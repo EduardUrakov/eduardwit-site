@@ -559,59 +559,85 @@
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('contact-form');
+    if (!form) {
+      console.warn('⚠️ Форма #contact-form не найдена');
+      return;
+    }
+    
     const submitBtn = form.querySelector('[type="submit"]');
     const successMsg = document.getElementById('success-message');
     const formError = document.getElementById('form-error');
     
-    // Webhook URL from n8n (replace with your actual URL)
-    const WEBHOOK_URL = 'https://n8n.eduardwit.ru/webhook/7e2e569f-955e-4535-9901-18b0201e5f95';
+    // 🔗 Webhook URL — замени на свой Production URL из n8n
+    const WEBHOOK_URL = 'https://n8n.eduardwit.ru/webhook/portfolio-contact';
     
-    function validateField(field, errorId) {
+    // ✅ Безопасная валидация поля
+    function validateField(fieldId, errorId) {
+      const field = document.getElementById(fieldId);
       const errorEl = document.getElementById(errorId);
-      if (!field.value.trim()) {
-        errorEl.textContent = 'Это поле обязательно';
+      
+      // Если поле не найдено — пропускаем валидацию (но логируем)
+      if (!field) {
+        console.warn(`⚠️ Поле #${fieldId} не найдено`);
+        return true;
+      }
+      
+      const value = field.value?.trim() || '';
+      
+      if (!value) {
+        if (errorEl) errorEl.textContent = 'Это поле обязательно';
         return false;
       }
-      errorEl.textContent = '';
+      
+      if (errorEl) errorEl.textContent = '';
       return true;
     }
     
+    // 📤 Обработка отправки формы
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      formError.textContent = '';
       
-      // Validate
-      const nameValid = validateField(document.getElementById('name'), 'name-error');
-      const contactValid = validateField(document.getElementById('contact'), 'contact-error');
-      const topicValid = validateField(document.getElementById('topic'), 'topic-error');
-      const messageValid = validateField(document.getElementById('message'), 'message-error');
+      if (formError) formError.textContent = '';
+      
+      // Валидация полей
+      const nameValid = validateField('name', 'name-error');
+      const contactValid = validateField('contact', 'contact-error');
+      const topicValid = validateField('topic', 'topic-error');
+      const messageValid = validateField('message', 'message-error');
+      
+      // Валидация чекбокса
       const consentEl = document.getElementById('consent');
-      const consentValid = consentEl.checked || (document.getElementById('consent-error').textContent = 'Необходимо согласие');
+      const consentError = document.getElementById('consent-error');
+      let consentValid = true;
       
-      if (!consentEl.checked) {
-        document.getElementById('consent-error').textContent = 'Необходимо согласие';
-      } else {
-        document.getElementById('consent-error').textContent = '';
+      if (consentEl && !consentEl.checked) {
+        if (consentError) consentError.textContent = 'Необходимо согласие с политикой';
+        consentValid = false;
+      } else if (consentError) {
+        consentError.textContent = '';
       }
       
+      // Если есть ошибки — останавливаемся
       if (!nameValid || !contactValid || !topicValid || !messageValid || !consentValid) {
         return;
       }
       
-      // Prepare data
+      // 📦 Сбор данных
       const data = {
-        name: document.getElementById('name').value.trim(),
-        contact: document.getElementById('contact').value.trim(),
-        topic: document.getElementById('topic').value,
-        message: document.getElementById('message').value.trim(),
-        consent: consentEl.checked,
+        name: document.getElementById('name')?.value?.trim() || '',
+        contact: document.getElementById('contact')?.value?.trim() || '',
+        topic: document.getElementById('topic')?.value || '',
+        message: document.getElementById('message')?.value?.trim() || '',
+        consent: document.getElementById('consent')?.checked || false,
         timestamp: new Date().toISOString(),
         source: 'eduardwit.ru'
       };
       
-      // Send to n8n
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Отправка...';
+      // 🚀 Отправка в n8n
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Отправка...';
+      }
       
       try {
         const response = await fetch(WEBHOOK_URL, {
@@ -622,27 +648,40 @@
         
         if (response.ok) {
           form.reset();
-          successMsg.style.display = 'block';
-          setTimeout(() => successMsg.style.display = 'none', 5000);
+          if (successMsg) {
+            successMsg.style.display = 'block';
+            setTimeout(() => { successMsg.style.display = 'none'; }, 5000);
+          }
         } else {
-          throw new Error('Ошибка отправки');
+          throw new Error(`HTTP ${response.status}`);
         }
       } catch (err) {
-        formError.textContent = '⚠️ Не удалось отправить. Попробуйте написать напрямую в ' + 
-          '<a href="https://t.me/@EduardWIT_Lending_bot" target="_blank" style="color:var(--color-accent)">Telegram</a>';
+        console.error('❌ Ошибка отправки:', err);
+        if (formError) {
+          formError.innerHTML = `⚠️ Не удалось отправить. Попробуйте написать напрямую в <a href="https://t.me/твой_ник" target="_blank" style="color:#00d4ff">Telegram</a>`;
+        }
       } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Отправить';
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Отправить';
+        }
       }
     });
     
-    // Clear errors on input
+    // 🧹 Очистка ошибок при вводе
     form.querySelectorAll('input, textarea, select').forEach(field => {
       field.addEventListener('input', () => {
-        const errorId = field.id + '-error';
-        const errorEl = document.getElementById(errorId);
+        const errorEl = document.getElementById(field.id + '-error');
         if (errorEl) errorEl.textContent = '';
       });
+    });
+    
+    // 🔄 Сброс формы
+    form.addEventListener('reset', () => {
+      form.querySelectorAll('.contact-form__error').forEach(el => {
+        if (el) el.textContent = '';
+      });
+      if (formError) formError.textContent = '';
     });
   });
 </script>
