@@ -932,6 +932,14 @@
                     <div class="contact-form__error" id="contact-input-error"></div>
                 </div>
 
+                <!-- 🆕 PHONE (вставь этот блок) -->
+                <div class="contact-form__group">
+                    <label class="contact-form__label" for="phone-input">Телефон</label>
+                    <input type="tel" id="phone-input" name="phone" class="contact-form__input"
+                        placeholder="+7 (999) 000-00-00" autocomplete="tel" inputmode="tel">
+                    <div class="contact-form__error" id="phone-input-error"></div>
+                </div>
+
                 <!-- Topic -->
                 <div class="contact-form__group">
                     <label class="contact-form__label" for="topic-input">Тема *</label>
@@ -1022,15 +1030,13 @@
             const formError = document.getElementById('form-error');
             const WEBHOOK_URL = 'https://n8n.eduardwit.ru/webhook/7e2e569f-955e-4535-9901-18b0201e5f95';
 
-            // Валидация одного поля
             function validate(value) {
                 const val = (value || '').toString().trim();
                 return val ? { ok: true, error: '' } : { ok: false, error: 'Это поле обязательно' };
             }
 
-            // Очистка всех ошибок
             function clearErrors() {
-                ['name-input', 'contact-input', 'topic-input', 'message-input', 'consent-input'].forEach(id => {
+                ['name-input', 'contact-input', 'phone-input', 'topic-input', 'message-input', 'consent-input'].forEach(id => {
                     const el = document.getElementById(id + '-error');
                     if (el) el.textContent = '';
                 });
@@ -1041,23 +1047,23 @@
                 e.preventDefault();
                 clearErrors();
 
-                // Получаем значения по ПРАВИЛЬНЫМ ID
                 const name = document.getElementById('name-input')?.value || '';
                 const contact = document.getElementById('contact-input')?.value || '';
+                const phone = document.getElementById('phone-input')?.value || '';
                 const topic = document.getElementById('topic-input')?.value || '';
                 const message = document.getElementById('message-input')?.value || '';
                 const consent = document.getElementById('consent-input')?.checked || false;
 
-                // Валидация с ПРАВИЛЬными ID ошибок
                 const checks = [
                     { field: validate(name), id: 'name-input-error' },
                     { field: validate(contact), id: 'contact-input-error' },
+                    // 📞 Телефон опционален. Если хочешь сделать обязательным, раскомментируй строку ниже:
+                    // { field: validate(phone), id: 'phone-input-error' },
                     { field: validate(topic), id: 'topic-input-error' },
                     { field: validate(message), id: 'message-input-error' },
                     { field: consent ? { ok: true } : { ok: false, error: 'Необходимо согласие' }, id: 'consent-input-error' }
                 ];
 
-                // Показать ошибки, если есть
                 const hasErrors = checks.some(check => {
                     if (!check.field.ok) {
                         const el = document.getElementById(check.id);
@@ -1068,7 +1074,6 @@
                 });
                 if (hasErrors) return;
 
-                // Отправка
                 if (submitBtn) {
                     submitBtn.disabled = true;
                     submitBtn.textContent = 'Отправка...';
@@ -1081,6 +1086,7 @@
                         body: JSON.stringify({
                             name: name.trim(),
                             contact: contact.trim(),
+                            phone: phone.trim(),
                             topic,
                             message: message.trim(),
                             consent,
@@ -1111,7 +1117,6 @@
                 }
             });
 
-            // Очистка ошибки при вводе
             form.querySelectorAll('input, textarea, select').forEach(field => {
                 field.addEventListener('input', () => {
                     const err = document.getElementById(field.id + '-error');
