@@ -13,7 +13,7 @@
             --color-bg: #0a0a0a;
             --color-bg-alt: #161625;
             --color-text: #f3f4f6;
-            --color-text-muted: #202327;
+            --color-text-muted: #8f969f;
             --color-accent: #00d4ff;
             --color-accent-alt: #00ff88;
             --color-border: rgba(255, 255, 255, 0.08);
@@ -563,7 +563,7 @@
                     </div>
                     <div class="hero__contact-item">
                         <span>✈️</span>
-                        <a href="https://t.me/EduardWIT_Lending_bot" target="_blank">@@EduardWIT_Lending_bot</a>
+                        <a href="https://t.me/EduardWIT_Lending_bot" target="_blank">@EduardWIT_Lending_bot</a>
                     </div>
                     <div class="hero__contact-item">
                         <span>🌐</span>
@@ -915,49 +915,60 @@
                 <h2 class="section__title">Связаться со мной</h2>
                 <p class="section__description">Заполните форму — я отвечу в ближайшее время</p>
             </div>
-            <form id="contact-form" class="contact-form" novalidate>
+            <form id="contact-form" novalidate>
+                <!-- Name -->
                 <div class="contact-form__group">
-                    <label class="contact-form__label" for="name">Ваше имя *</label>
-                    <input type="text" id="name" name="name" class="contact-form__input" required>
-                    <div class="contact-form__error" id="name-error"></div>
+                    <label class="contact-form__label" for="name-input">Ваше имя *</label>
+                    <input type="text" id="name-input" name="name" class="contact-form__input" placeholder="Иван"
+                        autocomplete="name">
+                    <div class="contact-form__error" id="name-input-error"></div>
                 </div>
+
+                <!-- Contact -->
                 <div class="contact-form__group">
-                    <label class="contact-form__label" for="contact">Email *</label>
-                    <input type="text" id="contact" name="contact" class="contact-form__input" required
-                        placeholder="email@example.com">
-                    <div class="contact-form__error" id="contact-error"></div>
+                    <label class="contact-form__label" for="contact-input">Email *</label>
+                    <input type="text" id="contact-input" name="contact" class="contact-form__input"
+                        placeholder="email@example.com" autocomplete="email" inputmode="email">
+                    <div class="contact-form__error" id="contact-input-error"></div>
                 </div>
+
+                <!-- Topic -->
                 <div class="contact-form__group">
-                    <label class="contact-form__label" for="topic">Тема *</label>
-                    <select id="topic" name="topic" class="contact-form__select" required>
+                    <label class="contact-form__label" for="topic-input">Тема *</label>
+                    <select id="topic-input" name="topic" class="contact-form__select" autocomplete="off">
                         <option value="">Выберите тему</option>
                         <option value="project">Разработка проекта</option>
                         <option value="automation">Автоматизация / n8n</option>
                         <option value="consultation">Консультация</option>
                         <option value="other">Другое</option>
                     </select>
-                    <div class="contact-form__error" id="topic-error"></div>
+                    <div class="contact-form__error" id="topic-input-error"></div>
                 </div>
+
+                <!-- Message -->
                 <div class="contact-form__group">
-                    <label class="contact-form__label" for="message">Сообщение *</label>
-                    <textarea id="message" name="message" class="contact-form__textarea" required
-                        placeholder="Опишите задачу кратко..."></textarea>
-                    <div class="contact-form__error" id="message-error"></div>
+                    <label class="contact-form__label" for="message-input">Сообщение *</label>
+                    <textarea id="message-input" name="message" class="contact-form__textarea"
+                        placeholder="Опишите задачу кратко..." autocomplete="off"></textarea>
+                    <div class="contact-form__error" id="message-input-error"></div>
                 </div>
+
+                <!-- Consent -->
                 <label class="contact-form__consent">
-                    <input type="checkbox" id="consent" name="consent" required>
-                    <span>Я согласен с <a href="#privacy-full">политикой конфиденциальности</a> и понимаю, что при
-                        разработке могут использоваться ИИ-модели (GigaChat, ChatGPT, Claude и др.)</span>
+                    <input type="checkbox" id="consent-input" name="consent">
+                    <span>Я согласен с <a href="#privacy-full">политикой конфиденциальности</a></span>
                 </label>
-                <div class="contact-form__error" id="consent-error"></div>
+                <div class="contact-form__error" id="consent-input-error"></div>
+
+                <!-- Buttons -->
                 <div class="contact-form__buttons">
                     <button type="reset" class="contact-form__button cancel">Очистить</button>
                     <button type="submit" class="contact-form__button submit">Отправить</button>
                 </div>
-                <div class="contact-form__success" id="success-message">
-                    ✅ Спасибо! Заявка отправлена. Я свяжусь с вами в ближайшее время.
-                </div>
-                <div class="contact-form__error" id="form-error" style="text-align: center; margin-top: 16px;"></div>
+
+                <!-- Messages -->
+                <div class="contact-form__success" id="success-message">✅ Спасибо! Заявка отправлена.</div>
+                <div class="contact-form__error" id="form-error" style="text-align:center;margin-top:16px;"></div>
             </form>
         </div>
     </section>
@@ -995,8 +1006,8 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>© 2026 Эдуард Вит • <a href="#privacy-full">Политика конфиденциальности</a> • <a
-                    href="https://t.me/@EduardWIT_Lending_bot" target="_blank">Telegram</a></p>
+            <p>© 2026 EduardWIT • <a href="#privacy-full">Политика конфиденциальности</a> • <a
+                    href="https://t.me/EduardWIT_Lending_bot" target="_blank">Telegram</a></p>
         </div>
     </footer>
 
@@ -1009,18 +1020,17 @@
             const submitBtn = form.querySelector('button[type="submit"]');
             const successMsg = document.getElementById('success-message');
             const formError = document.getElementById('form-error');
-            const WEBHOOK_URL = 'https://n8n.eduardwit.ru/webhook/7e2e569f-955e-4535-9901-18b0201e5f95'; // 🔗 Замени на свой Production URL
+            const WEBHOOK_URL = 'https://n8n.eduardwit.ru/webhook/7e2e569f-955e-4535-9901-18b0201e5f95';
 
-            // Простая валидация: возвращает {ok: true/false, error: 'сообщение' }
-            function validate(value, fieldName) {
+            // Валидация одного поля
+            function validate(value) {
                 const val = (value || '').toString().trim();
-                if (!val) return { ok: false, error: 'Это поле обязательно' };
-                return { ok: true, error: '' };
+                return val ? { ok: true, error: '' } : { ok: false, error: 'Это поле обязательно' };
             }
 
-            // Очистка ошибок
+            // Очистка всех ошибок
             function clearErrors() {
-                ['name', 'contact', 'topic', 'message', 'consent'].forEach(id => {
+                ['name-input', 'contact-input', 'topic-input', 'message-input', 'consent-input'].forEach(id => {
                     const el = document.getElementById(id + '-error');
                     if (el) el.textContent = '';
                 });
@@ -1028,26 +1038,26 @@
             }
 
             form.addEventListener('submit', async (e) => {
-                e.preventDefault(); // 🔥 Останавливаем стандартную отправку
+                e.preventDefault();
                 clearErrors();
 
-                // Получаем значения напрямую
-                const name = document.getElementById('name')?.value || '';
-                const contact = document.getElementById('contact')?.value || '';
-                const topic = document.getElementById('topic')?.value || '';
-                const message = document.getElementById('message')?.value || '';
-                const consent = document.getElementById('consent')?.checked || false;
+                // Получаем значения по ПРАВИЛЬНЫМ ID
+                const name = document.getElementById('name-input')?.value || '';
+                const contact = document.getElementById('contact-input')?.value || '';
+                const topic = document.getElementById('topic-input')?.value || '';
+                const message = document.getElementById('message-input')?.value || '';
+                const consent = document.getElementById('consent-input')?.checked || false;
 
-                // Валидация
+                // Валидация с ПРАВИЛЬными ID ошибок
                 const checks = [
-                    { field: validate(name, 'name'), id: 'name-error' },
-                    { field: validate(contact, 'contact'), id: 'contact-error' },
-                    { field: validate(topic, 'topic'), id: 'topic-error' },
-                    { field: validate(message, 'message'), id: 'message-error' },
-                    { field: consent ? { ok: true } : { ok: false, error: 'Необходимо согласие' }, id: 'consent-error' }
+                    { field: validate(name), id: 'name-input-error' },
+                    { field: validate(contact), id: 'contact-input-error' },
+                    { field: validate(topic), id: 'topic-input-error' },
+                    { field: validate(message), id: 'message-input-error' },
+                    { field: consent ? { ok: true } : { ok: false, error: 'Необходимо согласие' }, id: 'consent-input-error' }
                 ];
 
-                // Показываем ошибки, если есть
+                // Показать ошибки, если есть
                 const hasErrors = checks.some(check => {
                     if (!check.field.ok) {
                         const el = document.getElementById(check.id);
@@ -1056,10 +1066,9 @@
                     }
                     return false;
                 });
-
                 if (hasErrors) return;
 
-                // 📦 Отправка
+                // Отправка
                 if (submitBtn) {
                     submitBtn.disabled = true;
                     submitBtn.textContent = 'Отправка...';
@@ -1092,7 +1101,7 @@
                 } catch (err) {
                     console.error('❌ Ошибка:', err);
                     if (formError) {
-                        formError.innerHTML = '⚠️ Ошибка отправки. Напишите напрямую в <a href="https://t.me/EduardWIT" style="color:#00d4ff">Telegram</a>';
+                        formError.innerHTML = '⚠️ Ошибка отправки. Напишите напрямую в <a href="https://t.me/EduardWIT_Lending_bot" style="color:#00d4ff">Telegram</a>';
                     }
                 } finally {
                     if (submitBtn) {
