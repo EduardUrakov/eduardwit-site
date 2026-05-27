@@ -1,690 +1,1117 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>EduardWIT | Автоматизация & Веб-разработка</title>
-  <meta name="description" content="Python • n8n • Telegram • Адаптивная вёрстка • Быстрые MVP. Интеграции под ключ.">
-  <style>
-    :root {
-      --t-text-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      --t-headline-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      --color-bg: #0a0a0a;
-      --color-bg-alt: #161625;
-      --color-text: #f3f4f6;
-      --color-text-muted: #9ca3af;
-      --color-accent: #00d4ff;
-      --color-accent-alt: #00ff88;
-      --color-border: rgba(255,255,255,0.08);
-      --color-card: rgba(255,255,255,0.02);
-    }
-    
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: var(--t-text-font);
-      background: linear-gradient(180deg, var(--color-bg) 0%, var(--color-bg-alt) 100%);
-      color: var(--color-text);
-      line-height: 1.6;
-      overflow-x: hidden;
-    }
-    
-    h1,h2,h3,h4 { font-family: var(--t-headline-font); font-weight: 600; line-height: 1.2; }
-    a { color: inherit; text-decoration: none; transition: color 0.2s; }
-    a:hover { color: var(--color-accent); }
-    img { max-width: 100%; display: block; }
-    
-    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-    
-    /* Hero */
-    .hero { padding: 100px 0 80px; }
-    .hero__header { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 60px; margin-bottom: 60px; }
-    .hero__title { font-size: clamp(32px, 5vw, 64px); font-weight: 700; letter-spacing: -0.02em; }
-    .hero__subtitle { color: var(--color-text-muted); font-size: 18px; max-width: 480px; }
-    .hero__contact { display: flex; flex-direction: column; gap: 16px; min-width: 220px; }
-    .hero__contact-item { display: flex; align-items: center; gap: 12px; font-size: 16px; }
-    .hero__contact-item a { font-weight: 500; color: var(--color-accent); }
-    
-    /* Sections */
-    .section { padding: 60px 0; border-top: 1px solid #1f2937; }
-    .section__header { margin-bottom: 4px; }
-    .section__title {
-      font-size: clamp(24px, 4vw, 36px);
-      margin-bottom: 12px;
-      background: linear-gradient(90deg, var(--color-accent) 0%, var(--color-accent-alt) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .section__description { font-size: 16px; color: var(--color-text-muted); }
-    .section__content { display: grid; grid-template-columns: repeat(12, 1fr); gap: 40px; }
-    .section__col { grid-column: span 6; }
-    .section__col--full { grid-column: span 12; }
-    
-    /* Competencies */
-    .competencies__list { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 24px; }
-    .competencies__item {
-      display: flex; align-items: center; gap: 12px; padding: 20px;
-      background: var(--color-card); border: 1px solid var(--color-border);
-      border-radius: 8px; transition: transform 0.2s, border-color 0.2s;
-    }
-    .competencies__item:hover { transform: translateY(-4px); border-color: var(--color-accent); }
-    .competencies__icon { width: 32px; height: 32px; flex-shrink: 0; opacity: 0.9; }
-    .competencies__text { font-size: 16px; font-weight: 500; }
-    
-    /* Skills */
-    .skills__label { font-size: 13px; color: #6b7280; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .skills__tags { display: flex; flex-wrap: wrap; gap: 8px; }
-    .skills__tag {
-      font-size: 14px; font-weight: 500; color: var(--color-text);
-      background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.3);
-      padding: 6px 14px; border-radius: 6px;
-    }
-    
-    /* Projects */
-    .projects__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 32px; }
-    .projects__card {
-      display: flex; flex-direction: column;
-      background: var(--color-card); border: 1px solid var(--color-border);
-      border-radius: 12px; overflow: hidden;
-      transition: border-color 0.2s, transform 0.2s;
-    }
-    .projects__card:hover { border-color: var(--color-accent); transform: translateY(-4px); }
-    .projects__header { padding: 24px 24px 16px; }
-    .projects__title { font-size: 20px; font-weight: 600; margin-bottom: 8px; }
-    .projects__description { font-size: 14px; color: var(--color-text-muted); line-height: 1.4; margin-bottom: 16px; }
-    .projects__tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
-    .projects__tag {
-      font-size: 12px; font-weight: 500; color: var(--color-accent);
-      background: rgba(0, 212, 255, 0.05); padding: 4px 10px; border-radius: 4px;
-    }
-    .projects__links { padding: 0 24px 24px; display: flex; flex-wrap: wrap; gap: 12px; }
-    .projects__link {
-      font-size: 14px; font-weight: 500; color: var(--color-accent);
-      display: flex; align-items: center; gap: 6px;
-    }
-    .projects__link::before { content: "→"; font-size: 14px; }
-    
-    /* Education */
-    .education__list { display: flex; flex-direction: column; gap: 24px; }
-    .education__item {
-      display: flex; gap: 24px; padding: 24px;
-      background: var(--color-card); border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 8px;
-    }
-    .education__year { font-size: 18px; font-weight: 600; color: var(--color-accent); min-width: 80px; padding-top: 4px; }
-    .education__content h4 { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
-    .education__content p { color: var(--color-text-muted); font-size: 15px; }
-    
-    /* Qualities */
-    .qualities__list { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
-    .qualities__item {
-      display: flex; align-items: center; gap: 12px; padding: 18px;
-      background: var(--color-card); border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 8px;
-    }
-    .qualities__bullet { width: 8px; height: 8px; background: var(--color-accent); border-radius: 50%; flex-shrink: 0; }
-    .qualities__text { font-size: 15px; }
-    
-    /* Privacy Policy */
-    .privacy-banner {
-      padding: 20px; margin: 40px 0;
-      background: rgba(0, 212, 255, 0.05); border: 1px solid rgba(0, 212, 255, 0.2);
-      border-radius: 8px; font-size: 14px; color: var(--color-text-muted);
-    }
-    .privacy-banner strong { color: var(--color-text); }
-    .privacy-banner a { color: var(--color-accent); text-decoration: underline; }
-    
-    /* Contact Form */
-    .contact { padding: 80px 0; background: linear-gradient(180deg, var(--color-bg-alt) 0%, var(--color-bg) 100%); }
-    .contact-form { max-width: 600px; margin: 0 auto; }
-    .contact-form__group { margin-bottom: 24px; }
-    .contact-form__label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 8px; color: var(--color-text); }
-    .contact-form__input, .contact-form__textarea, .contact-form__select {
-      width: 100%; padding: 14px 16px;
-      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 8px; color: var(--color-text); font-family: var(--t-text-font);
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    .contact-form__input:focus, .contact-form__textarea:focus, .contact-form__select:focus {
-      outline: none; border-color: var(--color-accent);
-      box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
-    }
-    .contact-form__textarea { min-height: 140px; resize: vertical; }
-    .contact-form__error { color: #ef4444; font-size: 13px; margin-top: 6px; min-height: 18px; }
-    .contact-form__consent {
-      display: flex; align-items: flex-start; gap: 10px; margin: 20px 0;
-      font-size: 14px; color: var(--color-text-muted);
-    }
-    .contact-form__consent input { margin-top: 4px; }
-    .contact-form__buttons { display: flex; gap: 16px; margin-top: 32px; }
-    .contact-form__button {
-      flex: 1; padding: 14px 28px; border-radius: 8px; font-weight: 600;
-      cursor: pointer; transition: background 0.2s, transform 0.2s;
-      font-family: var(--t-headline-font); border: 1px solid transparent;
-    }
-    .contact-form__button.cancel {
-      background: transparent; border-color: var(--color-border); color: var(--color-text);
-    }
-    .contact-form__button.submit {
-      background: var(--color-accent); color: var(--color-bg); border-color: var(--color-accent);
-    }
-    .contact-form__button:hover { transform: translateY(-2px); }
-    .contact-form__button.submit:hover { background: var(--color-accent-alt); border-color: var(--color-accent-alt); }
-    .contact-form__success {
-      display: none; padding: 24px;
-      background: rgba(0, 255, 136, 0.05); border: 1px solid rgba(0, 255, 136, 0.3);
-      border-radius: 8px; text-align: center; margin-top: 24px; color: var(--color-accent-alt);
-    }
-    
-    /* Footer */
-    .footer { padding: 40px 0; text-align: center; color: var(--color-text-muted); font-size: 14px; border-top: 1px solid var(--color-border); }
-    .footer a { color: var(--color-accent); }
-    
-    /* Responsive */
-    @media (max-width: 960px) {
-      .hero__header { flex-direction: column; gap: 40px; }
-      .hero__contact { min-width: 100%; }
-      .section__col { grid-column: span 12; }
-      .projects__grid { grid-template-columns: 1fr; }
-      .education__item { flex-direction: column; gap: 8px; }
-    }
-    @media (max-width: 640px) {
-      .hero { padding: 60px 0 40px; }
-      .section { padding: 40px 0; }
-      .contact-form__buttons { flex-direction: column; }
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EduardWIT | Автоматизация & Веб-разработка</title>
+    <meta name="description" content="n8n • Telegram • Адаптивная вёрстка • Быстрые MVP. Интеграции под ключ.">
+    <style>
+        :root {
+            --t-text-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --t-headline-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --color-bg: #0a0a0a;
+            --color-bg-alt: #161625;
+            --color-text: #f3f4f6;
+            --color-text-muted: #202327;
+            --color-accent: #00d4ff;
+            --color-accent-alt: #00ff88;
+            --color-border: rgba(255, 255, 255, 0.08);
+            --color-card: rgba(255, 255, 255, 0.02);
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--t-text-font);
+            background: linear-gradient(180deg, var(--color-bg) 0%, var(--color-bg-alt) 100%);
+            color: var(--color-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: var(--t-headline-font);
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        a:hover {
+            color: var(--color-accent);
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Hero */
+        .hero {
+            padding: 100px 0 80px;
+        }
+
+        .hero__header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            gap: 60px;
+            margin-bottom: 60px;
+        }
+
+        .hero__title {
+            font-size: clamp(32px, 5vw, 64px);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .hero__subtitle {
+            color: var(--color-text-muted);
+            font-size: 18px;
+            max-width: 480px;
+        }
+
+        .hero__contact {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            min-width: 220px;
+        }
+
+        .hero__contact-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 16px;
+        }
+
+        .hero__contact-item a {
+            font-weight: 500;
+            color: var(--color-accent);
+        }
+
+        /* Sections */
+        .section {
+            padding: 60px 0;
+            border-top: 1px solid #1f2937;
+        }
+
+        .section__header {
+            margin-bottom: 4px;
+        }
+
+        .section__title {
+            font-size: clamp(24px, 4vw, 36px);
+            margin-bottom: 12px;
+            background: linear-gradient(90deg, var(--color-accent) 0%, var(--color-accent-alt) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section__description {
+            font-size: 16px;
+            color: var(--color-text-muted);
+        }
+
+        .section__content {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 40px;
+        }
+
+        .section__col {
+            grid-column: span 6;
+        }
+
+        .section__col--full {
+            grid-column: span 12;
+        }
+
+        /* Competencies */
+        .competencies__list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 24px;
+        }
+
+        .competencies__item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 20px;
+            background: var(--color-card);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .competencies__item:hover {
+            transform: translateY(-4px);
+            border-color: var(--color-accent);
+        }
+
+        .competencies__icon {
+            width: 32px;
+            height: 32px;
+            flex-shrink: 0;
+            opacity: 0.9;
+        }
+
+        .competencies__text {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        /* Skills */
+        .skills__label {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .skills__tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .skills__tag {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-text);
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            padding: 6px 14px;
+            border-radius: 6px;
+        }
+
+        /* Projects */
+        .projects__grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 32px;
+        }
+
+        .projects__card {
+            display: flex;
+            flex-direction: column;
+            background: var(--color-card);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+
+        .projects__card:hover {
+            border-color: var(--color-accent);
+            transform: translateY(-4px);
+        }
+
+        .projects__header {
+            padding: 24px 24px 16px;
+        }
+
+        .projects__title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .projects__description {
+            font-size: 14px;
+            color: var(--color-text-muted);
+            line-height: 1.4;
+            margin-bottom: 16px;
+        }
+
+        .projects__tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+
+        .projects__tag {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--color-accent);
+            background: rgba(0, 212, 255, 0.05);
+            padding: 4px 10px;
+            border-radius: 4px;
+        }
+
+        .projects__links {
+            padding: 0 24px 24px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .projects__link {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-accent);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .projects__link::before {
+            content: "→";
+            font-size: 14px;
+        }
+
+        /* Education */
+        .education__list {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .education__item {
+            display: flex;
+            gap: 24px;
+            padding: 24px;
+            background: var(--color-card);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 8px;
+        }
+
+        .education__year {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--color-accent);
+            min-width: 80px;
+            padding-top: 4px;
+        }
+
+        .education__content h4 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .education__content p {
+            color: var(--color-text-muted);
+            font-size: 15px;
+        }
+
+        /* Qualities */
+        .qualities__list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .qualities__item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 18px;
+            background: var(--color-card);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 8px;
+        }
+
+        .qualities__bullet {
+            width: 8px;
+            height: 8px;
+            background: var(--color-accent);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .qualities__text {
+            font-size: 15px;
+        }
+
+        /* Privacy Policy */
+        .privacy-banner {
+            padding: 20px;
+            margin: 40px 0;
+            background: rgba(0, 212, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 8px;
+            font-size: 14px;
+            color: var(--color-text-muted);
+        }
+
+        .privacy-banner strong {
+            color: var(--color-text);
+        }
+
+        .privacy-banner a {
+            color: var(--color-accent);
+            text-decoration: underline;
+        }
+
+        /* Contact Form */
+        .contact {
+            padding: 80px 0;
+            background: linear-gradient(180deg, var(--color-bg-alt) 0%, var(--color-bg) 100%);
+        }
+
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .contact-form__group {
+            margin-bottom: 24px;
+        }
+
+        .contact-form__label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--color-text);
+        }
+
+        .contact-form__input,
+        .contact-form__textarea,
+        .contact-form__select {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: var(--color-text);
+            font-family: var(--t-text-font);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .contact-form__input:focus,
+        .contact-form__textarea:focus,
+        .contact-form__select:focus {
+            outline: none;
+            border-color: var(--color-accent);
+            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+        }
+
+        .contact-form__textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+
+        .contact-form__error {
+            color: #ef4444;
+            font-size: 13px;
+            margin-top: 6px;
+            min-height: 18px;
+        }
+
+        .contact-form__consent {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 20px 0;
+            font-size: 14px;
+            color: var(--color-text-muted);
+        }
+
+        .contact-form__consent input {
+            margin-top: 4px;
+        }
+
+        .contact-form__buttons {
+            display: flex;
+            gap: 16px;
+            margin-top: 32px;
+        }
+
+        .contact-form__button {
+            flex: 1;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+            font-family: var(--t-headline-font);
+            border: 1px solid transparent;
+        }
+
+        .contact-form__button.cancel {
+            background: transparent;
+            border-color: var(--color-border);
+            color: var(--color-text);
+        }
+
+        .contact-form__button.submit {
+            background: var(--color-accent);
+            color: var(--color-bg);
+            border-color: var(--color-accent);
+        }
+
+        .contact-form__button:hover {
+            transform: translateY(-2px);
+        }
+
+        .contact-form__button.submit:hover {
+            background: var(--color-accent-alt);
+            border-color: var(--color-accent-alt);
+        }
+
+        .contact-form__success {
+            display: none;
+            padding: 24px;
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 24px;
+            color: var(--color-accent-alt);
+        }
+
+        /* Footer */
+        .footer {
+            padding: 40px 0;
+            text-align: center;
+            color: var(--color-text-muted);
+            font-size: 14px;
+            border-top: 1px solid var(--color-border);
+        }
+
+        .footer a {
+            color: var(--color-accent);
+        }
+
+        /* Responsive */
+        @media (max-width: 960px) {
+            .hero__header {
+                flex-direction: column;
+                gap: 40px;
+            }
+
+            .hero__contact {
+                min-width: 100%;
+            }
+
+            .section__col {
+                grid-column: span 12;
+            }
+
+            .projects__grid {
+                grid-template-columns: 1fr;
+            }
+
+            .education__item {
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .hero {
+                padding: 60px 0 40px;
+            }
+
+            .section {
+                padding: 40px 0;
+            }
+
+            .contact-form__buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-<!-- Hero -->
-<section class="hero">
-  <div class="container">
-    <div class="hero__header">
-      <div>
-        <h1 class="hero__title">EduardWIT</h1>
-        <p class="hero__subtitle">Создаю и поддерживаю сайты, совмещая техническую точность с творческим подходом. Специализируюсь на адаптивной вёрстке, автоматизации через n8n и Telegram, быстрых MVP.</p>
-      </div>
-      <div class="hero__contact">
-        <div class="hero__contact-item">
-          <span>📧</span>
-          <a href="mailto:admin@eduardwit.ru">admin@eduardwit.ru</a>
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero__header">
+                <div>
+                    <h1 class="hero__title">EduardWIT</h1>
+                    <p class="hero__subtitle">Создаю и поддерживаю сайты, совмещая техническую точность с творческим
+                        подходом. Специализируюсь на адаптивной вёрстке, автоматизации через n8n и Telegram, быстрых
+                        MVP.</p>
+                </div>
+                <div class="hero__contact">
+                    <div class="hero__contact-item">
+                        <span>📧</span>
+                        <a href="mailto:admin@eduardwit.ru">admin@eduardwit.ru</a>
+                    </div>
+                    <div class="hero__contact-item">
+                        <span>✈️</span>
+                        <a href="https://t.me/EduardWIT_Lending_bot" target="_blank">@@EduardWIT_Lending_bot</a>
+                    </div>
+                    <div class="hero__contact-item">
+                        <span>🌐</span>
+                        <a href="https://eduardwit.ru">eduardwit.ru</a>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="hero__contact-item">
-          <span>✈️</span>
-          <a href="https://t.me/EduardWIT_Lending_bot" target="_blank">@@EduardWIT_Lending_bot</a>
-        </div>
-        <div class="hero__contact-item">
-          <span>🌐</span>
-          <a href="https://eduardwit.ru">eduardwit.ru</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<!-- Competencies -->
-<section class="section">
-  <div class="container">
-    <div class="section__header">
-      <h2 class="section__title">Ключевые компетенции</h2>
-    </div>
-    <div class="section__content">
-      <div class="section__col">
-        <div class="competencies__list">
-          <div class="competencies__item">
-            <svg class="competencies__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-            <span class="competencies__text">Адаптивная вёрстка</span>
-          </div>
-          <div class="competencies__item">
-            <svg class="competencies__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-            <span class="competencies__text">Оптимизация и отладка</span>
-          </div>
-          <div class="competencies__item">
-            <svg class="competencies__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-            <span class="competencies__text">Автоматизация (n8n)</span>
-          </div>
-          <div class="competencies__item">
-            <svg class="competencies__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-            <span class="competencies__text">Telegram-интеграции</span>
-          </div>
-          <div class="competencies__item">
-            <svg class="competencies__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-            <span class="competencies__text">Поддержка legacy-кода</span>
-          </div>
-          <div class="competencies__item">
-            <svg class="competencies__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            <span class="competencies__text">No-Code / Low-Code</span>
-          </div>
+    <!-- Competencies -->
+    <section class="section">
+        <div class="container">
+            <div class="section__header">
+                <h2 class="section__title">Ключевые компетенции</h2>
+            </div>
+            <div class="section__content">
+                <div class="section__col">
+                    <div class="competencies__list">
+                        <div class="competencies__item">
+                            <svg class="competencies__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                                <path d="M2 17l10 5 10-5" />
+                                <path d="M2 12l10 5 10-5" />
+                            </svg>
+                            <span class="competencies__text">Адаптивная вёрстка</span>
+                        </div>
+                        <div class="competencies__item">
+                            <svg class="competencies__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path
+                                    d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+                            </svg>
+                            <span class="competencies__text">Оптимизация и отладка</span>
+                        </div>
+                        <div class="competencies__item">
+                            <svg class="competencies__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <path d="M12 6v6l4 2" />
+                            </svg>
+                            <span class="competencies__text">Автоматизация (n8n)</span>
+                        </div>
+                        <div class="competencies__item">
+                            <svg class="competencies__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path
+                                    d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                                <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                                <line x1="12" y1="22.08" x2="12" y2="12" />
+                            </svg>
+                            <span class="competencies__text">Telegram-интеграции</span>
+                        </div>
+                        <div class="competencies__item">
+                            <svg class="competencies__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M12 20h9" />
+                                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                            </svg>
+                            <span class="competencies__text">Поддержка legacy-кода</span>
+                        </div>
+                        <div class="competencies__item">
+                            <svg class="competencies__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                                <line x1="16" y1="2" x2="16" y2="6" />
+                                <line x1="8" y1="2" x2="8" y2="6" />
+                                <line x1="3" y1="10" x2="21" y2="10" />
+                            </svg>
+                            <span class="competencies__text">No-Code / Low-Code</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="section__col">
+                    <div class="skills__label">Дополнительно</div>
+                    <div class="skills__tags">
+                        <span class="skills__tag">C# (базово)</span>
+                        <span class="skills__tag">PHP (базово)</span>
+                        <span class="skills__tag">Agile / Scrum</span>
+                        <span class="skills__tag">Linux / Bash</span>
+                        <span class="skills__tag">Figma → Код</span>
+                    </div>
+                    <p style="margin-top: 24px; font-size: 15px; color: var(--color-text-muted); line-height: 1.6;">
+                        Читаю и понимаю чужой код, поддерживаю работоспособность проектов,
+                        тестирую валидность, отлаживаю и оптимизирую для стабильной работы.
+                    </p>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="section__col">
-        <div class="skills__label">Дополнительно</div>
-        <div class="skills__tags">
-          <span class="skills__tag">C# (базово)</span>
-          <span class="skills__tag">PHP (базово)</span>
-          <span class="skills__tag">Agile / Scrum</span>
-          <span class="skills__tag">Linux / Bash</span>
-          <span class="skills__tag">Figma → Код</span>
-        </div>
-        <p style="margin-top: 24px; font-size: 15px; color: var(--color-text-muted); line-height: 1.6;">
-          Читаю и понимаю чужой код, поддерживаю работоспособность проектов, 
-          тестирую валидность, отлаживаю и оптимизирую для стабильной работы.
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<!-- Stack -->
-<section class="section">
-  <div class="container">
-    <div class="section__header">
-      <h2 class="section__title">Стек технологий</h2>
-    </div>
-    <div class="section__content">
-      <div class="section__col">
-        <div class="skills__label">Frontend / Вёрстка</div>
-        <div class="skills__tags">
-          <span class="skills__tag">HTML5</span><span class="skills__tag">CSS3</span><span class="skills__tag">SCSS/SASS</span>
-          <span class="skills__tag">JavaScript</span><span class="skills__tag">TypeScript</span>
-          <span class="skills__tag">React</span><span class="skills__tag">Angular</span><span class="skills__tag">jQuery</span>
-          <span class="skills__tag">Bootstrap</span><span class="skills__tag">БЭМ</span><span class="skills__tag">Gulp</span>
+    <!-- Stack -->
+    <section class="section">
+        <div class="container">
+            <div class="section__header">
+                <h2 class="section__title">Стек технологий</h2>
+            </div>
+            <div class="section__content">
+                <div class="section__col">
+                    <div class="skills__label">Frontend / Вёрстка</div>
+                    <div class="skills__tags">
+                        <span class="skills__tag">HTML5</span><span class="skills__tag">CSS3</span><span
+                            class="skills__tag">SCSS/SASS</span>
+                        <span class="skills__tag">JavaScript</span><span class="skills__tag">TypeScript</span>
+                        <span class="skills__tag">React</span><span class="skills__tag">Angular</span><span
+                            class="skills__tag">jQuery</span>
+                        <span class="skills__tag">Bootstrap</span><span class="skills__tag">БЭМ</span><span
+                            class="skills__tag">Gulp</span>
+                    </div>
+                    <div class="skills__label" style="margin-top: 24px;">Backend & Движки</div>
+                    <div class="skills__tags">
+                        <span class="skills__tag">Python</span><span class="skills__tag">Django</span><span
+                            class="skills__tag">Tilda</span>
+                        <span class="skills__tag">Glide</span><span class="skills__tag">NocoDB</span><span
+                            class="skills__tag">Supabase</span>
+                        <span class="skills__tag">Dokploy</span>
+                    </div>
+                </div>
+                <div class="section__col">
+                    <div class="skills__label">Инфраструктура</div>
+                    <div class="skills__tags">
+                        <span class="skills__tag">Docker</span><span class="skills__tag">Git</span><span
+                            class="skills__tag">Linux</span><span class="skills__tag">Bash</span>
+                    </div>
+                    <div class="skills__label" style="margin-top: 24px;">Базы данных</div>
+                    <div class="skills__tags">
+                        <span class="skills__tag">SQL</span><span class="skills__tag">MySQL</span>
+                    </div>
+                    <div class="skills__label" style="margin-top: 24px;">AI & Автоматизация</div>
+                    <div class="skills__tags">
+                        <span class="skills__tag">n8n</span><span class="skills__tag">Telegram Bot API</span>
+                        <span class="skills__tag">Бипиум</span><span class="skills__tag">SMAIPL</span><span
+                            class="skills__tag">AI-боты</span>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="skills__label" style="margin-top: 24px;">Backend & Движки</div>
-        <div class="skills__tags">
-          <span class="skills__tag">Python</span><span class="skills__tag">Django</span><span class="skills__tag">Tilda</span>
-          <span class="skills__tag">Glide</span><span class="skills__tag">NocoDB</span><span class="skills__tag">Supabase</span>
-          <span class="skills__tag">Dokploy</span>
+    </section>
+
+    <!-- Portfolio (только демо-ссылки) -->
+    <section class="section">
+        <div class="container">
+            <div class="section__header">
+                <h2 class="section__title">Портфолио</h2>
+            </div>
+            <div class="section__content">
+                <div class="section__col--full">
+                    <div class="projects__grid">
+                        <!-- Project 1 -->
+                        <div class="projects__card">
+                            <div class="projects__header">
+                                <div class="projects__title">Адаптивная вёрстка (Bootstrap)</div>
+                                <div class="projects__description">Вёрстка по макету с использованием Bootstrap, SCSS,
+                                    адаптив под все устройства.</div>
+                                <div class="projects__tags">
+                                    <span class="projects__tag">HTML</span><span class="projects__tag">SCSS</span><span
+                                        class="projects__tag">Bootstrap</span>
+                                </div>
+                            </div>
+                            <div class="projects__links">
+                                <a href="https://eduardurakov.github.io/uber/" target="_blank"
+                                    class="projects__link">Демо</a>
+                            </div>
+                        </div>
+                        <!-- Project 2 -->
+                        <div class="projects__card">
+                            <div class="projects__header">
+                                <div class="projects__title">Одностраничный сайт</div>
+                                <div class="projects__description">Полнофункциональный магазин с корзиной, оформлением
+                                    заказа, админ-панелью.</div>
+                                <div class="projects__tags">
+                                    <span class="projects__tag">PHP</span><span class="projects__tag">MySQL</span><span
+                                        class="projects__tag">HTML</span>
+                                </div>
+                            </div>
+                            <div class="projects__links">
+                                <a href="https://eduardurakov.github.io/Kettox/" target="_blank"
+                                    class="projects__link">Демо</a>
+                            </div>
+                        </div>
+                        <!-- Project 3 -->
+                        <div class="projects__card">
+                            <div class="projects__header">
+                                <div class="projects__title">Многостраничная форма</div>
+                                <div class="projects__description">Форма с валидацией, анимациями, андерлайном и полной
+                                    адаптивностью.</div>
+                                <div class="projects__tags">
+                                    <span class="projects__tag">SCSS</span><span
+                                        class="projects__tag">jQuery</span><span class="projects__tag">Gulp</span>
+                                </div>
+                            </div>
+                            <div class="projects__links">
+                                <a href="https://eduardurakov.github.io/future-tech/" target="_blank"
+                                    class="projects__link">Демо</a>
+                            </div>
+                        </div>
+                        <!-- Project 4 -->
+                        <div class="projects__card">
+                            <div class="projects__header">
+                                <div class="projects__title">Glide — бизнес-приложение</div>
+                                <div class="projects__description">No-Code приложение на Glide для учёта расходов с
+                                    синхронизацией данных.</div>
+                                <div class="projects__tags">
+                                    <span class="projects__tag">Glide</span><span class="projects__tag">No-Code</span>
+                                </div>
+                            </div>
+                            <div class="projects__links">
+                                <a href="https://kniga-rashodov-j4dd.glide.page" target="_blank"
+                                    class="projects__link">Демо</a>
+                            </div>
+                        </div>
+                        <!-- Project 5 -->
+                        <div class="projects__card">
+                            <div class="projects__header">
+                                <div class="projects__title">React — мебельный магазин</div>
+                                <div class="projects__description">SPA на React с корзиной, фильтрацией товаров и
+                                    адаптивным интерфейсом.</div>
+                                <div class="projects__tags">
+                                    <span class="projects__tag">React</span><span
+                                        class="projects__tag">JavaScript</span>
+                                </div>
+                            </div>
+                            <div class="projects__links">
+                                <a href="https://eduardurakov.github.io/furniture_shop/" target="_blank"
+                                    class="projects__link">Демо</a>
+                            </div>
+                        </div>
+                        <!-- Project 6 -->
+                        <div class="projects__card">
+                            <div class="projects__header">
+                                <div class="projects__title">Angular + TypeScript</div>
+                                <div class="projects__description">Приложения на Angular с типизацией через TypeScript.
+                                </div>
+                                <div class="projects__tags">
+                                    <span class="projects__tag">Angular</span><span
+                                        class="projects__tag">TypeScript</span>
+                                </div>
+                            </div>
+                            <div class="projects__links">
+                                <a href="https://eduardurakov.github.io/burgers/" target="_blank"
+                                    class="projects__link">Burgers</a>
+                                <a href="https://eduardurakov.github.io/cars/" target="_blank"
+                                    class="projects__link">Cars</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="section__col">
-        <div class="skills__label">Инфраструктура</div>
-        <div class="skills__tags">
-          <span class="skills__tag">Docker</span><span class="skills__tag">Git</span><span class="skills__tag">Linux</span><span class="skills__tag">Bash</span>
+    </section>
+
+    <!-- Education -->
+    <section class="section">
+        <div class="container">
+            <div class="section__header">
+                <h2 class="section__title">Повышение квалификации</h2>
+            </div>
+            <div class="section__content">
+                <div class="section__col--full">
+                    <div class="education__list">
+                        <div class="education__item">
+                            <div class="education__year">2023</div>
+                            <div class="education__content">
+                                <h4>Python-программист</h4>
+                                <p>Университет «Синергия» — курс профессиональной переподготовки</p>
+                            </div>
+                        </div>
+                        <div class="education__item">
+                            <div class="education__year">2023</div>
+                            <div class="education__content">
+                                <h4>Frontend-разработчик / Верстальщик</h4>
+                                <p>ООО «ГикБреинс» — курс по адаптивной вёрстке и работе с макетами</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="skills__label" style="margin-top: 24px;">Базы данных</div>
-        <div class="skills__tags">
-          <span class="skills__tag">SQL</span><span class="skills__tag">MySQL</span>
+    </section>
+
+    <!-- About & Qualities -->
+    <section class="section">
+        <div class="container">
+            <div class="section__header">
+                <h2 class="section__title">Обо мне</h2>
+            </div>
+            <div class="section__content">
+                <div class="section__col">
+                    <p style="font-size: 16px; color: var(--color-text-muted); line-height: 1.7; margin-bottom: 32px;">
+                        Привлекательность разработки для меня — в создании и поддержании работоспособных сайтов.
+                        Именно этим я планирую заниматься в первую очередь, продолжая развивать навыки в направлении
+                        автоматизации и интеграций.
+                    </p>
+                    <div class="qualities__list">
+                        <div class="qualities__item">
+                            <div class="qualities__bullet"></div>
+                            <div class="qualities__text">Аналитический склад ума</div>
+                        </div>
+                        <div class="qualities__item">
+                            <div class="qualities__bullet"></div>
+                            <div class="qualities__text">Позитивный настрой и самостоятельность</div>
+                        </div>
+                        <div class="qualities__item">
+                            <div class="qualities__bullet"></div>
+                            <div class="qualities__text">Профессиональная заинтересованность</div>
+                        </div>
+                        <div class="qualities__item">
+                            <div class="qualities__bullet"></div>
+                            <div class="qualities__text">Гибкость и творческий подход</div>
+                        </div>
+                        <div class="qualities__item">
+                            <div class="qualities__bullet"></div>
+                            <div class="qualities__text">Умение брать ответственность</div>
+                        </div>
+                        <div class="qualities__item">
+                            <div class="qualities__bullet"></div>
+                            <div class="qualities__text">Довожу начатое до конца</div>
+                        </div>
+                        <div class="qualities__item">
+                            <div class="qualities__bullet"></div>
+                            <div class="qualities__text">Умение работать с информацией</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="skills__label" style="margin-top: 24px;">AI & Автоматизация</div>
-        <div class="skills__tags">
-          <span class="skills__tag">n8n</span><span class="skills__tag">Telegram Bot API</span>
-          <span class="skills__tag">Бипиум</span><span class="skills__tag">SMAIPL</span><span class="skills__tag">AI-боты</span>
+    </section>
+
+    <!-- Privacy Policy Banner -->
+    <section class="section">
+        <div class="container">
+            <div class="privacy-banner">
+                <strong> Конфиденциальность и ИИ</strong><br>
+                Данные из форм используются только для связи. При разработке могут применяться ИИ-модели:
+                <strong>российские</strong> (GigaChat, YandexGPT) и <strong>иностранные</strong> (ChatGPT, Claude,
+                Gemini, Copilot и др.).
+                Конфиденциальная информация заказчика <strong>не передаётся</strong> в публичные ИИ-сервисы без
+                согласования.
+                <a href="#privacy-full">Полная версия политики ↓</a>
+            </div>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<!-- Portfolio (только демо-ссылки) -->
-<section class="section">
-  <div class="container">
-    <div class="section__header">
-      <h2 class="section__title">Портфолио</h2>
-    </div>
-    <div class="section__content">
-      <div class="section__col--full">
-        <div class="projects__grid">
-          <!-- Project 1 -->
-          <div class="projects__card">
-            <div class="projects__header">
-              <div class="projects__title">Адаптивная вёрстка (Bootstrap)</div>
-              <div class="projects__description">Вёрстка по макету с использованием Bootstrap, SCSS, адаптив под все устройства.</div>
-              <div class="projects__tags">
-                <span class="projects__tag">HTML</span><span class="projects__tag">SCSS</span><span class="projects__tag">Bootstrap</span>
-              </div>
+    <!-- Contact Form -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="section__header" style="text-align: center;">
+                <h2 class="section__title">Связаться со мной</h2>
+                <p class="section__description">Заполните форму — я отвечу в ближайшее время</p>
             </div>
-            <div class="projects__links">
-              <a href="https://eduardurakov.github.io/uber/" target="_blank" class="projects__link">Демо</a>
-            </div>
-          </div>
-          <!-- Project 2 -->
-          <div class="projects__card">
-            <div class="projects__header">
-              <div class="projects__title">Одностраничный сайт</div>
-              <div class="projects__description">Полнофункциональный магазин с корзиной, оформлением заказа, админ-панелью.</div>
-              <div class="projects__tags">
-                <span class="projects__tag">PHP</span><span class="projects__tag">MySQL</span><span class="projects__tag">HTML</span>
-              </div>
-            </div>
-            <div class="projects__links">
-              <a href="https://eduardurakov.github.io/Kettox/" target="_blank" class="projects__link">Демо</a>
-            </div>
-          </div>
-          <!-- Project 3 -->
-          <div class="projects__card">
-            <div class="projects__header">
-              <div class="projects__title">Многостраничная форма</div>
-              <div class="projects__description">Форма с валидацией, анимациями, андерлайном и полной адаптивностью.</div>
-              <div class="projects__tags">
-                <span class="projects__tag">SCSS</span><span class="projects__tag">jQuery</span><span class="projects__tag">Gulp</span>
-              </div>
-            </div>
-            <div class="projects__links">
-              <a href="https://eduardurakov.github.io/future-tech/" target="_blank" class="projects__link">Демо</a>
-            </div>
-          </div>
-          <!-- Project 4 -->
-          <div class="projects__card">
-            <div class="projects__header">
-              <div class="projects__title">Glide — бизнес-приложение</div>
-              <div class="projects__description">No-Code приложение на Glide для учёта расходов с синхронизацией данных.</div>
-              <div class="projects__tags">
-                <span class="projects__tag">Glide</span><span class="projects__tag">No-Code</span>
-              </div>
-            </div>
-            <div class="projects__links">
-              <a href="https://kniga-rashodov-j4dd.glide.page" target="_blank" class="projects__link">Демо</a>
-            </div>
-          </div>
-          <!-- Project 5 -->
-          <div class="projects__card">
-            <div class="projects__header">
-              <div class="projects__title">React — мебельный магазин</div>
-              <div class="projects__description">SPA на React с корзиной, фильтрацией товаров и адаптивным интерфейсом.</div>
-              <div class="projects__tags">
-                <span class="projects__tag">React</span><span class="projects__tag">JavaScript</span>
-              </div>
-            </div>
-            <div class="projects__links">
-              <a href="https://eduardurakov.github.io/furniture_shop/" target="_blank" class="projects__link">Демо</a>
-            </div>
-          </div>
-          <!-- Project 6 -->
-          <div class="projects__card">
-            <div class="projects__header">
-              <div class="projects__title">Angular + TypeScript</div>
-              <div class="projects__description">Приложения на Angular с типизацией через TypeScript.</div>
-              <div class="projects__tags">
-                <span class="projects__tag">Angular</span><span class="projects__tag">TypeScript</span>
-              </div>
-            </div>
-            <div class="projects__links">
-              <a href="https://eduardurakov.github.io/burgers/" target="_blank" class="projects__link">Burgers</a>
-              <a href="https://eduardurakov.github.io/cars/" target="_blank" class="projects__link">Cars</a>
-            </div>
-          </div>
+            <form id="contact-form" class="contact-form" novalidate>
+                <div class="contact-form__group">
+                    <label class="contact-form__label" for="name">Ваше имя *</label>
+                    <input type="text" id="name" name="name" class="contact-form__input" required>
+                    <div class="contact-form__error" id="name-error"></div>
+                </div>
+                <div class="contact-form__group">
+                    <label class="contact-form__label" for="contact">Email *</label>
+                    <input type="text" id="contact" name="contact" class="contact-form__input" required
+                        placeholder="email@example.com">
+                    <div class="contact-form__error" id="contact-error"></div>
+                </div>
+                <div class="contact-form__group">
+                    <label class="contact-form__label" for="topic">Тема *</label>
+                    <select id="topic" name="topic" class="contact-form__select" required>
+                        <option value="">Выберите тему</option>
+                        <option value="project">Разработка проекта</option>
+                        <option value="automation">Автоматизация / n8n</option>
+                        <option value="consultation">Консультация</option>
+                        <option value="other">Другое</option>
+                    </select>
+                    <div class="contact-form__error" id="topic-error"></div>
+                </div>
+                <div class="contact-form__group">
+                    <label class="contact-form__label" for="message">Сообщение *</label>
+                    <textarea id="message" name="message" class="contact-form__textarea" required
+                        placeholder="Опишите задачу кратко..."></textarea>
+                    <div class="contact-form__error" id="message-error"></div>
+                </div>
+                <label class="contact-form__consent">
+                    <input type="checkbox" id="consent" name="consent" required>
+                    <span>Я согласен с <a href="#privacy-full">политикой конфиденциальности</a> и понимаю, что при
+                        разработке могут использоваться ИИ-модели (GigaChat, ChatGPT, Claude и др.)</span>
+                </label>
+                <div class="contact-form__error" id="consent-error"></div>
+                <div class="contact-form__buttons">
+                    <button type="reset" class="contact-form__button cancel">Очистить</button>
+                    <button type="submit" class="contact-form__button submit">Отправить</button>
+                </div>
+                <div class="contact-form__success" id="success-message">
+                    ✅ Спасибо! Заявка отправлена. Я свяжусь с вами в ближайшее время.
+                </div>
+                <div class="contact-form__error" id="form-error" style="text-align: center; margin-top: 16px;"></div>
+            </form>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<!-- Education -->
-<section class="section">
-  <div class="container">
-    <div class="section__header">
-      <h2 class="section__title">Повышение квалификации</h2>
-    </div>
-    <div class="section__content">
-      <div class="section__col--full">
-        <div class="education__list">
-          <div class="education__item">
-            <div class="education__year">2023</div>
-            <div class="education__content">
-              <h4>Python-программист</h4>
-              <p>Университет «Синергия» — курс профессиональной переподготовки</p>
+    <!-- Full Privacy Policy -->
+    <section class="section" id="privacy-full" style="background: rgba(0,0,0,0.2);">
+        <div class="container">
+            <div class="section__header">
+                <h2 class="section__title">Политика конфиденциальности</h2>
             </div>
-          </div>
-          <div class="education__item">
-            <div class="education__year">2023</div>
-            <div class="education__content">
-              <h4>Frontend-разработчик / Верстальщик</h4>
-              <p>ООО «ГикБреинс» — курс по адаптивной вёрстке и работе с макетами</p>
+            <div style="font-size: 15px; color: var(--color-text-muted); line-height: 1.7; max-width: 800px;">
+                <p style="margin-bottom: 16px;"><strong>1. Сбор данных</strong><br>Я собираю только те данные, которые
+                    вы предоставляете добровольно через формы: имя, контакт (Telegram/Email), текст обращения. Эти
+                    данные используются исключительно для обработки вашего запроса и обратной связи.</p>
+                <p style="margin-bottom: 16px;"><strong>2. Использование ИИ</strong><br>В процессе разработки и
+                    тестирования я могу использовать:<br>• <strong>Российские модели:</strong> GigaChat, YandexGPT<br>•
+                    <strong>Иностранные модели:</strong> ChatGPT, Claude, Gemini, Copilot и другие аналоги.<br><br>Цели:
+                    генерация шаблонного кода, оптимизация текстов, тестирование гипотез.<br><br>⚠️
+                    <strong>Конфиденциальная информация заказчика НЕ передаётся в публичные ИИ-сервисы без вашего
+                        письменного согласия.</strong> При работе с чувствительными данными используются локальные
+                    модели или анонимизированные данные.
+                </p>
+                <p style="margin-bottom: 16px;"><strong>3. Защита данных</strong><br>Данные хранятся в зашифрованном
+                    виде, доступ имеют только авторизованные лица, регулярно выполняется резервное копирование.</p>
+                <p style="margin-bottom: 16px;"><strong>4. Ваши права</strong><br>Вы вправе запросить удаление своих
+                    данных, отозвать согласие на обработку или получить копию сохранённой информации.</p>
+                <p><strong>5. Контакты</strong><br>По вопросам конфиденциальности: <a
+                        href="https://t.me/EduardWIT_Lending_bot">Telegram</a> | <a
+                        href="mailto:admin@eduardwit.ru">admin@eduardwit.ru</a></p>
+                <p style="margin-top: 24px; font-size: 13px; color: #6b7280;">Последнее обновление: май 2026</p>
             </div>
-          </div>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<!-- About & Qualities -->
-<section class="section">
-  <div class="container">
-    <div class="section__header">
-      <h2 class="section__title">Обо мне</h2>
-    </div>
-    <div class="section__content">
-      <div class="section__col">
-        <p style="font-size: 16px; color: var(--color-text-muted); line-height: 1.7; margin-bottom: 32px;">
-          Привлекательность разработки для меня — в создании и поддержании работоспособных сайтов. 
-          Именно этим я планирую заниматься в первую очередь, продолжая развивать навыки в направлении автоматизации и интеграций.
-        </p>
-        <div class="qualities__list">
-          <div class="qualities__item"><div class="qualities__bullet"></div><div class="qualities__text">Аналитический склад ума</div></div>
-          <div class="qualities__item"><div class="qualities__bullet"></div><div class="qualities__text">Позитивный настрой и самостоятельность</div></div>
-          <div class="qualities__item"><div class="qualities__bullet"></div><div class="qualities__text">Профессиональная заинтересованность</div></div>
-          <div class="qualities__item"><div class="qualities__bullet"></div><div class="qualities__text">Гибкость и творческий подход</div></div>
-          <div class="qualities__item"><div class="qualities__bullet"></div><div class="qualities__text">Умение брать ответственность</div></div>
-          <div class="qualities__item"><div class="qualities__bullet"></div><div class="qualities__text">Довожу начатое до конца</div></div>
-          <div class="qualities__item"><div class="qualities__bullet"></div><div class="qualities__text">Умение работать с информацией</div></div>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>© 2026 Эдуард Вит • <a href="#privacy-full">Политика конфиденциальности</a> • <a
+                    href="https://t.me/@EduardWIT_Lending_bot" target="_blank">Telegram</a></p>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
+    </footer>
 
-<!-- Privacy Policy Banner -->
-<section class="section">
-  <div class="container">
-    <div class="privacy-banner">
-      <strong> Конфиденциальность и ИИ</strong><br>
-      Данные из форм используются только для связи. При разработке могут применяться ИИ-модели: 
-      <strong>российские</strong> (GigaChat, YandexGPT) и <strong>иностранные</strong> (ChatGPT, Claude, Gemini, Copilot и др.). 
-      Конфиденциальная информация заказчика <strong>не передаётся</strong> в публичные ИИ-сервисы без согласования. 
-      <a href="#privacy-full">Полная версия политики ↓</a>
-    </div>
-  </div>
-</section>
+    <!-- Form Script (vanilla JS + n8n webhook) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('contact-form');
+            if (!form) return;
 
-<!-- Contact Form -->
-<section class="contact" id="contact">
-  <div class="container">
-    <div class="section__header" style="text-align: center;">
-      <h2 class="section__title">Связаться со мной</h2>
-      <p class="section__description">Заполните форму — я отвечу в ближайшее время</p>
-    </div>
-    <form id="contact-form" class="contact-form" novalidate>
-      <div class="contact-form__group">
-        <label class="contact-form__label" for="name">Ваше имя *</label>
-        <input type="text" id="name" name="name" class="contact-form__input" required>
-        <div class="contact-form__error" id="name-error"></div>
-      </div>
-      <div class="contact-form__group">
-        <label class="contact-form__label" for="contact">Telegram или Email *</label>
-        <input type="text" id="contact" name="contact" class="contact-form__input" required placeholder="@username или email@example.com">
-        <div class="contact-form__error" id="contact-error"></div>
-      </div>
-      <div class="contact-form__group">
-        <label class="contact-form__label" for="topic">Тема *</label>
-        <select id="topic" name="topic" class="contact-form__select" required>
-          <option value="">Выберите тему</option>
-          <option value="project">Разработка проекта</option>
-          <option value="automation">Автоматизация / n8n</option>
-          <option value="consultation">Консультация</option>
-          <option value="other">Другое</option>
-        </select>
-        <div class="contact-form__error" id="topic-error"></div>
-      </div>
-      <div class="contact-form__group">
-        <label class="contact-form__label" for="message">Сообщение *</label>
-        <textarea id="message" name="message" class="contact-form__textarea" required placeholder="Опишите задачу кратко..."></textarea>
-        <div class="contact-form__error" id="message-error"></div>
-      </div>
-      <label class="contact-form__consent">
-        <input type="checkbox" id="consent" name="consent" required>
-        <span>Я согласен с <a href="#privacy-full">политикой конфиденциальности</a> и понимаю, что при разработке могут использоваться ИИ-модели (GigaChat, ChatGPT, Claude и др.)</span>
-      </label>
-      <div class="contact-form__error" id="consent-error"></div>
-      <div class="contact-form__buttons">
-        <button type="reset" class="contact-form__button cancel">Очистить</button>
-        <button type="submit" class="contact-form__button submit">Отправить</button>
-      </div>
-      <div class="contact-form__success" id="success-message">
-        ✅ Спасибо! Заявка отправлена. Я свяжусь с вами в ближайшее время.
-      </div>
-      <div class="contact-form__error" id="form-error" style="text-align: center; margin-top: 16px;"></div>
-    </form>
-  </div>
-</section>
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const successMsg = document.getElementById('success-message');
+            const formError = document.getElementById('form-error');
+            const WEBHOOK_URL = 'https://n8n.eduardwit.ru/webhook/7e2e569f-955e-4535-9901-18b0201e5f95'; // 🔗 Замени на свой Production URL
 
-<!-- Full Privacy Policy -->
-<section class="section" id="privacy-full" style="background: rgba(0,0,0,0.2);">
-  <div class="container">
-    <div class="section__header">
-      <h2 class="section__title">Политика конфиденциальности</h2>
-    </div>
-    <div style="font-size: 15px; color: var(--color-text-muted); line-height: 1.7; max-width: 800px;">
-      <p style="margin-bottom: 16px;"><strong>1. Сбор данных</strong><br>Я собираю только те данные, которые вы предоставляете добровольно через формы: имя, контакт (Telegram/Email), текст обращения. Эти данные используются исключительно для обработки вашего запроса и обратной связи.</p>
-      <p style="margin-bottom: 16px;"><strong>2. Использование ИИ</strong><br>В процессе разработки и тестирования я могу использовать:<br>• <strong>Российские модели:</strong> GigaChat, YandexGPT<br>• <strong>Иностранные модели:</strong> ChatGPT, Claude, Gemini, Copilot и другие аналоги.<br><br>Цели: генерация шаблонного кода, оптимизация текстов, тестирование гипотез.<br><br>⚠️ <strong>Конфиденциальная информация заказчика НЕ передаётся в публичные ИИ-сервисы без вашего письменного согласия.</strong> При работе с чувствительными данными используются локальные модели или анонимизированные данные.</p>
-      <p style="margin-bottom: 16px;"><strong>3. Защита данных</strong><br>Данные хранятся в зашифрованном виде, доступ имеют только авторизованные лица, регулярно выполняется резервное копирование.</p>
-      <p style="margin-bottom: 16px;"><strong>4. Ваши права</strong><br>Вы вправе запросить удаление своих данных, отозвать согласие на обработку или получить копию сохранённой информации.</p>
-      <p><strong>5. Контакты</strong><br>По вопросам конфиденциальности: <a href="https://t.me/EduardWIT_Lending_bot">Telegram</a> | <a href="mailto:admin@eduardwit.ru">admin@eduardwit.ru</a></p>
-      <p style="margin-top: 24px; font-size: 13px; color: #6b7280;">Последнее обновление: май 2026</p>
-    </div>
-  </div>
-</section>
+            // Простая валидация: возвращает {ok: true/false, error: 'сообщение' }
+            function validate(value, fieldName) {
+                const val = (value || '').toString().trim();
+                if (!val) return { ok: false, error: 'Это поле обязательно' };
+                return { ok: true, error: '' };
+            }
 
-<!-- Footer -->
-<footer class="footer">
-  <div class="container">
-    <p>© 2026 Эдуард Вит • <a href="#privacy-full">Политика конфиденциальности</a> • <a href="https://t.me/@EduardWIT_Lending_bot" target="_blank">Telegram</a></p>
-  </div>
-</footer>
+            // Очистка ошибок
+            function clearErrors() {
+                ['name', 'contact', 'topic', 'message', 'consent'].forEach(id => {
+                    const el = document.getElementById(id + '-error');
+                    if (el) el.textContent = '';
+                });
+                if (formError) formError.textContent = '';
+            }
 
-<!-- Form Script (vanilla JS + n8n webhook) -->
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('contact-form');
-    if (!form) {
-      console.warn('⚠️ Форма #contact-form не найдена');
-      return;
-    }
-    
-    const submitBtn = form.querySelector('[type="submit"]');
-    const successMsg = document.getElementById('success-message');
-    const formError = document.getElementById('form-error');
-    
-    // 🔗 Webhook URL — замени на свой Production URL из n8n
-    const WEBHOOK_URL = 'https://n8n.eduardwit.ru/webhook/portfolio-contact';
-    
-    // ✅ Безопасная валидация поля
-    function validateField(fieldId, errorId) {
-      const field = document.getElementById(fieldId);
-      const errorEl = document.getElementById(errorId);
-      
-      // Если поле не найдено — пропускаем валидацию (но логируем)
-      if (!field) {
-        console.warn(`⚠️ Поле #${fieldId} не найдено`);
-        return true;
-      }
-      
-      const value = field.value?.trim() || '';
-      
-      if (!value) {
-        if (errorEl) errorEl.textContent = 'Это поле обязательно';
-        return false;
-      }
-      
-      if (errorEl) errorEl.textContent = '';
-      return true;
-    }
-    
-    // 📤 Обработка отправки формы
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      if (formError) formError.textContent = '';
-      
-      // Валидация полей
-      const nameValid = validateField('name', 'name-error');
-      const contactValid = validateField('contact', 'contact-error');
-      const topicValid = validateField('topic', 'topic-error');
-      const messageValid = validateField('message', 'message-error');
-      
-      // Валидация чекбокса
-      const consentEl = document.getElementById('consent');
-      const consentError = document.getElementById('consent-error');
-      let consentValid = true;
-      
-      if (consentEl && !consentEl.checked) {
-        if (consentError) consentError.textContent = 'Необходимо согласие с политикой';
-        consentValid = false;
-      } else if (consentError) {
-        consentError.textContent = '';
-      }
-      
-      // Если есть ошибки — останавливаемся
-      if (!nameValid || !contactValid || !topicValid || !messageValid || !consentValid) {
-        return;
-      }
-      
-      // 📦 Сбор данных
-      const data = {
-        name: document.getElementById('name')?.value?.trim() || '',
-        contact: document.getElementById('contact')?.value?.trim() || '',
-        topic: document.getElementById('topic')?.value || '',
-        message: document.getElementById('message')?.value?.trim() || '',
-        consent: document.getElementById('consent')?.checked || false,
-        timestamp: new Date().toISOString(),
-        source: 'eduardwit.ru'
-      };
-      
-      // 🚀 Отправка в n8n
-      if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Отправка...';
-      }
-      
-      try {
-        const response = await fetch(WEBHOOK_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault(); // 🔥 Останавливаем стандартную отправку
+                clearErrors();
+
+                // Получаем значения напрямую
+                const name = document.getElementById('name')?.value || '';
+                const contact = document.getElementById('contact')?.value || '';
+                const topic = document.getElementById('topic')?.value || '';
+                const message = document.getElementById('message')?.value || '';
+                const consent = document.getElementById('consent')?.checked || false;
+
+                // Валидация
+                const checks = [
+                    { field: validate(name, 'name'), id: 'name-error' },
+                    { field: validate(contact, 'contact'), id: 'contact-error' },
+                    { field: validate(topic, 'topic'), id: 'topic-error' },
+                    { field: validate(message, 'message'), id: 'message-error' },
+                    { field: consent ? { ok: true } : { ok: false, error: 'Необходимо согласие' }, id: 'consent-error' }
+                ];
+
+                // Показываем ошибки, если есть
+                const hasErrors = checks.some(check => {
+                    if (!check.field.ok) {
+                        const el = document.getElementById(check.id);
+                        if (el) el.textContent = check.field.error;
+                        return true;
+                    }
+                    return false;
+                });
+
+                if (hasErrors) return;
+
+                // 📦 Отправка
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'Отправка...';
+                }
+
+                try {
+                    const response = await fetch(WEBHOOK_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            name: name.trim(),
+                            contact: contact.trim(),
+                            topic,
+                            message: message.trim(),
+                            consent,
+                            timestamp: new Date().toISOString(),
+                            source: 'eduardwit.ru'
+                        })
+                    });
+
+                    if (response.ok) {
+                        form.reset();
+                        if (successMsg) {
+                            successMsg.style.display = 'block';
+                            setTimeout(() => { successMsg.style.display = 'none'; }, 5000);
+                        }
+                    } else {
+                        throw new Error('HTTP ' + response.status);
+                    }
+                } catch (err) {
+                    console.error('❌ Ошибка:', err);
+                    if (formError) {
+                        formError.innerHTML = '⚠️ Ошибка отправки. Напишите напрямую в <a href="https://t.me/EduardWIT" style="color:#00d4ff">Telegram</a>';
+                    }
+                } finally {
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Отправить';
+                    }
+                }
+            });
+
+            // Очистка ошибки при вводе
+            form.querySelectorAll('input, textarea, select').forEach(field => {
+                field.addEventListener('input', () => {
+                    const err = document.getElementById(field.id + '-error');
+                    if (err) err.textContent = '';
+                });
+            });
         });
-        
-        if (response.ok) {
-          form.reset();
-          if (successMsg) {
-            successMsg.style.display = 'block';
-            setTimeout(() => { successMsg.style.display = 'none'; }, 5000);
-          }
-        } else {
-          throw new Error(`HTTP ${response.status}`);
-        }
-      } catch (err) {
-        console.error('❌ Ошибка отправки:', err);
-        if (formError) {
-          formError.innerHTML = `⚠️ Не удалось отправить. Попробуйте написать напрямую в <a href="https://t.me/твой_ник" target="_blank" style="color:#00d4ff">Telegram</a>`;
-        }
-      } finally {
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'Отправить';
-        }
-      }
-    });
-    
-    // 🧹 Очистка ошибок при вводе
-    form.querySelectorAll('input, textarea, select').forEach(field => {
-      field.addEventListener('input', () => {
-        const errorEl = document.getElementById(field.id + '-error');
-        if (errorEl) errorEl.textContent = '';
-      });
-    });
-    
-    // 🔄 Сброс формы
-    form.addEventListener('reset', () => {
-      form.querySelectorAll('.contact-form__error').forEach(el => {
-        if (el) el.textContent = '';
-      });
-      if (formError) formError.textContent = '';
-    });
-  });
-</script>
+    </script>
 
 </body>
+
 </html>
