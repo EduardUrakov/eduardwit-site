@@ -541,6 +541,87 @@
                 flex-direction: column;
             }
         }
+
+        /* AI Assistant CTA */
+        .contact__ai-assistant {
+            margin: 32px 0;
+        }
+
+        .ai-assistant__card {
+            display: flex;
+            gap: 16px;
+            padding: 20px;
+            background: rgba(0, 212, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            align-items: flex-start;
+        }
+
+        .ai-assistant__icon {
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+
+        .ai-assistant__content {
+            flex: 1;
+        }
+
+        .ai-assistant__title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--color-text);
+        }
+
+        .ai-assistant__text {
+            font-size: 14px;
+            color: var(--color-text-muted);
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .ai-assistant__note {
+            font-size: 13px;
+            color: var(--color-text-muted);
+            margin-bottom: 16px;
+            line-height: 1.4;
+        }
+
+        .ai-assistant__note a {
+            color: var(--color-accent);
+            text-decoration: underline;
+        }
+
+        .ai-assistant__button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: var(--color-accent);
+            color: var(--color-bg);
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .ai-assistant__button:hover {
+            background: var(--color-accent-alt);
+            transform: translateY(-2px);
+        }
+
+        /* Адаптив для мобильных */
+        @media (max-width: 640px) {
+            .ai-assistant__card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .ai-assistant__button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
     </style>
 </head>
 
@@ -914,6 +995,26 @@
             <div class="section__header" style="text-align: center;">
                 <h2 class="section__title">Связаться со мной</h2>
                 <p class="section__description">Заполните форму — я отвечу в ближайшее время</p>
+                <!-- 🤖 AI Assistant CTA -->
+                <div class="contact__ai-assistant">
+                    <div class="ai-assistant__card">
+                        <div class="ai-assistant__icon">🤖</div>
+                        <div class="ai-assistant__content">
+                            <h3 class="ai-assistant__title">Не хотите заполнять форму?</h3>
+                            <p class="ai-assistant__text">
+                                Пообщайтесь с <strong>ИИ-ассистентом</strong> в Telegram — он ответит на вопросы
+                                по автоматизации, технологиям и процессам, используя актуальную базу знаний.
+                            </p>
+                            <p class="ai-assistant__note">
+                                🔒 После диалога вы сможете передать нужные данные —
+                                <a href="#privacy-full">полностью соблюдая политику конфиденциальности</a>.
+                            </p>
+                            <a href="https://t.me/EduardWIT_assistent_bot" target="_blank" class="ai-assistant__button">
+                                ✈️ Написать @EduardWIT_assistent_bot
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
             <form id="contact-form" novalidate>
                 <!-- Name -->
