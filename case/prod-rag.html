@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Кейс: Prod-RAG на Supabase + n8n | EduardWIT</title>
+    <meta name="description"
+        content="RAG-конвейер для корпоративной базы знаний: self-hosted, pgvector, GigaChat, экономия 40+ часов/мес.">
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --bg-alt: #161625;
+            --text: #f3f4f6;
+            --muted: #9ca3af;
+            --accent: #00d4ff;
+            --accent-alt: #00ff88;
+            --border: rgba(255, 255, 255, 0.08);
+            --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font);
+            background: linear-gradient(180deg, var(--bg) 0%, var(--bg-alt) 100%);
+            color: var(--text);
+            line-height: 1.6;
+            padding-bottom: 60px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .header {
+            padding: 60px 0 40px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header h1 {
+            font-size: clamp(28px, 5vw, 42px);
+            margin-bottom: 12px;
+        }
+
+        .header .meta {
+            color: var(--muted);
+            font-size: 14px;
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .header .meta span {
+            background: rgba(0, 212, 255, 0.1);
+            padding: 4px 10px;
+            border-radius: 4px;
+        }
+
+        .section {
+            padding: 40px 0;
+        }
+
+        .section h2 {
+            font-size: 24px;
+            margin-bottom: 16px;
+            color: var(--accent);
+        }
+
+        .section p {
+            margin-bottom: 16px;
+            color: var(--muted);
+        }
+
+        .section ul {
+            margin: 12px 0 12px 24px;
+            color: var(--muted);
+        }
+
+        .section li {
+            margin-bottom: 8px;
+        }
+
+        .architecture {
+            background: rgba(0, 212, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            color: var(--accent-alt);
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .metric {
+            background: var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .metric .value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-alt);
+        }
+
+        .metric .label {
+            font-size: 13px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        .cta {
+            text-align: center;
+            padding: 32px;
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 12px;
+            margin: 32px 0;
+        }
+
+        .cta .button {
+            display: inline-block;
+            padding: 12px 28px;
+            background: var(--accent);
+            color: #0a0a0a;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-top: 16px;
+        }
+
+        .cta .button:hover {
+            background: var(--accent-alt);
+        }
+
+        .footer {
+            text-align: center;
+            color: var(--muted);
+            font-size: 14px;
+            padding-top: 40px;
+            border-top: 1px solid var(--border);
+        }
+
+        @media (max-width: 640px) {
+            .header {
+                padding: 40px 0 30px;
+            }
+
+            .section {
+                padding: 30px 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="container">
+            <h1>Prod-RAG: Корпоративная база знаний с ИИ-ассистентом</h1>
+            <div class="meta">
+                <span>🛠 n8n + Supabase</span>
+                <span>🧠 GigaChat API</span>
+                <span>🔒 Self-hosted</span>
+                <span>⏱ ~3 дня</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Контекст -->
+        <section class="section">
+            <h2>🎯 Бизнес-проблема</h2>
+            <p>Команда продаж тратила 30–40 минут в день на поиск информации в разрозненных источниках (Google Docs,
+                Notion, PDF). Онбординг нового менеджера занимал до 2 недель.</p>
+            <ul>
+                <li>Менеджеры забывали нюансы скриптов → теряли сделки</li>
+                <li>База знаний устаревала — не было единого источника правды</li>
+                <li>Классический FAQ-бот не справлялся с контекстными вопросами</li>
+            </ul>
+        </section>
+
+        <!-- Цель -->
+        <section class="section">
+            <h2>✅ Цель решения</h2>
+            <p>Собрать production-ready RAG-конвейер, который:</p>
+            <ul>
+                <li>Индексирует документы в векторную БД с чанкингом</li>
+                <li>Отвечает на вопросы, подтягивая релевантные фрагменты</li>
+                <li>Фильтрует ответы по метаданным (отдел, тема, версия)</li>
+                <li>Работает на собственной инфраструктуре — данные не покидают периметр</li>
+            </ul>
+        </section>
+
+        <!-- Архитектура -->
+        <section class="section">
+            <h2>⚙️ Архитектура</h2>
+            <div class="architecture">
+                [Документы] → n8n (loader) → Text Splitter (1000/200)
+                → HuggingFace Embeddings (384 dim)
+                → Supabase + pgvector (upsert)
+                → n8n (retrieval) → GigaChat → Ответ + источник
+            </div>
+            <img src="../images/wf-prod.jpg" max-width="900px" height="400px" loading="lazy" />
+            <p><strong>Инфраструктура:</strong> VPS 7 ГБ RAM, Docker + Dokploy, домен supabase.eduardwit.ru с авто-SSL,
+                пересозданные JWT-ключи.</p>
+
+        </section>
+
+        <!-- Метрики -->
+        <section class="section">
+            <h2>📊 Результат</h2>
+            <div class="metrics">
+                <div class="metric">
+                    <div class="value">−70%</div>
+                    <div class="label">Время онбординга</div>
+                </div>
+                <div class="metric">
+                    <div class="value">−85%</div>
+                    <div class="label">Поиск информации</div>
+                </div>
+                <div class="metric">
+                    <div class="value">~40 ч/мес</div>
+                    <div class="label">Экономия на команду</div>
+                </div>
+                <div class="metric">
+                    <div class="value">2.1 сек</div>
+                    <div class="label">Среднее время ответа</div>
+                </div>
+            </div>
+            <p style="color:var(--muted);font-size:14px;margin-top:16px;">
+                При стоимости часа менеджера 800 ₽ экономия только на поиске = ~32 000 ₽/мес на команду из 7 человек.
+            </p>
+        </section>
+
+        <!-- Почему это ценно -->
+        <section class="section">
+            <h2>💡 Ценность для бизнеса</h2>
+            <ul>
+                <li><strong>Сокращение затрат на онбординг:</strong> новые сотрудники выходят на план за 3–4 дня вместо
+                    2 недель</li>
+                <li><strong>Рост конверсии:</strong> менеджеры отвечают строго по скриптам компании</li>
+                <li><strong>Сохранение экспертизы:</strong> знания остаются в векторной БД, даже если сотрудник уволился
+                </li>
+                <li><strong>Информационная безопасность:</strong> self-hosted, данные не уходят в публичные облака</li>
+                <li><strong>Независимость от вендоров:</strong> любой компонент можно заменить без переписывания системы
+                </li>
+            </ul>
+        </section>
+
+        <!-- Где ещё применимо -->
+        <section class="section">
+            <h2>🌍 Где ещё работает</h2>
+            <ul>
+                <li>Юридические отделы — поиск по договорам и судебной практике</li>
+                <li>Техподдержка (L1/L2) — бот первой линии с эскалацией</li>
+                <li>HR / онбординг — ИИ-наставник с адаптацией под роль</li>
+                <li>E-commerce — ассистент менеджеров на маркетплейсах</li>
+                <li>EdTech — ИИ-тьютор на базе учебных материалов</li>
+            </ul>
+        </section>
+
+    </main>
+
+    <footer class="footer container">
+        <p>© 2026 EduardWIT • <a href="../index.html">Главная</a> • <a href="crm-avtomation.html">Кейс: Заявки в CRM</a>
+            • <a href="ai-classification.html">ИИ-классификация обращений</a>
+        </p>
+    </footer>
+</body>
+
+</html>
