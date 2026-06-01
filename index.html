@@ -794,6 +794,62 @@
             <div class="section__content">
                 <div class="section__col--full">
                     <div class="projects__grid">
+                        <!-- Project: Prod-RAG on Supabase -->
+                        <div class="projects__card">
+                            <div class="projects__header">
+                                <div class="projects__title">Prod-RAG: Корпоративная база знаний с ИИ</div>
+                                <div class="projects__description">
+                                    RAG-конвейер на self-hosted инфраструктуре: документы → векторный поиск →
+                                    ответ ИИ со ссылкой на источник. Фильтрация по отделам.
+                                </div>
+                                <div class="projects__tags">
+                                    <span class="projects__tag">n8n</span>
+                                    <span class="projects__tag">Supabase + pgvector</span>
+                                    <span class="projects__tag">GigaChat API</span>
+                                    <span class="projects__tag">Docker / Dokploy</span>
+                                </div>
+                            </div>
+                            <div class="projects__links">
+                                <a href="case/prod-rag.html" class="projects__link">Читать кейс</a>
+                            </div>
+                        </div>
+                        <div class="projects__card">
+                            <div class="projects__header">
+                                <div class="projects__title">CRM + Оплата: Сквозной пайплайн на n8n</div>
+                                <div class="projects__description">
+                                    AI-скоринг заявок, генерация КП, NocoDB Kanban, Robokassa с MD5-защитой и
+                                    идемпотентностью.
+                                    Сокращение Time-to-Response с 24 ч до 15 сек.
+                                </div>
+                                <div class="projects__tags">
+                                    <span class="projects__tag">n8n</span>
+                                    <span class="projects__tag">NocoDB</span>
+                                    <span class="projects__tag">GigaChat AI</span>
+                                    <span class="projects__tag">Robokassa API</span>
+                                </div>
+                            </div>
+                            <div class="projects__links">
+                                <a href="case/crm-avtomation.html" class="projects__link">Читать кейс</a>
+                            </div>
+                        </div>
+                        <div class="projects__card">
+                            <div class="projects__header">
+                                <div class="projects__title">ИИ-классификация обращений</div>
+                                <div class="projects__description">
+                                    Автоматическая маршрутизация 100+ лидов в день. GigaChat LLM, Confidence Score,
+                                    Human-in-the-Loop и интеграция с NocoDB + Telegram. Экономия ~624к ₽/год.
+                                </div>
+                                <div class="projects__tags">
+                                    <span class="projects__tag">n8n</span>
+                                    <span class="projects__tag">GigaChat LLM</span>
+                                    <span class="projects__tag">NocoDB</span>
+                                    <span class="projects__tag">Telegram API</span>
+                                </div>
+                            </div>
+                            <div class="projects__links">
+                                <a href="case/ai-classification.html" class="projects__link"> Читать кейс</a>
+                            </div>
+                        </div>
                         <!-- Project 1 -->
                         <div class="projects__card">
                             <div class="projects__header">
@@ -977,14 +1033,18 @@
     <!-- Privacy Policy Banner -->
     <section class="section">
         <div class="container">
-            <div class="privacy-banner">
-                <strong> Конфиденциальность и ИИ</strong><br>
+            <!-- Конфиденциальность и ИИ (баннер) -->
+            <div class="privacy-banner"
+                style="background: rgba(0,212,255,0.05); border: 1px solid rgba(0,212,255,0.2); border-radius: 8px; padding: 16px; margin: 24px 0; font-size: 14px; color: var(--color-text-muted);">
+                <strong>🔒 Конфиденциальность и ИИ</strong><br>
                 Данные из форм используются только для связи. При разработке могут применяться ИИ-модели:
                 <strong>российские</strong> (GigaChat, YandexGPT) и <strong>иностранные</strong> (ChatGPT, Claude,
-                Gemini, Copilot и др.).
+                Gemini, Copilot и др.).<br>
                 Конфиденциальная информация заказчика <strong>не передаётся</strong> в публичные ИИ-сервисы без
                 согласования.
-                <a href="#privacy-full">Полная версия политики ↓</a>
+                <a href="privacy-policy.html"
+                    style="color: var(--color-accent); display: inline-block; margin-top: 8px;">Полная версия политики
+                    →</a>
             </div>
         </div>
     </section>
@@ -995,10 +1055,9 @@
             <div class="section__header" style="text-align: center;">
                 <h2 class="section__title">Связаться со мной</h2>
                 <p class="section__description">Заполните форму — я отвечу в ближайшее время</p>
-                <!-- 🤖 AI Assistant CTA -->
+                <!--  AI Assistant CTA -->
                 <div class="contact__ai-assistant">
                     <div class="ai-assistant__card">
-                        <div class="ai-assistant__icon">🤖</div>
                         <div class="ai-assistant__content">
                             <h3 class="ai-assistant__title">Не хотите заполнять форму?</h3>
                             <p class="ai-assistant__text">
@@ -1007,7 +1066,7 @@
                             </p>
                             <p class="ai-assistant__note">
                                 🔒 После диалога вы сможете передать нужные данные —
-                                <a href="#privacy-full">полностью соблюдая политику конфиденциальности</a>.
+                                <a href="privacy-policy.html">полностью соблюдая политику конфиденциальности</a>.
                             </p>
                             <a href="https://t.me/EduardWIT_assistent_bot" target="_blank" class="ai-assistant__button">
                                 ✈️ Написать @EduardWIT_assistent_bot
@@ -1082,40 +1141,11 @@
         </div>
     </section>
 
-    <!-- Full Privacy Policy -->
-    <section class="section" id="privacy-full" style="background: rgba(0,0,0,0.2);">
-        <div class="container">
-            <div class="section__header">
-                <h2 class="section__title">Политика конфиденциальности</h2>
-            </div>
-            <div style="font-size: 15px; color: var(--color-text-muted); line-height: 1.7; max-width: 800px;">
-                <p style="margin-bottom: 16px;"><strong>1. Сбор данных</strong><br>Я собираю только те данные, которые
-                    вы предоставляете добровольно через формы: имя, контакт (Telegram/Email), текст обращения. Эти
-                    данные используются исключительно для обработки вашего запроса и обратной связи.</p>
-                <p style="margin-bottom: 16px;"><strong>2. Использование ИИ</strong><br>В процессе разработки и
-                    тестирования я могу использовать:<br>• <strong>Российские модели:</strong> GigaChat, YandexGPT<br>•
-                    <strong>Иностранные модели:</strong> ChatGPT, Claude, Gemini, Copilot и другие аналоги.<br><br>Цели:
-                    генерация шаблонного кода, оптимизация текстов, тестирование гипотез.<br><br>⚠️
-                    <strong>Конфиденциальная информация заказчика НЕ передаётся в публичные ИИ-сервисы без вашего
-                        письменного согласия.</strong> При работе с чувствительными данными используются локальные
-                    модели или анонимизированные данные.
-                </p>
-                <p style="margin-bottom: 16px;"><strong>3. Защита данных</strong><br>Данные хранятся в зашифрованном
-                    виде, доступ имеют только авторизованные лица, регулярно выполняется резервное копирование.</p>
-                <p style="margin-bottom: 16px;"><strong>4. Ваши права</strong><br>Вы вправе запросить удаление своих
-                    данных, отозвать согласие на обработку или получить копию сохранённой информации.</p>
-                <p><strong>5. Контакты</strong><br>По вопросам конфиденциальности: <a
-                        href="https://t.me/EduardWIT_assistent_bot">Telegram</a> | <a
-                        href="mailto:admin@eduardwit.ru">admin@eduardwit.ru</a></p>
-                <p style="margin-top: 24px; font-size: 13px; color: #6b7280;">Последнее обновление: май 2026</p>
-            </div>
-        </div>
-    </section>
 
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>© 2026 EduardWIT • <a href="#privacy-full">Политика конфиденциальности</a> • <a
+            <p>© 2026 EduardWIT • <a href="privacy-policy.html">Политика конфиденциальности</a> • <a
                     href="https://t.me/EduardWIT_assistent_bot" target="_blank">Telegram</a></p>
         </div>
     </footer>
