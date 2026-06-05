@@ -224,9 +224,99 @@
                 → Supabase + pgvector (upsert)
                 → n8n (retrieval) → GigaChat → Ответ + источник
             </div>
-            <img src="../images/wf-prod1.jpg" max-width="900px" height="400px" loading="lazy" />
             <p><strong>Инфраструктура:</strong> VPS 7 ГБ RAM, Docker + Dokploy, домен supabase.eduardwit.ru с авто-SSL,
                 пересозданные JWT-ключи.</p>
+        </section>
+        <!-- 📸 Галерея скриншотов -->
+        <section class="section">
+            <h2>📸 Как это выглядит в production</h2>
+            <p>Реальные скриншоты работающей системы — без мокапов и постановочных кадров:</p>
+
+            <div style="display: flex; flex-direction: column; gap: 32px; margin: 24px 0; max-width: 900px;">
+
+                <!-- Скрин 1: Воркфлоу -->
+                <figure style="margin: 0; background: var(--border); border-radius: 12px; overflow: hidden;">
+                    <a href="../images/wf-overview.jpg" target="_blank">
+                        <img src="../images/wf-overview.jpg" alt="RAG-воркфлоу в n8n" loading="lazy"
+                            style="width: 100%; display: block; cursor: zoom-in; transition: opacity 0.2s;"
+                            onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                    </a>
+                    <figcaption style="padding: 20px; border-top: 1px solid var(--border);">
+                        <strong style="color: var(--text); font-size: 17px;">🛠 Воркфлоу в n8n</strong>
+                        <p style="color: var(--muted); margin: 10px 0 0; font-size: 15px; line-height: 1.6;">
+                            Полная цепочка: Telegram-триггер → классификатор тем → Supabase Vector Store →
+                            GigaChat-агент → логирование в NocoDB.
+                            <span style="color: var(--accent);">Active 🔘</span> — работает 24/7.
+                        </p>
+                    </figcaption>
+                </figure>
+
+                <!-- Скрин 2: Диалог -->
+                <figure style="margin: 0; background: var(--border); border-radius: 12px; overflow: hidden;">
+                    <a href="../images/telegram-demo.jpg" target="_blank">
+                        <img src="../images/telegram-demo.jpg" alt="Диалог с ИИ-ассистентом в Telegram" loading="lazy"
+                            style="width: 100%; display: block; cursor: zoom-in; transition: opacity 0.2s;"
+                            onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                    </a>
+                    <figcaption style="padding: 20px; border-top: 1px solid var(--border);">
+                        <strong style="color: var(--text); font-size: 17px;">💬 Диалог с ИИ-ассистентом</strong>
+                        <p style="color: var(--muted); margin: 10px 0 0; font-size: 15px; line-height: 1.6;">
+                            Бот отвечает на вопросы по базе знаний, указывает <strong>источник в конце ответа</strong> и
+                            корректно обрабатывает вопросы вне темы («В базе нет данных»).
+                        </p>
+                    </figcaption>
+                </figure>
+
+                <!-- Скрин 3: Supabase -->
+                <figure style="margin: 0; background: var(--border); border-radius: 12px; overflow: hidden;">
+                    <a href="../images/supabase-table.jpg" target="_blank">
+                        <img src="../images/supabase-table.jpg" alt="Таблица documents в Supabase" loading="lazy"
+                            style="width: 100%; display: block; cursor: zoom-in; transition: opacity 0.2s;"
+                            onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                    </a>
+                    <figcaption style="padding: 20px; border-top: 1px solid var(--border);">
+                        <strong style="color: var(--text); font-size: 17px;">🗄 База знаний в Supabase</strong>
+                        <p style="color: var(--muted); margin: 10px 0 0; font-size: 15px; line-height: 1.6;">
+                            10 чанков по 5 темам:
+                            <code
+                                style="background: rgba(0,212,255,0.1); padding: 2px 6px; border-radius: 4px;">automation</code>,
+                            <code
+                                style="background: rgba(0,255,136,0.1); padding: 2px 6px; border-radius: 4px;">project</code>,
+                            <code
+                                style="background: rgba(255,215,0,0.1); padding: 2px 6px; border-radius: 4px;">consultation</code>,
+                            <code
+                                style="background: rgba(255,107,107,0.1); padding: 2px 6px; border-radius: 4px;">sales</code>,
+                            <code
+                                style="background: rgba(192,132,252,0.1); padding: 2px 6px; border-radius: 4px;">faq</code>.
+                            Векторные эмбеддинги (384 dim) + метаданные для фильтрации.
+                        </p>
+                    </figcaption>
+                </figure>
+
+                <!-- Скрин 4: NocoDB Logs -->
+                <figure style="margin: 0; background: var(--border); border-radius: 12px; overflow: hidden;">
+                    <a href="../images/rag-logs.jpg" target="_blank">
+                        <img src="../images/rag-logs.jpg" alt="Логирование в NocoDB" loading="lazy"
+                            style="width: 100%; display: block; cursor: zoom-in; transition: opacity 0.2s;"
+                            onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                    </a>
+                    <figcaption style="padding: 20px; border-top: 1px solid var(--border);">
+                        <strong style="color: var(--text); font-size: 17px;">📊 Аналитика в NocoDB</strong>
+                        <p style="color: var(--muted); margin: 10px 0 0; font-size: 15px; line-height: 1.6;">
+                            Таблица <code
+                                style="background: rgba(0,212,255,0.1); padding: 2px 6px; border-radius: 4px;">rag_logs</code>:
+                            вопрос, определённая тема, ответ ИИ, источники, latency (мс), статус (<code>success</code> /
+                            <code>no_data</code> / <code>error</code>).
+                            Полная прозрачность и отладка.
+                        </p>
+                    </figcaption>
+                </figure>
+
+            </div>
+
+            <p style="color: var(--muted); font-size: 13px; margin-top: 16px; text-align: center;">
+                💡 Кликните на изображение, чтобы открыть в полном размере
+            </p>
         </section>
         <!-- 🤖 Попробовать в действии -->
         <section class="section">
