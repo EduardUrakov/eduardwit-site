@@ -224,12 +224,72 @@
                 → Supabase + pgvector (upsert)
                 → n8n (retrieval) → GigaChat → Ответ + источник
             </div>
-            <img src="../images/wf-prod.jpg" max-width="900px" height="400px" loading="lazy" />
+            <img src="../images/wf-prod1.jpg" max-width="900px" height="400px" loading="lazy" />
             <p><strong>Инфраструктура:</strong> VPS 7 ГБ RAM, Docker + Dokploy, домен supabase.eduardwit.ru с авто-SSL,
                 пересозданные JWT-ключи.</p>
-
+        </section>
+        <!-- 🤖 Попробовать в действии -->
+        <section class="section">
+            <h2>🤖 Попробовать в действии</h2>
+            <p>Напишите ИИ-ассистенту в Telegram — он ответит на вопросы по базе знаний, укажет источник и не будет
+                «галлюцинировать».</p>
+            <div
+                style="background: rgba(0,212,255,0.05); border: 1px solid rgba(0,212,255,0.2); border-radius: 12px; padding: 24px; margin: 20px 0;">
+                <p style="margin-bottom: 16px; color: var(--text);"><strong>Примеры вопросов, которые стоит
+                        задать:</strong></p>
+                <ul style="margin-left: 24px; margin-bottom: 20px;">
+                    <li>💰 «Сколько стоит Telegram-бот с AI-классификацией?»</li>
+                    <li>🌐 «Какая цена лендинга под ключ?»</li>
+                    <li>🎓 «Проводите ли обучение по n8n?»</li>
+                    <li>🎁 «Какие есть скидки?»</li>
+                    <li>📞 «Как с вами связаться?»</li>
+                </ul>
+                <a href="https://t.me/EduardWIT_assistent_bot" target="_blank"
+                    style="display: inline-block; padding: 14px 32px; background: var(--accent); color: #0a0a0a; border-radius: 8px; font-weight: 600; text-decoration: none; transition: all 0.2s;">
+                    ✈️ Открыть @EduardWIT_assistent_bot
+                </a>
+            </div>
         </section>
 
+        <!-- 🗂 Тематическая маршрутизация -->
+        <section class="section">
+            <h2>🗂 5 тематических маршрутов</h2>
+            <p>База знаний разделена на 5 изолированных разделов. Классификатор определяет тему по ключевым словам и
+                фильтрует поиск в Supabase через <code>metadata-&gt;&gt;'topic'</code>:</p>
+            <div class="data-grid"
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin: 20px 0;">
+                <div
+                    style="background: var(--border); border-radius: 8px; padding: 16px; border-left: 3px solid #00d4ff;">
+                    <h4 style="color: var(--text); margin-bottom: 8px;">🤖 automation</h4>
+                    <p style="color: var(--muted); margin: 0; font-size: 14px;">n8n, RAG-системы, Telegram-боты,
+                        AI-классификация, интеграции с API</p>
+                </div>
+                <div
+                    style="background: var(--border); border-radius: 8px; padding: 16px; border-left: 3px solid #00ff88;">
+                    <h4 style="color: var(--text); margin-bottom: 8px;">🌐 project</h4>
+                    <p style="color: var(--muted); margin: 0; font-size: 14px;">Вёрстка, лендинги, многостраничные
+                        сайты, React/Angular, поддержка legacy</p>
+                </div>
+                <div
+                    style="background: var(--border); border-radius: 8px; padding: 16px; border-left: 3px solid #ffd700;">
+                    <h4 style="color: var(--text); margin-bottom: 8px;">💡 consultation</h4>
+                    <p style="color: var(--muted); margin: 0; font-size: 14px;">Технический аудит, консультации,
+                        архитектурные сессии, обучение, менторство</p>
+                </div>
+                <div
+                    style="background: var(--border); border-radius: 8px; padding: 16px; border-left: 3px solid #ff6b6b;">
+                    <h4 style="color: var(--text); margin-bottom: 8px;">💰 sales</h4>
+                    <p style="color: var(--muted); margin: 0; font-size: 14px;">Цены, скидки, условия оплаты, договор,
+                        гарантии, SLA, интеллектуальная собственность</p>
+                </div>
+                <div
+                    style="background: var(--border); border-radius: 8px; padding: 16px; border-left: 3px solid #c084fc;">
+                    <h4 style="color: var(--text); margin-bottom: 8px;">❓ faq</h4>
+                    <p style="color: var(--muted); margin: 0; font-size: 14px;">Общие вопросы: контакты, договор,
+                        технологии, Tilda/Glide, иностранные заказчики</p>
+                </div>
+            </div>
+        </section>
         <!-- Метрики -->
         <section class="section">
             <h2>📊 Результат</h2>
@@ -255,7 +315,64 @@
                 При стоимости часа менеджера 800 ₽ экономия только на поиске = ~32 000 ₽/мес на команду из 7 человек.
             </p>
         </section>
+        <!-- 🛡 Production-ready фичи -->
+        <section class="section">
+            <h2>🛡 Production-ready фичи</h2>
+            <p>То, что отличает демо от реальной системы, готовой к нагрузке и сбоям:</p>
+            <div class="data-grid">
+                <div class="data-card">
+                    <h4>🎯 Тематическая маршрутизация</h4>
+                    <p style="color:var(--muted);margin:0">Классификатор определяет тему вопроса
+                        (<code>automation</code>, <code>project</code>, <code>consultation</code>, <code>sales</code>,
+                        <code>faq</code>) и фильтрует поиск в Supabase через <code>metadata-&gt;&gt;'topic'</code>.
+                    </p>
+                </div>
+                <div class="data-card">
+                    <h4>📊 Логирование в NocoDB</h4>
+                    <p style="color:var(--muted);margin:0">Таблица <code>rag_logs</code>: вопрос, определённая тема,
+                        ответ ИИ, источники, latency, статус (<code>success</code> / <code>no_data</code> /
+                        <code>error</code>). Полная аналитика и отладка.
+                    </p>
+                </div>
+                <div class="data-card">
+                    <h4>🔄 Retry + Fallback</h4>
+                    <p style="color:var(--muted);margin:0">GigaChat перезапрашивается до 2 раз с задержкой 3 сек при
+                        timeout. При полном падении — fallback-ответ «Техническая заминка, передаю специалисту».</p>
+                </div>
+                <div class="data-card">
+                    <h4>🔐 Self-hosted инфраструктура</h4>
+                    <p style="color:var(--muted);margin:0">Supabase + n8n + NocoDB в Dokploy. Данные заказчика не
+                        покидают периметр, все API-ключи и JWT под полным контролем.</p>
+                </div>
+            </div>
+        </section>
 
+        <!-- 📈 Production-метрики -->
+        <section class="section">
+            <h2>📈 Production-метрики (из реальных логов)</h2>
+            <div class="metrics">
+                <div class="metric">
+                    <div class="value">~2.1 сек</div>
+                    <div class="label">End-to-end latency</div>
+                </div>
+                <div class="metric">
+                    <div class="value">85%</div>
+                    <div class="label">Релевантность top-3</div>
+                </div>
+                <div class="metric">
+                    <div class="value">100%</div>
+                    <div class="label">Ответов с источником</div>
+                </div>
+                <div class="metric">
+                    <div class="value">0%</div>
+                    <div class="label">Галлюцинаций</div>
+                </div>
+            </div>
+            <p style="color:var(--muted); font-size: 14px; margin-top: 16px;">
+                Жёсткий системный промпт («отвечай строго по контексту, указывай источник») + порог схожести
+                <code>minScore: 0.5</code> полностью исключают выдуманные факты.
+            </p>
+        </section>
         <!-- Почему это ценно -->
         <section class="section">
             <h2>💡 Ценность для бизнеса</h2>
