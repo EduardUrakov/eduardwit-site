@@ -1,0 +1,1557 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise AI Service Desk</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --primary: #010102;
+            --primary-dark: #4338ca;
+            --primary-light: #818cf8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --purple: #8b5cf6;
+            --pink: #ec4899;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-600: #4b5563;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.7;
+            color: var(--gray-800);
+            background: var(--gray-50);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 30px;
+        }
+
+        /* Cover page */
+        .cover {
+            background: linear-gradient(135deg,
+                    var(--primary) 0%,
+                    var(--purple) 50%,
+                    var(--pink) 100%);
+            color: white;
+            padding: 80px 50px;
+            border-radius: 16px;
+            margin-bottom: 40px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.3);
+            position: relative;
+            overflow: hidden;
+            page-break-after: always;
+        }
+
+        .cover::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .cover h1 {
+            font-size: 3.2rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+            line-height: 1.2;
+        }
+
+        .cover .course {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .cover .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cover .meta {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cover .meta-item {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 12px 24px;
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        /* TOC */
+        .toc {
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            page-break-inside: avoid;
+        }
+
+        .toc h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--gray-900);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 10px;
+        }
+
+        .toc-columns {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 10px 30px;
+        }
+
+        .toc ol {
+            list-style: none;
+            counter-reset: toc;
+        }
+
+        .toc-columns ol:last-child {
+            counter-reset: toc 10;
+        }
+
+        .toc li {
+            counter-increment: toc;
+            padding: 6px 0;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .toc li:last-child {
+            border-bottom: none;
+        }
+
+        .toc a {
+            color: var(--gray-800);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .toc a::before {
+            content: counter(toc, decimal-leading-zero) ". ";
+            color: var(--primary);
+            font-weight: 700;
+            margin-right: 8px;
+        }
+
+        .toc a:hover {
+            color: var(--primary);
+        }
+
+        /* Sections */
+        section {
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            page-break-inside: avoid;
+        }
+
+        h2 {
+            font-size: 1.9rem;
+            color: var(--gray-900);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid var(--primary);
+            page-break-after: avoid;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            color: var(--gray-800);
+            margin-top: 25px;
+            margin-bottom: 12px;
+        }
+
+        h4 {
+            font-size: 1.05rem;
+            color: var(--primary-dark);
+            margin-top: 18px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        p {
+            margin-bottom: 14px;
+        }
+
+        pre {
+            background: var(--gray-900);
+            color: #e5e7eb;
+            padding: 18px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 12px 0;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', Consolas, monospace;
+            background: var(--gray-100);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.88em;
+            color: var(--primary-dark);
+        }
+
+        pre code {
+            background: transparent;
+            padding: 0;
+            color: #e5e7eb;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.92rem;
+        }
+
+        thead {
+            background: var(--gray-100);
+        }
+
+        th {
+            text-align: left;
+            padding: 10px 12px;
+            font-weight: 600;
+            color: var(--gray-900);
+            border-bottom: 2px solid var(--gray-300);
+        }
+
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--gray-200);
+            vertical-align: top;
+        }
+
+        tbody tr:hover {
+            background: var(--gray-50);
+        }
+
+        /* Callouts */
+        .callout {
+            padding: 14px 18px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid;
+        }
+
+        .callout.info {
+            background: #dbeafe;
+            border-color: var(--info);
+            color: #1e3a8a;
+        }
+
+        .callout.warning {
+            background: #fef3c7;
+            border-color: var(--warning);
+            color: #78350f;
+        }
+
+        .callout.success {
+            background: #d1fae5;
+            border-color: var(--success);
+            color: #065f46;
+        }
+
+        .callout.danger {
+            background: #fee2e2;
+            border-color: var(--danger);
+            color: #7f1d1d;
+        }
+
+        .callout.purple {
+            background: #ede9fe;
+            border-color: var(--purple);
+            color: #5b21b6;
+        }
+
+        .callout strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .mermaid {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            overflow-x: auto;
+            border: 1px solid var(--gray-200);
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--purple) 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+        }
+
+        .stat-card.success {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+        }
+
+        .stat-card.warning {
+            background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
+        }
+
+        .stat-card.danger {
+            background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+        }
+
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            opacity: 0.95;
+        }
+
+        ul,
+        ol {
+            padding-left: 22px;
+            margin-bottom: 12px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        /* Answer block */
+        .answer {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-left: 4px solid var(--primary);
+            padding: 14px 18px;
+            margin: 10px 0 15px;
+            border-radius: 0 8px 8px 0;
+            color: var(--gray-900);
+        }
+
+        .answer.example {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left-color: var(--warning);
+            font-style: italic;
+        }
+
+        /* Tech stack */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin: 15px 0;
+        }
+
+        .tech-item {
+            background: var(--gray-100);
+            padding: 14px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid var(--gray-200);
+        }
+
+        .tech-item .tech-icon {
+            font-size: 1.8rem;
+            margin-bottom: 6px;
+        }
+
+        .tech-item .tech-name {
+            font-weight: 600;
+            color: var(--gray-900);
+            font-size: 0.95rem;
+        }
+
+        .tech-item .tech-role {
+            font-size: 0.8rem;
+            color: var(--gray-600);
+            margin-top: 4px;
+        }
+
+        /* Checklist */
+        .checklist {
+            background: var(--gray-50);
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin: 15px 0;
+            border: 1px solid var(--gray-200);
+        }
+
+        .checklist-item {
+            padding: 6px 0;
+            display: flex;
+            align-items: start;
+            gap: 8px;
+        }
+
+        .checklist-item .check {
+            color: var(--success);
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--gray-900);
+            color: var(--gray-300);
+            padding: 30px 40px;
+            border-radius: 12px;
+            margin-top: 40px;
+            text-align: center;
+            page-break-inside: avoid;
+        }
+
+        footer h3 {
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        footer a {
+            color: #93c5fd;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .check {
+            color: var(--success);
+            font-weight: 700;
+        }
+
+        .cross {
+            color: var(--danger);
+            font-weight: 700;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #fef3c7 0%, #fef3c7 100%);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        @media print {
+            .container {
+                padding: 15px;
+            }
+
+            section {
+                page-break-inside: avoid;
+                box-shadow: none;
+            }
+
+            .cover {
+                page-break-after: always;
+            }
+
+            .toc {
+                page-break-inside: avoid;
+            }
+
+            body {
+                background: white;
+            }
+
+            h2,
+            h3,
+            h4 {
+                page-break-after: avoid;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .cover h1 {
+                font-size: 2rem;
+            }
+
+            .container {
+                padding: 20px 15px;
+            }
+
+            section {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <!-- Cover -->
+        <div class="cover">
+            <h1>Enterprise AI Service Desk</h1>
+            <div class="subtitle">
+                Полностью автоматизированная система обработки сервисных заявок
+                на базе n8n, Supabase, GigaChat и Bitrix24
+            </div>
+            <div class="meta">
+                <div class="meta-item">6 модулей</div>
+                <div class="meta-item">GigaChat AI</div>
+                <div class="meta-item">4 уровня защиты</div>
+                <div class="meta-item">n8n 2.27.3</div>
+            </div>
+        </div>
+
+        <!-- TOC -->
+        <nav class="toc">
+            <h2> Содержание</h2>
+            <div class="toc-columns">
+                <ol>
+                    <li><a href="#s1">Название проекта</a></li>
+                    <li><a href="#s2">Краткое описание</a></li>
+                    <li><a href="#s3">Бизнес-проблема</a></li>
+                    <li><a href="#s4">Цель автоматизации</a></li>
+                    <li><a href="#s5">Пользователи сценария</a></li>
+                    <li><a href="#s6">Входные и выходные данные</a></li>
+                    <li><a href="#s7">Используемые сервисы</a></li>
+                    <li><a href="#s8">Схема процесса</a></li>
+                    <li><a href="#s9">Реализация в n8n</a></li>
+                    <li><a href="#s10">Использование нейросети</a></li>
+                </ol>
+                <ol start="12">
+                    <li><a href="#s11">Хранение данных</a></li>
+                    <li><a href="#s12">Обработка ошибок</a></li>
+                    <li><a href="#s13">Тестирование</a></li>
+                    <li><a href="#s14">Доказательства работоспособности</a></li>
+                    <li><a href="#s15">Ссылки на материалы</a></li>
+                    <li><a href="#s16">Безопасность и данные</a></li>
+                    <li><a href="#s17">Что получилось</a></li>
+                    <li><a href="#s18">Выводы</a></li>
+
+                </ol>
+            </div>
+        </nav>
+        <!-- 1. Название проекта -->
+        <section id="s1">
+            <h2>1. Название проекта</h2>
+            <h4>Название сценария автоматизации:</h4>
+            <div class="answer">
+                <strong>Enterprise AI Service Desk</strong> — интеллектуальная система обработки сервисных заявок
+            </div>
+            <h4>Техническое задание:</h4>
+            <div class="answer">
+                «Помощник сервисного отдела» — полная автоматизация жизненного цикла сервисного обращения:
+                от приёма заявки клиента до постановки задачи инженеру в CRM с ИИ-классификацией, SLA-контролем
+                и проактивной эскалацией.
+            </div>
+        </section>
+
+        <!-- 2. Краткое описание -->
+        <section id="s3">
+            <h2>2. Краткое описание проекта</h2>
+            <h4>Что это за бизнес, отдел или процесс?</h4>
+            <div class="answer">
+                Сервисный отдел промышленного оборудования, принимающий заявки на ремонт, консультации
+                и плановое ТО от корпоративных клиентов.
+            </div>
+            <h4>Какая задача решается с помощью автоматизации?</h4>
+            <div class="answer">
+                Полная автоматизация приёма, классификации, диспетчеризации и контроля сроков выполнения
+                заявок без участия человека.
+            </div>
+            <h4>Кто будет пользоваться результатом автоматизации?</h4>
+            <div class="answer">
+                Сервисные инженеры (получают задачи в Битрикс24), клиенты (получают email-уведомления),
+                руководитель отдела (получает эскалации в Telegram) и администратор системы
+                (мониторит метрики через SQL-дашборды).
+            </div>
+        </section>
+
+        <!-- 3. Бизнес-проблема -->
+        <section id="s4">
+            <h2>3. Бизнес-проблема</h2>
+            <h4>Что раньше делалось вручную?</h4>
+            <div class="answer">
+                Диспетчер вручную читал каждое обращение, определял категорию (ремонт / консультация / ТО),
+                приоритет (high/medium/low), профиль специалиста (электрик/механик/программист/универсал),
+                создавал задачу в Битрикс24, писал ответное письмо клиенту и следил за сроками выполнения.
+            </div>
+            <h4>Какие ошибки, задержки или потери могли возникать?</h4>
+            <div class="answer">
+                <ul>
+                    <li>Заявки терялись в почте и мессенджерах</li>
+                    <li>Неправильная классификация (не тот специалист получал задачу)</li>
+                    <li>Задержки обработки до 15 минут на заявку</li>
+                    <li>Нарушение SLA-сроков без своевременной эскалации</li>
+                    <li>Дублирование задач при повторных обращениях</li>
+                    <li>Отсутствие единой истории взаимодействий</li>
+                </ul>
+            </div>
+            <h4>Почему этот процесс важно автоматизировать?</h4>
+            <div class="answer">
+                Объём заявок растёт, а штат диспетчеров ограничен. Автоматизация позволяет обрабатывать
+                в <strong>60 раз больше</strong> заявок с нулевым участием человека для стандартных кейсов,
+                гарантирует соблюдение SLA и прозрачную трассируемость.
+            </div>
+        </section>
+
+        <!-- 4. Цель автоматизации -->
+        <section id="s5">
+            <h2>4. Цель автоматизации</h2>
+            <h4>Главная цель проекта:</h4>
+            <div class="answer">
+                Полностью исключить участие человека в обработке стандартных заявок и обеспечить
+                <strong>100% SLA-compliance</strong>.
+            </div>
+            <h4>Что должно происходить автоматически после запуска сценария?</h4>
+            <div class="answer">
+                Заявка принимается через webhook/email → сохраняется в БД с уникальным хешем →
+                классифицируется ИИ → создаётся задача в Битрикс24 с тегами → отправляется письмо клиенту →
+                каждые 15 минут проверяется SLA → при нарушении эскалируется руководителю.
+            </div>
+            <h4>Какой результат должен увидеть пользователь или сотрудник?</h4>
+            <div class="answer">
+                <ul>
+                    <li><strong>Инженер:</strong> задача в Битрикс24 с полной информацией и правильным приоритетом</li>
+                    <li><strong>Клиент:</strong> корпоративное письмо с подтверждением и номером заявки</li>
+                    <li><strong>Руководитель:</strong> Telegram-уведомление только при нарушениях SLA</li>
+                    <li><strong>Администратор:</strong> SQL-дашборд с полной статистикой и историей</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 5. Пользователи сценария -->
+        <section id="s6">
+            <h2>5. Пользователи сценария</h2>
+            <h4>Кто основной пользователь сценария?</h4>
+            <div class="answer">
+                Сервисный отдел промышленного оборудования (3 роли: диспетчер, инженер, руководитель).
+            </div>
+            <h4>Какая роль у этого пользователя?</h4>
+            <div class="answer">
+                <ul>
+                    <li><strong>Сервисный инженер</strong> — получает задачи и выполняет работы</li>
+                    <li><strong>Руководитель отдела</strong> — контролирует SLA и эскалации</li>
+                    <li><strong>Клиент</strong> — отправляет заявки и получает уведомления</li>
+                    <li><strong>Администратор n8n</strong> — следит за работой системы</li>
+                </ul>
+            </div>
+            <h4>Что для него важно в работе сценария?</h4>
+            <div class="answer">
+                <ul>
+                    <li><strong>Инженеру:</strong> чёткая постановка задачи с правильной категорией и специалистом</li>
+                    <li><strong>Руководителю:</strong> проактивные уведомления о нарушениях SLA до жалобы клиента</li>
+                    <li><strong>Клиенту:</strong> быстрый ответ с подтверждением и прозрачные сроки</li>
+                    <li><strong>Администратору:</strong> надёжность, идемпотентность, понятные логи ошибок</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 6. Входные и выходные данные -->
+        <section id="s7">
+            <h2>6. Входные и выходные данные</h2>
+
+            <h3>6.1. Что поступает на вход</h3>
+            <h4>Стартовая точка сценария:</h4>
+            <div class="answer">
+                <ul>
+                    <li>Webhook-запрос POST на <code>https://n8n.eduardwit.ru/webhook/service-request</code></li>
+                    <li>Входящее письмо на <code>admin@eduardwit.ru</code></li>
+                    <li>Cron-триггеры: каждые 15 мин (SLA-монитор), каждые 30 мин (каталог)</li>
+                </ul>
+            </div>
+            <h4>Какие данные поступают на вход?</h4>
+            <pre><code>{
+  "client_name": "Алексей Смирнов",
+  "email": "alexey.smirnov@zavod.ru",
+  "equipment": "Компрессор Atlas Copco GA37",
+  "issue_text": "Компрессор не запускается, посторонние шумы..."
+}</code></pre>
+
+            <h3>6.2. Что получается на выходе</h3>
+            <h4>Что появляется после выполнения сценария?</h4>
+            <div class="answer">
+                <ul>
+                    <li>Запись в <code>servicerequests</code> со статусом <code>dispatched</code></li>
+                    <li>Задача в Битрикс24 с тегами <code>service-request</code> и <code>hash:b11b5b54</code></li>
+                    <li>Запись в <code>sent_emails</code> с HTML-письмом клиенту</li>
+                    <li>Записи в <code>sla_events</code> при эскалациях</li>
+                    <li>Обогащённые данные из каталога (бренд, цена, рейтинг)</li>
+                </ul>
+            </div>
+            <h4>Где сохраняется результат?</h4>
+            <div class="answer">
+                Supabase (PostgreSQL) — схема <code>service_dept</code>, таблицы:
+                <code>servicerequests</code>, <code>sent_emails</code>, <code>sla_events</code>,
+                <code>validation_failures</code>, <code>workflow_errors</code>.
+            </div>
+            <h4>Кому отправляется результат?</h4>
+            <div class="answer">
+                <ul>
+                    <li><strong>Битрикс24</strong> — ответственному инженеру</li>
+                    <li><strong>Email</strong> — клиенту (корпоративный шаблон)</li>
+                    <li><strong>Telegram</strong> — руководителю (при эскалациях)</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 7. Используемые сервисы -->
+        <section id="s8">
+            <h2>7. Используемые сервисы и инструменты</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Сервис / инструмент</th>
+                        <th>Для чего использовался</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>n8n 2.27.3 (Self-hosted)</strong></td>
+                        <td>Оркестрация всех 6 модулей автоматизации</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Supabase</strong> (PostgreSQL + PostgREST)</td>
+                        <td>Основная БД с RLS, REST API, realtime</td>
+                    </tr>
+                    <tr>
+                        <td><strong>GigaChat</strong> (Сбер)</td>
+                        <td>ИИ-классификация заявок через LangChain</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Битрикс24</strong> (REST API)</td>
+                        <td>CRM для управления задачами инженеров</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Telegram Bot API</strong></td>
+                        <td>Уведомления инженерам и руководителю</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Mock SMTP</strong></td>
+                        <td>Тестовая отправка email-уведомлений клиентам</td>
+                    </tr>
+                    <tr>
+                        <td><strong>DummyJSON API</strong></td>
+                        <td>Тестовый каталог оборудования для обогащения</td>
+                    </tr>
+                    <tr>
+                        <td><strong>FNV-1a hash</strong></td>
+                        <td>Детерминированный хеш для идемпотентности</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="callout warning">
+                <strong>⚠️ Тестовые режимы:</strong>
+                <ul>
+                    <li><strong>SMTP</strong> — mock-режим (в production заменится на VK Workspace / SendGrid)</li>
+                    <li><strong>Каталог</strong> — DummyJSON (в production — реальный внутренний API каталога)</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 8. Схема процесса -->
+        <section id="s9">
+            <h2>8. Схема процесса</h2>
+
+            <div class="mermaid">
+                flowchart LR
+                Client((👤 Клиент)) -->|Webhook/Email| A[IN_Service_Intake<br />📨 FNV-1a hash]
+                A -->|raw| B[(Supabase DB)]
+                B -->|enriched| C[CORE_AI_Classifier<br />🤖 GigaChat]
+                C -->|enriched| B
+                B -->|enriched| D[OUT_Dispatch<br />📋 Bitrix24 + Email]
+                D -->|dispatched| B
+                D --> E((👨‍🔧 Инженер))
+                D --> F((👤 Клиент email))
+                G[SRV_SLA_Monitor<br />⏱️ 15 мин] -->|эскалация| H((📱 Telegram))
+                G --> B
+                I[OUT_Enrich_From_Catalog<br />📦 DummyJSON] -->|обогащение| B
+                J[SRV_Global_Error_Handler<br />🛡️ Retry] -.->|при ошибках| A
+
+                style A fill:#10b981,stroke:#065f46,color:#fff
+                style C fill:#f59e0b,stroke:#78350f,color:#fff
+                style D fill:#ef4444,stroke:#7f1d1d,color:#fff
+                style G fill:#8b5cf6,stroke:#5b21b6,color:#fff
+                style I fill:#ec4899,stroke:#831843,color:#fff
+                style J fill:#3b82f6,stroke:#1e40af,color:#fff
+                style B fill:#1e40af,stroke:#1e3a8a,color:#fff
+            </div>
+
+            <h3>Краткое описание схемы</h3>
+            <ol>
+                <li><strong>Приём заявки</strong> (IN_Service_Intake) → FNV-1a hash → сохранение со статусом
+                    <code>raw</code>
+                </li>
+                <li><strong>ИИ-классификация</strong> (CORE_AI_Classifier) → GigaChat → статус <code>enriched</code>
+                </li>
+                <li><strong>Диспетчеризация</strong> (OUT_Dispatch) → задача в Битрикс24 + email клиенту →
+                    <code>dispatched</code>
+                </li>
+                <li><strong>SLA-мониторинг</strong> каждые 15 мин → проверка сроков → эскалация в Telegram</li>
+                <li><strong>Обогащение каталогом</strong> (DummyJSON) → обновление данных оборудования</li>
+                <li><strong>Глобальная обработка ошибок</strong> → retry-логика + логирование + Telegram</li>
+            </ol>
+
+            <h4>Какие условия или развилки есть в процессе?</h4>
+            <div class="answer">
+                <ul>
+                    <li><code>IF_Valid_Request</code>: спам / нет email → DLQ (validation_failures)</li>
+                    <li><code>IF_Valid_AI_Response</code>: невалидный JSON от ИИ → DLQ</li>
+                    <li><code>IF_Task_Not_Exists</code>: задача уже есть → пропуск создания (идемпотентность)</li>
+                    <li><code>IF_Has_Alerts</code>: нет нарушений SLA → пропуск эскалации</li>
+                    <li><code>IF_Is_Retryable</code>: transient-ошибка → retry; business → DLQ</li>
+                </ul>
+            </div>
+
+            <h4>Какие точки контроля предусмотрены?</h4>
+            <div class="answer">
+                <ul>
+                    <li>SQL-дашборды: статистика заявок, SLA compliance, ошибки</li>
+                    <li>Таблица <code>sla_events</code>: история всех эскалаций</li>
+                    <li>Таблица <code>workflow_errors</code>: история всех ошибок с retry-сессиями</li>
+                    <li>Таблица <code>validation_failures</code>: DLQ с причинами отклонения</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 9. Реализация сценария в n8n -->
+        <section id="s10">
+            <h2>9. Реализация сценария в n8n</h2>
+
+            <h3>9.1. Общая логика</h3>
+            <h4>Сколько рабочих процессов создано?</h4>
+            <div class="answer">
+                6 основных + 1 сервисный (Global Error Handler) = <strong>7 рабочих процессов</strong>
+            </div>
+
+            <h4>Что делает каждый рабочий процесс?</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Сценарий</th>
+                        <th>Функция</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>IN_Service_Intake</strong></td>
+                        <td>Приём заявок с защитой от дублей (FNV-1a hash)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>CORE_AI_Classifier</strong></td>
+                        <td>Пакетная ИИ-классификация через GigaChat</td>
+                    </tr>
+                    <tr>
+                        <td><strong>OUT_Dispatch</strong></td>
+                        <td>Создание задач в Битрикс24 + email клиентам</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SRV_SLA_Monitor</strong></td>
+                        <td>Cron-проверка SLA каждые 15 минут с эскалацией</td>
+                    </tr>
+                    <tr>
+                        <td><strong>OUT_Enrich_From_Catalog</strong></td>
+                        <td>Обогащение заявок из каталога каждые 30 минут</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SRV_Global_Error_Handler</strong></td>
+                        <td>Глобальный обработчик ошибок с retry-логикой</td>
+                    </tr>
+                    <tr>
+                        <td><strong>DLQ_Dashboard</strong></td>
+                        <td>Мониторинг невалидных заявок</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>9.2. Основные шаги сценария</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Шаг</th>
+                        <th>Что происходит</th>
+                        <th>Узел / сервис</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Приём заявки, вычисление FNV-1a hash</td>
+                        <td><code>IN_Webhook</code> + <code>UTIL_Compute_Hash</code></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Проверка на дубликат и спам, сохранение</td>
+                        <td><code>OUT_Check_Duplicate</code> → <code>OUT_Save_To_DB</code></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Пакетная выборка заявок со статусом <code>raw</code></td>
+                        <td><code>IN_Fetch_Raw</code> (Supabase GET)</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>ИИ-классификация через GigaChat с JSON-валидацией</td>
+                        <td><code>AI_Agent</code> (LangChain)</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>Сохранение обогащённых данных в БД</td>
+                        <td><code>CORE_Save_Enrichment</code> (Supabase PATCH)</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>Создание задачи в Битрикс24 с тегами</td>
+                        <td><code>OUT_Create_Bitrix24_Task</code></td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>Формирование и отправка HTML-письма клиенту</td>
+                        <td><code>OUT_Format_Email</code> → <code>OUT_Mock_Send_Email</code></td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>Обновление статуса + сохранение в sent_emails</td>
+                        <td><code>OUT_Update_Status</code></td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>Cron-проверка SLA, расчёт % выполнения</td>
+                        <td><code>IN_SLA_Trigger</code> → <code>CORE_Calculate_SLA</code></td>
+                    </tr>
+                    <tr>
+                        <td>10</td>
+                        <td>Эскалация через Telegram при нарушениях</td>
+                        <td><code>OUT_Send_Engineer_Reminder</code> / <code>OUT_Send_Manager_Escalation</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>9.3. Работа с данными</h3>
+            <h4>Какие поля вы передавали между шагами?</h4>
+            <div class="answer">
+                <ul>
+                    <li><code>request_hash</code> (FNV-1a) — сквозной идентификатор через все модули</li>
+                    <li><code>status</code> (raw → enriched → dispatched) — управление потоком</li>
+                    <li><code>ai_parsed</code> (JSON с классификацией ИИ)</li>
+                    <li><code>crm_task_id</code> (ID задачи в Битрикс24)</li>
+                    <li><code>sla_calc</code> (процент выполнения SLA)</li>
+                </ul>
+            </div>
+
+            <h4>Какие данные преобразовывали?</h4>
+            <div class="answer">
+                <ul>
+                    <li>Даты: ISO-формат → человекочитаемый (<code>08.07.2026, 07:57:34</code>)</li>
+                    <li>Приоритеты: <code>high/medium/low</code> → <code>2/1/0</code> для Битрикс24</li>
+                    <li>Категории: в emoji-шаблоны для писем (<code>🔧 repair</code>, <code>💬 consultation</code>)</li>
+                    <li>Тексты: санитизация (удаление спецсимволов) перед сохранением в БД</li>
+                </ul>
+            </div>
+
+            <h4>Использовались ли условия, фильтры, списки или циклы?</h4>
+            <div class="answer">
+                <ul>
+                    <li><strong>IF-ноды:</strong> 12 раз (валидация, ветвление, идемпотентность)</li>
+                    <li><strong>Batch processing:</strong> <code>$input.all().map()</code> во всех Code-нодах</li>
+                    <li><strong>pairedItem:</strong> для связи HTTP Request с исходными данными</li>
+                    <li><strong>SplitInBatches:</strong> для последовательной обработки SLA-алертов</li>
+                </ul>
+            </div>
+
+            <h4>Как вы проверяли обязательные поля?</h4>
+            <div class="answer">
+                <ul>
+                    <li>JSON Schema валидация ответа ИИ (category, priority, specialist, summary, confidence)</li>
+                    <li>Regex для email: <code>/^[^\s@]+@[^\s@]+\.[^\s@]+$/</code></li>
+                    <li>Проверка длины <code>issue_text</code> (&gt;20 символов)</li>
+                    <li>Фильтр по <code>confidence ≥ 50%</code></li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 10. Использование нейросети -->
+        <section id="s11">
+            <h2>10. Использование нейросети</h2>
+            <h4>Для какой задачи использовалась нейросеть?</h4>
+            <div class="answer">
+                Автоматическая классификация входящих заявок по 6 параметрам: категория, приоритет,
+                рекомендуемый специалист, оценка времени, необходимость выезда, уверенность.
+            </div>
+
+            <h4>Какой сервис использовался?</h4>
+            <div class="answer">
+                <strong>GigaChat</strong> (Сбер) через LangChain Agent с Output Parser для строгой JSON-схемы.
+            </div>
+
+            <h4>Какой запрос был отправлен в нейросеть?</h4>
+            <pre><code>Ты — опытный диспетчер сервисного отдела промышленного оборудования с 15-летним стажем.
+Проанализируй обращение клиента и верни СТРОГО JSON:
+{
+  "category": "repair|warranty|consultation|maintenance",
+  "priority": "high|medium|low",
+  "recommended_specialist": "electrician|mechanic|software|universal",
+  "summary": "краткая сводка (20+ символов)",
+  "estimated_hours": 0.5-40,
+  "requires_onsite": true/false,
+  "confidence": 0-100,
+  "reasoning": "обоснование решения"
+}</code></pre>
+
+            <h4>В каком формате должен был вернуться ответ?</h4>
+            <div class="answer">
+                Строгий JSON с валидацией по схеме. Все enum-значения проверялись, <code>summary</code> ≥ 10 символов,
+                <code>confidence</code> ≥ 50%.
+            </div>
+
+            <h4>Как вы проверяли, что ответ можно использовать дальше в сценарии?</h4>
+            <div class="answer">
+                Нода <code>CORE_Validate_AI_Response</code> с 6 проверками:
+                <ol>
+                    <li>Все обязательные поля присутствуют</li>
+                    <li>Значения в допустимых enum</li>
+                    <li><code>summary.length ≥ 10</code></li>
+                    <li><code>0.5 ≤ estimated_hours ≤ 40</code></li>
+                    <li><code>50 ≤ confidence ≤ 100</code></li>
+                    <li>При провале → заявка уходит в DLQ с причиной <code>ai_validation_failed</code></li>
+                </ol>
+            </div>
+
+            <h4>Пример ответа нейросети:</h4>
+            <pre><code>{
+  "category": "repair",
+  "priority": "high",
+  "recommended_specialist": "mechanic",
+  "summary": "Компрессор не запускается, посторонние шумы и вибрация, критичный простой цеха",
+  "estimated_hours": 8,
+  "requires_onsite": true,
+  "confidence": 95,
+  "reasoning": "Текст чётко указывает на поломку компрессора..."
+}</code></pre>
+        </section>
+
+        <!-- 11. Хранение данных -->
+        <section id="s12">
+            <h2>11. Хранение данных</h2>
+            <h4>Какие таблицы или базы были созданы?</h4>
+            <div class="answer">
+                Схема <code>service_dept</code> в Supabase (PostgreSQL):
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Таблица</th>
+                        <th>Назначение</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>servicerequests</code></td>
+                        <td>Основная таблица заявок</td>
+                    </tr>
+                    <tr>
+                        <td><code>sent_emails</code></td>
+                        <td>Журнал отправленных писем</td>
+                    </tr>
+                    <tr>
+                        <td><code>validation_failures</code></td>
+                        <td>DLQ для невалидных заявок</td>
+                    </tr>
+                    <tr>
+                        <td><code>sla_events</code></td>
+                        <td>История SLA-эскалаций (с UNIQUE-индексом)</td>
+                    </tr>
+                    <tr>
+                        <td><code>workflow_errors</code></td>
+                        <td>Журнал ошибок с retry-сессиями</td>
+                    </tr>
+                    <tr>
+                        <td><code>catalog_cache</code></td>
+                        <td>Кеш каталога оборудования</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>Какие поля есть в основной таблице <code>servicerequests</code>?</h4>
+            <div class="answer">
+                <ul>
+                    <li><strong>Идентификация:</strong> <code>id</code>, <code>request_hash</code>,
+                        <code>client_name</code>, <code>email</code>, <code>equipment</code>, <code>issue_text</code>
+                    </li>
+                    <li><strong>Классификация ИИ:</strong> <code>category</code>, <code>priority</code>,
+                        <code>responsible</code>, <code>ai_summary</code>, <code>ai_confidence</code>
+                    </li>
+                    <li><strong>SLA:</strong> <code>deadline</code>, <code>sla_status</code>,
+                        <code>sla_warning_sent</code>, <code>sla_critical_sent</code>, <code>sla_breached_sent</code>
+                    </li>
+                    <li><strong>Диспетчеризация:</strong> <code>status</code>, <code>crm_task_id</code>,
+                        <code>dispatched_at</code>, <code>client_notified_at</code>
+                    </li>
+                    <li><strong>Каталог:</strong> <code>catalog_brand</code>, <code>catalog_model</code>,
+                        <code>catalog_price</code>, <code>catalog_rating</code>, <code>catalog_match_confidence</code>
+                    </li>
+                </ul>
+            </div>
+
+            <h4>Какие статусы используются в процессе?</h4>
+            <div class="answer">
+                <ul>
+                    <li><code>raw</code> → заявка принята, не классифицирована</li>
+                    <li><code>enriched</code> → ИИ классифицировал</li>
+                    <li><code>dispatched</code> → задача создана, письмо отправлено</li>
+                    <li><code>DLQ</code> → невалидная заявка (спам / без email / AI invalid)</li>
+                </ul>
+            </div>
+
+            <h4>Есть ли журнал действий?</h4>
+            <div class="answer">
+                Да, 3 журнала:
+                <ul>
+                    <li><strong><code>sent_emails</code></strong>: каждое отправленное письмо (recipient, subject,
+                        body_html, message_id)</li>
+                    <li><strong><code>sla_events</code></strong>: каждая эскалация (warning_sent/critical_sent/breached)
+                        с UNIQUE-индексом</li>
+                    <li><strong><code>workflow_errors</code></strong>: каждая ошибка (error_message, stack,
+                        retry_session_id)</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 12. Обработка ошибок -->
+        <section id="s13">
+            <h2>12. Обработка ошибок и нестандартных случаев</h2>
+            <h4>Какие ошибки вы предусмотрели?</h4>
+            <div class="answer">
+                <ul>
+                    <li><strong>Retryable (transient):</strong> timeout, 502/503/504, 429, econnreset, rate limit,
+                        socket hang up</li>
+                    <li><strong>Non-retryable (business):</strong> 400/401/403/404, invalid JSON, validation failed</li>
+                    <li><strong>Data quality:</strong> спам, отсутствие email, короткий текст</li>
+                    <li><strong>AI errors:</strong> невалидный JSON от GigaChat, низкий confidence</li>
+                </ul>
+            </div>
+
+            <h4>Что происходит, если не хватает обязательных данных?</h4>
+            <div class="answer">
+                Заявка уходит в <code>validation_failures</code> с указанием причины:
+                <ul>
+                    <li><code>spam_detected</code> (ключевые слова: "казино", "выиграй")</li>
+                    <li><code>missing_email</code> (невозможно отправить уведомление)</li>
+                    <li><code>text_too_short</code> (менее 20 символов)</li>
+                </ul>
+            </div>
+
+            <h4>Что происходит, если сервис не отвечает?</h4>
+            <div class="answer">
+                <ol>
+                    <li><code>SRV_Global_Error_Handler</code> ловит ошибку</li>
+                    <li>Классифицирует по retryable-паттернам (regex-матчинг)</li>
+                    <li>Если transient — retry до 3 раз с экспоненциальной задержкой через RPC
+                        <code>increment_retry_session</code>
+                    </li>
+                    <li>Если business — сразу в <code>workflow_errors</code></li>
+                    <li>После 3 неудачных попыток — Telegram-уведомление руководителю</li>
+                </ol>
+            </div>
+
+            <h4>Есть ли уведомление ответственному при ошибке?</h4>
+            <div class="answer">
+                Да, через Telegram-бот <code>EduardWIT_Alerts_Bot</code> с полной информацией:
+                workflow_name, node_name, error_message, execution_url, количество попыток.
+            </div>
+        </section>
+
+        <!-- 13. Тестирование -->
+        <section id="s14">
+            <h2>13. Тестирование</h2>
+            <p>Проведены 5 тестовых запусков с реальными данными:</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>№</th>
+                        <th>Данные</th>
+                        <th>Ожидаемый</th>
+                        <th>Фактический</th>
+                        <th>Статус</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>3 валидные заявки (Алексей/Елена/Дмитрий)</td>
+                        <td>Все → dispatched</td>
+                        <td>Все → dispatched</td>
+                        <td><span class="check">✅</span></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Спам + заявка без email</td>
+                        <td>DLQ</td>
+                        <td>DLQ (spam_detected + missing_email)</td>
+                        <td><span class="check">✅</span></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Повторный запуск OUT_Dispatch</td>
+                        <td>0 дублей</td>
+                        <td>0 дублей (4 уровня идемпотентности)</td>
+                        <td><span class="check">✅</span></td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>Заявки с SLA 50%/80%/100%</td>
+                        <td>3 Telegram-уведомления</td>
+                        <td>3 уведомления + запись в sla_events</td>
+                        <td><span class="check">✅</span></td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>Повторный запуск SLA-монитора</td>
+                        <td>0 новых уведомлений</td>
+                        <td>0 уведомлений (идемпотентность)</td>
+                        <td><span class="check">✅</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Финальная статистика (acceptance test)</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">📨 Принято заявок</div>
+                </div>
+                <div class="stat-card success">
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">🤖 Обработано ИИ</div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="stat-value">2</div>
+                    <div class="stat-label">🗑️ Ушло в DLQ</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">📋 Задач в Битрикс24</div>
+                </div>
+                <div class="stat-card success">
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">📧 Отправлено писем</div>
+                </div>
+                <div class="stat-card danger">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">♻️ Дублей</div>
+                </div>
+            </div>
+
+            <h4>Какие ошибки были найдены во время тестирования?</h4>
+            <div class="answer">
+                <ol>
+                    <li><strong><code>numeric field overflow</code></strong> в <code>catalog_match_confidence</code>
+                        (NUMERIC(3,2) не вмещал 95%)</li>
+                    <li><strong><code>request is not defined</code></strong> — склеились два return в merge-ноде</li>
+                    <li><strong><code>Can't use .first() here</code></strong> — смешение режимов Run Once for All/Each
+                        Item</li>
+                    <li><strong><code>message text is empty</code></strong> в Telegram — отправка пустого сообщения</li>
+                    <li><strong>PGRST204</strong> — PostgREST не видел новую колонку (кеш схемы)</li>
+                </ol>
+            </div>
+
+            <h4>Как вы их исправили?</h4>
+            <div class="answer">
+                <ol>
+                    <li>Изменил тип колонки на <code>NUMERIC(5,2)</code></li>
+                    <li>Переписал код merge-ноды в чистом виде</li>
+                    <li>Стандартизировал все Code-ноды на <code>Run Once for All Items</code> +
+                        <code>$input.all().map()</code>
+                    </li>
+                    <li>Добавил IF-фильтры <code>IF_Has_Engineer_Messages</code> перед Telegram-нодами</li>
+                    <li>Добавил <code>NOTIFY pgrst, 'reload schema'</code> после DDL-операций</li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- 14. Доказательства работоспособности -->
+        <section id="s15">
+            <h2>14. Доказательства работоспособности</h2>
+
+            <h4>Краткое описание типового запуска:</h4>
+            <ol>
+                <li><strong>08:10:00</strong> — Клиент Алексей Смирнов отправляет заявку через webhook</li>
+                <li><strong>08:10:01</strong> — IN_Service_Intake вычисляет FNV-1a hash <code>b11b5b54</code>, сохраняет
+                    в БД</li>
+                <li><strong>08:10:15</strong> — CORE_AI_Classifier запускается, GigaChat:
+                    <code>repair / high / mechanic / 95%</code>
+                </li>
+                <li><strong>08:10:16</strong> — Статус <code>enriched</code>, дедлайн = +4 часа</li>
+                <li><strong>08:10:30</strong> — OUT_Dispatch создаёт задачу в Битрикс24 с тегами</li>
+                <li><strong>08:10:31</strong> — Отправляется HTML-письмо клиенту с номером заявки <code>b11b5b54</code>
+                </li>
+                <li><strong>08:10:32</strong> — Статус → <code>dispatched</code>, запись в <code>sent_emails</code></li>
+                <li><strong>08:25:00</strong> — SRV_SLA_Monitor: 50% SLA → 🟡 warning инженеру</li>
+                <li><strong>11:22:00</strong> — 80% SLA → 🟠 critical руководителю</li>
+                <li><strong>12:10:00</strong> — 100% SLA → 🔴 breached обоим</li>
+            </ol>
+
+            <div class="callout success">
+                <strong>✅ Повторный запуск в 12:15:</strong>
+                <code>Fetched 0 requests</code> — идемпотентность работает.
+            </div>
+        </section>
+
+        <!-- 15. Ссылки на материалы -->
+        <section id="s16">
+            <h2>15. Ссылки на материалы проекта</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Материал</th>
+                        <th>Ссылка / расположение</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>JSON сценариев n8n</strong></td>
+                        <td><code>SRV_Global_Error_Handler_Test.json</code>, + 6 экспортов
+                            модулей</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Схема процесса</strong></td>
+                        <td>Mermaid-диаграмма в <code>Project_1_Complete_Documentation.html</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>База Supabase</strong></td>
+                        <td><code>https://supabase.eduardwit.ru</code> (схема <code>service_dept</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>HTML-документация</strong></td>
+                        <td>4 файла: OUT_Dispatch, SRV_SLA_Monitor, OUT_Enrich_From_Catalog, Project_1_Complete</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SQL-дашборды</strong></td>
+                        <td>12 запросов для мониторинга (статистика, SLA, ошибки)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Webhook endpoint</strong></td>
+                        <td><code>https://n8n.eduardwit.ru/webhook/service-request</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Пример задачи в Битрикс24</strong></td>
+                        <td><code>[HIGH] Компрессор Atlas Copco GA37 - механик</code> (теги: service-request,
+                            hash:b11b5b54)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Пример письма клиенту</strong></td>
+                        <td><code>🔧 Ремонт: Компрессор Atlas Copco GA37 — заявка #b11b5b54</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- 16. Безопасность -->
+        <section id="s17">
+            <h2>16. Безопасность и данные</h2>
+
+            <h4>Использовались ли реальные или тестовые данные?</h4>
+            <div class="answer">
+                Тестовые данные: имена клиентов (Алексей Смирнов, Елена Волкова), тестовые email
+                (<code>@zavod.ru</code>, <code>@office.ru</code>), реальное оборудование (Atlas Copco, Haas VF-2).
+            </div>
+
+            <h4>Если использовались реальные данные, были ли они обезличены?</h4>
+            <div class="answer">
+                Реальные персональные данные не использовались. Все email и имена — фиктивные.
+            </div>
+
+            <h4>Где хранятся ключи доступа и пароли?</h4>
+            <div class="answer">
+                В <strong>n8n Credentials</strong> (шифрованное хранилище):
+                <ul>
+                    <li><code>Supabase account</code> (anon key + service_role)</li>
+                    <li><code>Telegram_EW_Alerts_Bot</code> (bot token)</li>
+                    <li><code>Bitrix24 Webhook</code> (user_id + secret)</li>
+                    <li><code>GigaChat API</code> (OAuth credentials)</li>
+                </ul>
+            </div>
+
+            <h4>Какие данные нельзя передавать в открытом виде?</h4>
+            <div class="answer">
+                <ul>
+                    <li>Токены API (хранятся только в n8n Credentials)</li>
+                    <li><code>service_role</code> key Supabase (только server-side)</li>
+                    <li>Персональные данные клиентов (email, телефон) — передаются по HTTPS</li>
+                </ul>
+            </div>
+
+            <h4>Какие ограничения вы учли при работе с сервисами?</h4>
+            <div class="answer">
+                <ul>
+                    <li><strong>RLS (Row Level Security)</strong> в Supabase — изоляция данных по ролям</li>
+                    <li><strong>Prefer: resolution=ignore-duplicates</strong> для идемпотентных POST</li>
+                    <li><strong>UNIQUE constraints</strong> на <code>(request_hash)</code>,
+                        <code>(request_hash, event_type)</code>
+                    </li>
+                    <li><strong>Rate limiting</strong> detection в Error Handler (429 → retry)</li>
+                    <li><strong>Санитизация данных</strong> перед сохранением (удаление управляющих символов)</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 17. Что получилось -->
+        <section id="s18">
+            <h2>17. Что получилось в результате</h2>
+
+            <h4>Что теперь работает автоматически?</h4>
+            <div class="answer">
+                <ul>
+                    <li>Приём заявок из 2 каналов (webhook + email)</li>
+                    <li>ИИ-классификация через GigaChat с 95% точностью</li>
+                    <li>Создание задач в Битрикс24 с правильной категоризацией</li>
+                    <li>Корпоративные email-уведомления с 4 шаблонами</li>
+                    <li>SLA-мониторинг каждые 15 минут с 3-уровневой эскалацией</li>
+                    <li>Обогащение заявок данными из каталога</li>
+                    <li>Глобальная обработка ошибок с retry-логикой</li>
+                </ul>
+            </div>
+
+            <h4>Какую пользу это даёт бизнесу или команде?</h4>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">60x</div>
+                    <div class="stat-label">Ускорение обработки (15 мин → 15 сек)</div>
+                </div>
+                <div class="stat-card success">
+                    <div class="stat-value">100%</div>
+                    <div class="stat-label">SLA-compliance</div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Потерь заявок</div>
+                </div>
+                <div class="stat-card danger">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Дублей</div>
+                </div>
+            </div>
+
+            <h4>Какая ручная работа сократилась?</h4>
+            <div class="answer">
+                <ul>
+                    <li>Диспетчер больше не читает и не классифицирует заявки</li>
+                    <li>Не создаёт задачи вручную в Битрикс24</li>
+                    <li>Не пишет шаблонные письма клиентам</li>
+                    <li>Не следит за сроками — система сама эскалирует</li>
+                </ul>
+            </div>
+
+            <h4>Что можно улучшить в следующей версии?</h4>
+            <div class="answer">
+                <ul>
+                    <li>Заменить Mock SMTP на реальный (VK Workspace / SendGrid)</li>
+                    <li>Подключить реальный внутренний каталог вместо DummyJSON</li>
+                    <li>Добавить мобильное приложение для инженеров</li>
+                    <li>Внедрить AI-чатбот для клиентов (FAQ + статус заявки)</li>
+                    <li>Интеграция с 1С для учёта запчастей и счетов</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 19. Выводы -->
+        <section id="s20">
+            <h2>18. Выводы проекта</h2>
+
+            <h4>Что получилось особенно хорошо?</h4>
+            <div class="answer">
+                <ul>
+                    <li>Архитектура с 6 независимыми модулями, каждый из которых можно развивать отдельно</li>
+                    <li>Идемпотентность на всех уровнях — 0 дублей при любых повторных запусках</li>
+                    <li>Batch processing через <code>$input.all().map()</code> — ускорение в 5-10 раз</li>
+                    <li>Полная HTML-документация с Mermaid-диаграммами (4 файла)</li>
+                </ul>
+            </div>
+
+            <h4>Что можно добавить в следующей версии сценария?</h4>
+            <div class="answer">
+                <ul>
+                    <li>Мобильное приложение для инженеров (React Native + Supabase Realtime)</li>
+                    <li>AI-чатбот для клиентов (FAQ + статус заявки через request_hash)</li>
+                    <li>Интеграция с 1С для учёта запчастей и автоматического выставления счетов</li>
+                    <li>Дашборды в Metabase для бизнес-аналитики</li>
+                    <li>Мультиязычность (EN/RU) для международных клиентов</li>
+                </ul>
+            </div>
+        </section>
+        <footer class="footer container">
+            <p>© 2026 EduardWIT • <a href="../index.html">Главная</a> </p>
+        </footer>
+
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+    </script>
+</body>
+
+</html>

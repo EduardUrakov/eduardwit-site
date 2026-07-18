@@ -6,20 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>EduardWIT | Автоматизация & Веб-разработка</title>
     <meta name="description" content="n8n • Telegram • Адаптивная вёрстка • Быстрые MVP. Интеграции под ключ.">
-    
+
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript">
-        (function(m,e,t,r,i,k,a){
-            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-            m[i].l=1*new Date();
-            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=109690102', 'ym');
-    
-        ym(109690102, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+        (function (m, e, t, r, i, k, a) {
+            m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments) };
+            m[i].l = 1 * new Date();
+            for (var j = 0; j < document.scripts.length; j++) { if (document.scripts[j].src === r) { return; } }
+            k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
+        })(window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js?id=109690102', 'ym');
+
+        ym(109690102, 'init', { ssr: true, webvisor: true, clickmap: true, ecommerce: "dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce: true, trackLinks: true });
     </script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/109690102" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <noscript>
+        <div><img src="https://mc.yandex.ru/watch/109690102" style="position:absolute; left:-9999px;" alt="" /></div>
+    </noscript>
     <!-- /Yandex.Metrika counter -->
+
+
+
 
     <script src="js/analytics.js" defer></script>
 
@@ -162,7 +167,7 @@
         }
 
         .section__col {
-            grid-column: span 12;
+            grid-column: span 6;
         }
 
         .section__col--full {
@@ -343,7 +348,7 @@
         /* Qualities */
         .qualities__list {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            grid-template-columns: repeat(4, minmax(260px, 1fr));
             gap: 20px;
         }
 
@@ -828,6 +833,51 @@
                             </div>
                             <div class="projects__links">
                                 <a href="case/prod-rag.html" class="projects__link">Читать кейс</a>
+                            </div>
+                        </div>
+                        <div class="projects__card">
+                            <div class="projects__header">
+                                <div class="projects__title">Self-Healing: Автономное восстановление workflow</div>
+                                <div class="projects__description">
+                                    Система автоматического retry с exponential backoff (30с → 60с → 120с),
+                                    circuit breaker и идемпотентным UPSERT. Снижение ручных перезапусков на 90%,
+                                    автономная работа 24/7 без вмешательства оператора.
+                                </div>
+                                <div class="projects__tags">
+                                    <span class="projects__tag">n8n</span>
+                                    <span class="projects__tag">Supabase</span>
+                                    <span class="projects__tag">PostgREST</span>
+                                    <span class="projects__tag">Telegram Bot</span>
+                                    <span class="projects__tag">Grafana</span>
+                                </div>
+                            </div>
+                            <div class="projects__links">
+                                <a href="case/self-healing.html" class="projects__link">Читать кейс</a>
+                            </div>
+                        </div>
+                        <div class="projects__card">
+                            <div class="projects__header">
+                                <div class="projects__title">Enterprise AI Service Desk</div>
+                                <div class="projects__description">
+                                    «Помощник сервисного отдела» — полная автоматизация жизненного цикла сервисного
+                                    обращения: от приёма заявки клиента до постановки задачи инженеру в CRM с
+                                    ИИ-классификацией, SLA-контролем и проактивной эскалацией.
+                                </div>
+                                <div class="projects__tags">
+                                    <span class="projects__tag">n8n</span>
+                                    <span class="projects__tag">Supabase</span>
+                                    <span class="projects__tag">PostgREST</span>
+                                    <span class="projects__tag">Telegram Bot</span>
+                                    <span class="projects__tag">GigaChat</span>
+                                    <span class="projects__tag">Mock SMTP</span>
+                                    <span class="projects__tag">Битрикс24</span>
+                                    <span class="projects__tag">DummyJSON API</span>
+                                    <span class="projects__tag">FNV-1a hash</span>
+                                    <span class="projects__tag">Email</span>
+                                </div>
+                            </div>
+                            <div class="projects__links">
+                                <a href="case/SLA.html" class="projects__link">Читать кейс</a>
                             </div>
                         </div>
                         <div class="projects__card">
