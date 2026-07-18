@@ -7,19 +7,21 @@
     <title>Кейс: ИИ-классификация обращений в n8n | EduardWIT</title>
     <meta name="description"
         content="Автоматическая маршрутизация 100+ обращений в день с использованием GigaChat, Confidence Score и Human-in-the-Loop.">
-    
+
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript">
-        (function(m,e,t,r,i,k,a){
-            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-            m[i].l=1*new Date();
-            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=109690102', 'ym');
-    
-        ym(109690102, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+        (function (m, e, t, r, i, k, a) {
+            m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments) };
+            m[i].l = 1 * new Date();
+            for (var j = 0; j < document.scripts.length; j++) { if (document.scripts[j].src === r) { return; } }
+            k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
+        })(window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js?id=109690102', 'ym');
+
+        ym(109690102, 'init', { ssr: true, webvisor: true, clickmap: true, ecommerce: "dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce: true, trackLinks: true });
     </script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/109690102" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <noscript>
+        <div><img src="https://mc.yandex.ru/watch/109690102" style="position:absolute; left:-9999px;" alt="" /></div>
+    </noscript>
     <!-- /Yandex.Metrika counter -->
 
     <script src="../js/analytics.js" defer></script>
@@ -289,7 +291,7 @@
                 └── < 80% → [Manual Review Queue] → [Telegram: "Нужна проверка" ] </div>
                     <p><strong>Инфраструктура:</strong> Self-hosted n8n, NocoDB (CRM), внешние API (GigaChat, Telegram
                         Bot API), Nginx (Rate Limiting).</p>
-                    <img src="../images/AI.jpg" max-width="900px" height="400px" loading="lazy" />
+
         </section>
 
         <!-- Детали реализации -->
@@ -380,8 +382,7 @@
     </main>
 
     <footer class="footer container">
-        <p>© 2026 EduardWIT • <a href="../index.html">Главная</a> • <a href="prod-rag.html">Кейс: Prod-RAG</a> • <a
-                href="crm-automation.html">Кейс: Заявки в CRM</a></p>
+        <p>© 2026 EduardWIT • <a href="../index.html">Главная</a> </p>
     </footer>
 </body>
 
