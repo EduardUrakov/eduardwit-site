@@ -2,1229 +2,694 @@
 <html lang="ru">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EduardWIT | Автоматизация & Веб-разработка</title>
     <meta name="description" content="n8n • Telegram • Адаптивная вёрстка • Быстрые MVP. Интеграции под ключ.">
 
-    <!-- Yandex.Metrika counter -->
-    <script type="text/javascript">
-        (function (m, e, t, r, i, k, a) {
-            m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments) };
-            m[i].l = 1 * new Date();
-            for (var j = 0; j < document.scripts.length; j++) { if (document.scripts[j].src === r) { return; } }
-            k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
-        })(window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js?id=109690102', 'ym');
+    <link rel="apple-touch-icon" sizes="57x57" href="icons/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="icons/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="icons/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="icons/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="icons/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="icons/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="icons/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="icons/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="icons/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="icons/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon/favicon-16x16.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="icons/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
 
-        ym(109690102, 'init', { ssr: true, webvisor: true, clickmap: true, ecommerce: "dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce: true, trackLinks: true });
-    </script>
-    <noscript>
-        <div><img src="https://mc.yandex.ru/watch/109690102" style="position:absolute; left:-9999px;" alt="" /></div>
-    </noscript>
-    <!-- /Yandex.Metrika counter -->
-
-
-
-
+    <link rel="stylesheet" href="css/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/script.js" defer></script>
     <script src="js/analytics.js" defer></script>
-
-    <style>
-        :root {
-            --t-text-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            --t-headline-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            --color-bg: #0a0a0a;
-            --color-bg-alt: #161625;
-            --color-text: #f3f4f6;
-            --color-text-muted: #8f969f;
-            --color-accent: #00d4ff;
-            --color-accent-alt: #00ff88;
-            --color-border: rgba(255, 255, 255, 0.08);
-            --color-card: rgba(255, 255, 255, 0.02);
-        }
-
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: var(--t-text-font);
-            background: linear-gradient(180deg, var(--color-bg) 0%, var(--color-bg-alt) 100%);
-            color: var(--color-text);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        h1,
-        h2,
-        h3,
-        h4 {
-            font-family: var(--t-headline-font);
-            font-weight: 600;
-            line-height: 1.2;
-        }
-
-        a {
-            color: inherit;
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-
-        a:hover {
-            color: var(--color-accent);
-        }
-
-        img {
-            max-width: 100%;
-            display: block;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Hero */
-        .hero {
-            padding: 100px 0 80px;
-        }
-
-        .hero__header {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: flex-start;
-            gap: 60px;
-            margin-bottom: 60px;
-        }
-
-        .hero__title {
-            font-size: clamp(32px, 5vw, 64px);
-            font-weight: 700;
-            letter-spacing: -0.02em;
-        }
-
-        .hero__subtitle {
-            color: var(--color-text-muted);
-            font-size: 18px;
-            max-width: 480px;
-        }
-
-        .hero__contact {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            min-width: 220px;
-        }
-
-        .hero__contact-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 16px;
-        }
-
-        .hero__contact-item a {
-            font-weight: 500;
-            color: var(--color-accent);
-        }
-
-        /* Sections */
-        .section {
-            padding: 60px 0;
-            border-top: 1px solid #1f2937;
-        }
-
-        .section__header {
-            margin-bottom: 4px;
-        }
-
-        .section__title {
-            font-size: clamp(24px, 4vw, 36px);
-            margin-bottom: 12px;
-            background: linear-gradient(90deg, var(--color-accent) 0%, var(--color-accent-alt) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .section__description {
-            font-size: 16px;
-            color: var(--color-text-muted);
-        }
-
-        .section__content {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 40px;
-        }
-
-        .section__col {
-            grid-column: span 6;
-        }
-
-        .section__col--full {
-            grid-column: span 12;
-        }
-
-        /* Competencies */
-        .competencies__list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 24px;
-        }
-
-        .competencies__item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 20px;
-            background: var(--color-card);
-            border: 1px solid var(--color-border);
-            border-radius: 8px;
-            transition: transform 0.2s, border-color 0.2s;
-        }
-
-        .competencies__item:hover {
-            transform: translateY(-4px);
-            border-color: var(--color-accent);
-        }
-
-        .competencies__icon {
-            width: 32px;
-            height: 32px;
-            flex-shrink: 0;
-            opacity: 0.9;
-        }
-
-        .competencies__text {
-            font-size: 16px;
-            font-weight: 500;
-        }
-
-        /* Skills */
-        .skills__label {
-            font-size: 13px;
-            color: #6b7280;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .skills__tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .skills__tag {
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--color-text);
-            background: rgba(0, 212, 255, 0.1);
-            border: 1px solid rgba(0, 212, 255, 0.3);
-            padding: 6px 14px;
-            border-radius: 6px;
-        }
-
-        /* Projects */
-        .projects__grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 32px;
-        }
-
-        .projects__card {
-            display: flex;
-            flex-direction: column;
-            background: var(--color-card);
-            border: 1px solid var(--color-border);
-            border-radius: 12px;
-            overflow: hidden;
-            transition: border-color 0.2s, transform 0.2s;
-        }
-
-        .projects__card:hover {
-            border-color: var(--color-accent);
-            transform: translateY(-4px);
-        }
-
-        .projects__header {
-            padding: 24px 24px 16px;
-        }
-
-        .projects__title {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .projects__description {
-            font-size: 14px;
-            color: var(--color-text-muted);
-            line-height: 1.4;
-            margin-bottom: 16px;
-        }
-
-        .projects__tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 16px;
-        }
-
-        .projects__tag {
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--color-accent);
-            background: rgba(0, 212, 255, 0.05);
-            padding: 4px 10px;
-            border-radius: 4px;
-        }
-
-        .projects__links {
-            padding: 0 24px 24px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .projects__link {
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--color-accent);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .projects__link::before {
-            content: "→";
-            font-size: 14px;
-        }
-
-        /* Education */
-        .education__list {
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
-
-        .education__item {
-            display: flex;
-            gap: 24px;
-            padding: 24px;
-            background: var(--color-card);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 8px;
-        }
-
-        .education__year {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--color-accent);
-            min-width: 80px;
-            padding-top: 4px;
-        }
-
-        .education__content h4 {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .education__content p {
-            color: var(--color-text-muted);
-            font-size: 15px;
-        }
-
-        /* Qualities */
-        .qualities__list {
-            display: grid;
-            grid-template-columns: repeat(4, minmax(260px, 1fr));
-            gap: 20px;
-        }
-
-        .qualities__item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 18px;
-            background: var(--color-card);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 8px;
-        }
-
-        .qualities__bullet {
-            width: 8px;
-            height: 8px;
-            background: var(--color-accent);
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-
-        .qualities__text {
-            font-size: 15px;
-        }
-
-        /* Privacy Policy */
-        .privacy-banner {
-            padding: 20px;
-            margin: 40px 0;
-            background: rgba(0, 212, 255, 0.05);
-            border: 1px solid rgba(0, 212, 255, 0.2);
-            border-radius: 8px;
-            font-size: 14px;
-            color: var(--color-text-muted);
-        }
-
-        .privacy-banner strong {
-            color: var(--color-text);
-        }
-
-        .privacy-banner a {
-            color: var(--color-accent);
-            text-decoration: underline;
-        }
-
-        /* Contact Form */
-        .contact {
-            padding: 80px 0;
-            background: linear-gradient(180deg, var(--color-bg-alt) 0%, var(--color-bg) 100%);
-        }
-
-        .contact-form {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .contact-form__group {
-            margin-bottom: 24px;
-        }
-
-        .contact-form__label {
-            display: block;
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 8px;
-            color: var(--color-text);
-        }
-
-        .contact-form__input,
-        .contact-form__textarea,
-        .contact-form__select {
-            width: 100%;
-            padding: 14px 16px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            color: var(--color-text);
-            font-family: var(--t-text-font);
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-
-        .contact-form__input:focus,
-        .contact-form__textarea:focus,
-        .contact-form__select:focus {
-            outline: none;
-            border-color: var(--color-accent);
-            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
-        }
-
-        .contact-form__textarea {
-            min-height: 140px;
-            resize: vertical;
-        }
-
-        .contact-form__error {
-            color: #ef4444;
-            font-size: 13px;
-            margin-top: 6px;
-            min-height: 18px;
-        }
-
-        .contact-form__consent {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            margin: 20px 0;
-            font-size: 14px;
-            color: var(--color-text-muted);
-        }
-
-        .contact-form__consent input {
-            margin-top: 4px;
-        }
-
-        .contact-form__buttons {
-            display: flex;
-            gap: 16px;
-            margin-top: 32px;
-        }
-
-        .contact-form__button {
-            flex: 1;
-            padding: 14px 28px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.2s;
-            font-family: var(--t-headline-font);
-            border: 1px solid transparent;
-        }
-
-        .contact-form__button.cancel {
-            background: transparent;
-            border-color: var(--color-border);
-            color: var(--color-text);
-        }
-
-        .contact-form__button.submit {
-            background: var(--color-accent);
-            color: var(--color-bg);
-            border-color: var(--color-accent);
-        }
-
-        .contact-form__button:hover {
-            transform: translateY(-2px);
-        }
-
-        .contact-form__button.submit:hover {
-            background: var(--color-accent-alt);
-            border-color: var(--color-accent-alt);
-        }
-
-        .contact-form__success {
-            display: none;
-            padding: 24px;
-            background: rgba(0, 255, 136, 0.05);
-            border: 1px solid rgba(0, 255, 136, 0.3);
-            border-radius: 8px;
-            text-align: center;
-            margin-top: 24px;
-            color: var(--color-accent-alt);
-        }
-
-        /* Footer */
-        .footer {
-            padding: 40px 0;
-            text-align: center;
-            color: var(--color-text-muted);
-            font-size: 14px;
-            border-top: 1px solid var(--color-border);
-        }
-
-        .footer a {
-            color: var(--color-accent);
-        }
-
-        /* Responsive */
-        @media (max-width: 960px) {
-            .hero__header {
-                flex-direction: column;
-                gap: 40px;
-            }
-
-            .hero__contact {
-                min-width: 100%;
-            }
-
-            .section__col {
-                grid-column: span 12;
-            }
-
-            .projects__grid {
-                grid-template-columns: 1fr;
-            }
-
-            .education__item {
-                flex-direction: column;
-                gap: 8px;
-            }
-        }
-
-        @media (max-width: 640px) {
-            .hero {
-                padding: 60px 0 40px;
-            }
-
-            .section {
-                padding: 40px 0;
-            }
-
-            .contact-form__buttons {
-                flex-direction: column;
-            }
-        }
-
-        /* AI Assistant CTA */
-        .contact__ai-assistant {
-            margin: 32px 0;
-        }
-
-        .ai-assistant__card {
-            display: flex;
-            gap: 16px;
-            padding: 20px;
-            background: rgba(0, 212, 255, 0.05);
-            border: 1px solid rgba(0, 212, 255, 0.2);
-            border-radius: 12px;
-            align-items: flex-start;
-        }
-
-        .ai-assistant__icon {
-            font-size: 32px;
-            flex-shrink: 0;
-        }
-
-        .ai-assistant__content {
-            flex: 1;
-        }
-
-        .ai-assistant__title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: var(--color-text);
-        }
-
-        .ai-assistant__text {
-            font-size: 14px;
-            color: var(--color-text-muted);
-            margin-bottom: 12px;
-            line-height: 1.5;
-        }
-
-        .ai-assistant__note {
-            font-size: 13px;
-            color: var(--color-text-muted);
-            margin-bottom: 16px;
-            line-height: 1.4;
-        }
-
-        .ai-assistant__note a {
-            color: var(--color-accent);
-            text-decoration: underline;
-        }
-
-        .ai-assistant__button {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
-            background: var(--color-accent);
-            color: var(--color-bg);
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 14px;
-            transition: background 0.2s, transform 0.2s;
-        }
-
-        .ai-assistant__button:hover {
-            background: var(--color-accent-alt);
-            transform: translateY(-2px);
-        }
-
-        /* Адаптив для мобильных */
-        @media (max-width: 640px) {
-            .ai-assistant__card {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .ai-assistant__button {
-                width: 100%;
-                justify-content: center;
-            }
-        }
-    </style>
 </head>
 
 <body>
 
-    <!-- Hero -->
-    <section class="hero">
+    <aside class="sidepanel">
+        <a href="mailto:admin@eduardwit.ru" class="sidepanel__link" title="Email">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="4" width="20" height="16" rx="2" ry="2" />
+                <polyline points="2,4 12,13 22,4" />
+            </svg>
+        </a>
+        <a href="https://t.me/EduardWIT_bot" target="_blank" class="sidepanel__link" title="Telegram">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                    d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
+            </svg>
+        </a>
+        <div class="sidepanel__divider"></div>
+        <div class="sidepanel__text"><span>Социальные сети</span></div>
+    </aside>
+
+    <div class="menu">
+        <div class="menu__block">
+            <div class="menu__close">
+                <svg width="29" height="30" viewBox="0 0 29 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M17.1568 14.5231L28.4489 3.23075C29.1837 2.49623 29.1837 1.30861 28.4489 0.574085C27.7144 -0.160437 26.5267 -0.160437 25.7922 0.574085L14.4998 11.8665L3.20781 0.574085C2.47295 -0.160437 1.28567 -0.160437 0.551149 0.574085C-0.183716 1.30861 -0.183716 2.49623 0.551149 3.23075L11.8432 14.5231L0.551149 25.8155C-0.183716 26.55 -0.183716 27.7376 0.551149 28.4721C0.917206 28.8385 1.39852 29.0226 1.87948 29.0226C2.36045 29.0226 2.84141 28.8385 3.20781 28.4721L14.4998 17.1798L25.7922 28.4721C26.1586 28.8385 26.6396 29.0226 27.1205 29.0226C27.6015 29.0226 28.0825 28.8385 28.4489 28.4721C29.1837 27.7376 29.1837 26.55 28.4489 25.8155L17.1568 14.5231Z"
+                        fill="black" />
+                </svg>
+            </div>
+            <nav>
+                <ul class="menu__list">
+                    <li class="menu__link"><a href="#about">ПРО МЕНЯ</a></li>
+                    <li class="menu__link"><a href="#resume">ОПЫТ</a></li>
+                    <li class="menu__link"><a href="#skills">НАВЫКИ</a></li>
+                    <li class="menu__link"><a href="#portfolio">ПОРТФОЛИО</a></li>
+                    <li class="menu__link"><a href="#contacts">КОНТАКТЫ</a></li>
+                </ul>
+            </nav>
+            <div class="menu__social">
+                <a href="mailto:admin@eduardwit.ru">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="4" width="20" height="16" rx="2" ry="2" />
+                        <polyline points="2,4 12,13 22,4" />
+                    </svg>
+                </a>
+                <a href="https://t.me/EduardWIT_bot" target="_blank">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
+                    </svg>
+                </a>
+
+            </div>
+        </div>
+        <div class="menu__overlay"></div>
+    </div>
+
+    <section class="promo">
+        <div class="hamburger">
+            <span></span>
+            <span class="long"></span>
+            <span></span>
+        </div>
         <div class="container">
-            <div class="hero__header">
-                <div>
-                    <h1 class="hero__title">EduardWIT</h1>
-                    <p class="hero__subtitle">Создаю и поддерживаю сайты, совмещая техническую точность с творческим
-                        подходом. Специализируюсь на адаптивной вёрстке, автоматизации через n8n и Telegram, быстрых
-                        MVP.</p>
+            <div class="title title_fz16 promo__subtitle">EduardWIT</div>
+            <h1 class="title title_fz48 promo__title">Автоматизация &amp; Веб-разработка</h1>
+            <p style="color:#000;font-weight:500;font-size:16px;margin-top:10px;max-width:500px;line-height:1.5;">
+                Автоматизирую бизнес-процессы через n8n, создаю сайты и лендинги, разрабатываю Telegram-ботов, внедряю
+                AI в рабочие сценарии.</p>
+            <div class="promo__btns">
+                <a href="#portfolio" class="promo__link btn">Портфолио</a>
+                <a href="#contacts" class="promo__link">Связаться</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="about" id="about">
+        <div class="container">
+            <div class="about__wrapper">
+                <div class="about__photo">
+                    <img src="img/main_photo-min.jpg" alt="photo">
                 </div>
-                <div class="hero__contact">
-                    <div class="hero__contact-item">
-                        <span>📧</span>
-                        <a href="mailto:admin@eduardwit.ru">admin@eduardwit.ru</a>
+                <div class="about__descr">
+                    <h2 class="title title_fz16 about__title">Про меня</h2>
+                    <div class="title about__subtitle">Меня зовут Эдуард</div>
+                    <div class="divider"></div>
+                    <p class="about__text">Основная специализация — автоматизация бизнес-процессов на n8n. Строю
+                        RAG-конвейеры для работы с документацией, CRM-пайплайны для обработки заявок, AI-классификацию
+                        обращений, self-healing системы для мониторинга и восстановления сервисов. Интегрирую
+                        Telegram-ботов с CRM, базами данных и внешними API — под ключ, от схемы данных до деплоя.</p>
+                    <p class="about__text">Параллельно занимаюсь веб-разработкой: создаю сайты и лендинги на React,
+                        Bootstrap, с адаптивной вёрсткой по макетам. Все проекты веду от идеи до релиза и технической
+                        поддержки. Работаю с Python (FastAPI, aiohttp), GigaChat и YandexGPT API, NocoDB, Supabase.</p>
+                    <p class="about__text">В процессе активно использую Docker для контейнеризации, Git для контроля
+                        версий, Linux-серверы для развёртывания. Ставка на надёжность — тестирую, отлаживаю и
+                        оптимизирую каждое решение перед сдачей.</p>
+                </div>
+                <div class="about__skills">
+                    <div class="about__skills-item">
+                        <div class="about__skills-circle">
+                            <img src="icons/about_me/web_development.svg" alt="web-dev">
+                        </div>
+                        <div>
+                            <div class="title title_fz14">Сайты и лендинги</div>
+                            <div class="about__skills-text">Адаптивная вёрстка по макетам, разработка на React и
+                                Bootstrap. Результат: современный, быстрый сайт под ключ.</div>
+                        </div>
                     </div>
-                    <div class="hero__contact-item">
-                        <span>✈️</span>
-                        <a href="https://t.me/EduardWIT_bot" target="_blank">@EduardWIT_bot</a>
+                    <div class="about__skills-item">
+                        <div class="about__skills-circle">
+                            <img src="icons/about_me/mobile_dev.svg" alt="mvp">
+                        </div>
+                        <div>
+                            <div class="title title_fz14">MVP и автоматизация</div>
+                            <div class="about__skills-text">Собираю прототипы и рабочие решения на n8n: RAG-конвейеры,
+                                CRM-пайплайны, обработка заявок, self-healing системы.</div>
+                        </div>
                     </div>
-                    <div class="hero__contact-item">
-                        <span>🌐</span>
-                        <a href="https://eduardwit.ru">eduardwit.ru</a>
+                    <div class="about__skills-item">
+                        <div class="about__skills-circle">
+                            <img src="icons/about_me/design.svg" alt="telegram">
+                        </div>
+                        <div>
+                            <div class="title title_fz14">Telegram-боты</div>
+                            <div class="about__skills-text">Разрабатываю ботов для бизнеса: AI-ассистенты, уведомления,
+                                интеграция с CRM и внешними сервисами через Bot API.</div>
+                        </div>
+                    </div>
+                    <div class="about__skills-item">
+                        <div class="about__skills-circle">
+                            <img src="icons/about_me/al.png" alt="ai">
+                        </div>
+                        <div>
+                            <div class="title title_fz14">AI в сценариях</div>
+                            <div class="about__skills-text">Внедряю GigaChat и YandexGPT в бизнес-процессы:
+                                классификация обращений, генерация ответов, анализ данных.</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Competencies -->
-    <section class="section">
+    <section class="resume" id="resume">
         <div class="container">
-            <div class="section__header">
-                <h2 class="section__title">Ключевые компетенции</h2>
+            <h2 class="title title_fz16 title__section-title">Опыт</h2>
+            <div class="title title__section-subtitle resume__subtitle">Чем я буду полезен</div>
+            <div class="divider"></div>
+            <div class="resume__wrapper">
+                <div class="resume__column">
+                    <h3 class="title title_fz20 resume__column-title">Образование</h3>
+                    <ul>
+                        <li>
+                            <div class="resume__item">
+                                <div class="resume__item-head">
+                                    <div class="resume__item-icon">
+                                        <img src="icons/experience/university.svg" alt="">
+                                    </div>
+                                    <h4 class="title title_fz14">Python-программист</h4>
+                                    <div class="resume__item-result">Университет «Синергия» | 2023</div>
+                                </div>
+                                <div class="resume__item-body">Курс профессиональной переподготовки по разработке на
+                                    Python: основы языка, работа с API, базы данных, автоматизация процессов.</div>
+                                <a href="img/cert-python.jpg" class="resume__cert-link" data-cert>Диплом</a>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="resume__item">
+                                <div class="resume__item-head">
+                                    <div class="resume__item-icon">
+                                        <img src="icons/experience/courses.svg" alt="">
+                                    </div>
+                                    <h4 class="title title_fz14">Frontend-разработчик / Верстальщик</h4>
+                                    <div class="resume__item-result">ООО «ГикБреинс» | 2023</div>
+                                </div>
+                                <div class="resume__item-body">Курс по адаптивной вёрстке, работе с макетами, SCSS,
+                                    Bootstrap, JavaScript, React. Создание кросс-браузерных и адаптивных интерфейсов.
+                                </div>
+                                <a href="img/cert-frontend.jpg" class="resume__cert-link" data-cert>Диплом</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="resume__column">
+                    <h3 class="title title_fz20 resume__column-title">Квалификация</h3>
+                    <ul>
+                        <li>
+                            <div class="resume__item">
+                                <div class="resume__item-head">
+                                    <div class="resume__item-icon">
+                                        <img src="icons/experience/developer.svg" alt="">
+                                    </div>
+                                    <h4 class="title title_fz14">Автоматизация на n8n</h4>
+                                    <div class="resume__item-result">Университет «Zerocoder» | 2026</div>
+                                </div>
+                                <div class="resume__item-body">Курс по автоматизации бизнес-процессов с использованием
+                                    n8n: создание сложных workflow, интеграция с ИИ, Telegram, CRM, REST API.</div>
+                                <a href="img/cert-n8n.jpg" class="resume__cert-link" data-cert>Сертификат</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <div class="section__content">
-                <div class="section__col">
-                    <div class="competencies__list">
-                        <div class="competencies__item">
-                            <svg class="competencies__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2">
-                                <path d="M12 2L2 7l10 5 10-5-10-5z" />
-                                <path d="M2 17l10 5 10-5" />
-                                <path d="M2 12l10 5 10-5" />
-                            </svg>
-                            <span class="competencies__text">Адаптивная вёрстка</span>
-                        </div>
-                        <div class="competencies__item">
-                            <svg class="competencies__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2">
-                                <path
-                                    d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
-                            </svg>
-                            <span class="competencies__text">Оптимизация и отладка</span>
-                        </div>
-                        <div class="competencies__item">
-                            <svg class="competencies__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2">
-                                <circle cx="12" cy="12" r="10" />
-                                <path d="M12 6v6l4 2" />
-                            </svg>
-                            <span class="competencies__text">Автоматизация (n8n)</span>
-                        </div>
-                        <div class="competencies__item">
-                            <svg class="competencies__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2">
-                                <path
-                                    d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-                                <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-                                <line x1="12" y1="22.08" x2="12" y2="12" />
-                            </svg>
-                            <span class="competencies__text">Telegram-интеграции</span>
-                        </div>
-                        <div class="competencies__item">
-                            <svg class="competencies__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2">
-                                <path d="M12 20h9" />
-                                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
-                            </svg>
-                            <span class="competencies__text">Поддержка legacy-кода</span>
-                        </div>
-                        <div class="competencies__item">
-                            <svg class="competencies__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2">
-                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                                <line x1="16" y1="2" x2="16" y2="6" />
-                                <line x1="8" y1="2" x2="8" y2="6" />
-                                <line x1="3" y1="10" x2="21" y2="10" />
-                            </svg>
-                            <span class="competencies__text">No-Code / Low-Code</span>
-                        </div>
+        </div>
+    </section>
+
+    <section class="skills" id="skills">
+        <div class="container">
+            <h2 class="title title_fz16 title__section-title">Навыки</h2>
+            <div class="title title__section-subtitle skills__subtitle">Что я использую в работе</div>
+            <div class="divider"></div>
+            <div class="skills__wrapper">
+                <div class="skills__item">
+                    <div class="skills__item-icon">
+                        <img src="icons/skills/html5.svg" alt="html5">
+                        <img src="icons/skills/css3.svg" alt="css3">
+                    </div>
+                    <h4 class="title title_fz14">HTML5 / CSS3 / SCSS</h4>
+                    <div class="skills__item-descr">Адаптивная вёрстка, препроцессоры SCSS/SASS, Bootstrap, методология
+                        БЭМ. Сборка проектов через Gulp.</div>
+                </div>
+                <div class="skills__item">
+                    <div class="skills__item-icon">
+                        <img src="icons/skills/js.svg" alt="js">
+                        <img src="icons/skills/typescript_original_logo_icon_146317.svg" width="64px" alt="ts">
+
+                    </div>
+                    <h4 class="title title_fz14">JavaScript / TypeScript</h4>
+                    <div class="skills__item-descr">Нативный JS, TypeScript, jQuery, работа с DOM и API. Создание
+                        интерактивных элементов, асинхронные запросы.</div>
+                </div>
+                <div class="skills__item">
+                    <div class="skills__item-icon">
+                        <img src="icons/skills/react.svg" alt="React">
+                    </div>
+                    <h4 class="title title_fz14">React / Angular</h4>
+                    <div class="skills__item-descr">SPA на React и Angular с компонентным подходом, управлением
+                        состоянием, типизацией TypeScript.</div>
+                </div>
+                <div class="skills__item">
+                    <div class="skills__item-icon">
+                        <img src="icons/skills/python-icon-logo.svg" width="64px" alt="Python">
+                    </div>
+                    <h4 class="title title_fz14">Python / Django</h4>
+                    <div class="skills__item-descr">Backend-разработка, REST API, интеграции. Автоматизация процессов,
+                        взаимодействие с ИИ-моделями (GigaChat, YandexGPT).</div>
+                </div>
+                <div class="skills__item">
+                    <div class="skills__item-icon">
+                        <img src="icons/skills/n8n.svg" width="64px" height="64px" alt="n8n">
+                    </div>
+                    <h4 class="title title_fz14">n8n / Telegram API</h4>
+                    <div class="skills__item-descr">Автоматизация workflow любой сложности: RAG-конвейеры,
+                        AI-классификация, CRM-пайплайны. Telegram Bot API, Бипиум, SMAIPL.</div>
+                </div>
+                <div class="skills__item">
+                    <div class="skills__item-icon">
+                        <img src="icons/skills/docker.svg" width="64px" height="64px" alt="Docker">
+                    </div>
+                    <h4 class="title title_fz14">Docker / Linux</h4>
+                    <div class="skills__item-descr">Контейнеризация, развёртывание на Dokploy. Администрирование
+                        Linux-серверов, Bash-скриптинг.</div>
+                </div>
+                <div class="skills__item">
+                    <div class="skills__item-icon">
+                        <img src="icons/skills/git.svg" width="64px" height="64px" alt="Git">
+                    </div>
+                    <h4 class="title title_fz14">Git / Базы данных</h4>
+                    <div class="skills__item-descr">Контроль версий (Git). Работа с SQL, MySQL, NocoDB, Supabase
+                        (pgvector).</div>
+                </div>
+                <div class="skills__item">
+                    <div class="skills__item-icon">
+                        <img src="icons/skills/no-code.webp" width="64px" height="64px" alt="n8n">
+                    </div>
+                    <h4 class="title title_fz14">No-Code / Tilda / Glide</h4>
+                    <div class="skills__item-descr">Быстрые MVP на No-Code платформах: Tilda, Glide, NocoDB. Figma →
+                        код, адаптация существующих решений.</div>
+                </div>
+            </div>
+            <div class="skills__levels">
+                <div class="skills__level">
+                    <div class="skills__level-title">
+                        <div class="skills__level-head title title_fz14">Создание сайтов</div>
+                        <div class="skills__level-percent title_fz14">100%</div>
+                    </div>
+                    <div class="skills__level-bg">
+                        <div class="skills__level-line"></div>
                     </div>
                 </div>
-                <div class="section__col">
-                    <div class="skills__label">Дополнительно</div>
-                    <div class="skills__tags">
-                        <span class="skills__tag">C# (базово)</span>
-                        <span class="skills__tag">PHP (базово)</span>
-                        <span class="skills__tag">Agile / Scrum</span>
-                        <span class="skills__tag">Linux / Bash</span>
-                        <span class="skills__tag">Figma → Код</span>
+                <div class="skills__level">
+                    <div class="skills__level-title">
+                        <div class="skills__level-head title title_fz14">Автоматизация (n8n)</div>
+                        <div class="skills__level-percent title_fz14">95%</div>
                     </div>
-                    <p style="margin-top: 24px; font-size: 15px; color: var(--color-text-muted); line-height: 1.6;">
-                        Читаю и понимаю чужой код, поддерживаю работоспособность проектов,
-                        тестирую валидность, отлаживаю и оптимизирую для стабильной работы.
+                    <div class="skills__level-bg">
+                        <div class="skills__level-line"></div>
+                    </div>
+                </div>
+                <div class="skills__level">
+                    <div class="skills__level-title">
+                        <div class="skills__level-head title title_fz14">Интеграции</div>
+                        <div class="skills__level-percent title_fz14">90%</div>
+                    </div>
+                    <div class="skills__level-bg">
+                        <div class="skills__level-line"></div>
+                    </div>
+                </div>
+                <div class="skills__level">
+                    <div class="skills__level-title">
+                        <div class="skills__level-head title title_fz14">Оптимизация</div>
+                        <div class="skills__level-percent title_fz14">85%</div>
+                    </div>
+                    <div class="skills__level-bg">
+                        <div class="skills__level-line"></div>
+                    </div>
+                </div>
+                <div class="skills__level">
+                    <div class="skills__level-title">
+                        <div class="skills__level-head title title_fz14">Адаптивная вёрстка</div>
+                        <div class="skills__level-percent title_fz14">95%</div>
+                    </div>
+                    <div class="skills__level-bg">
+                        <div class="skills__level-line"></div>
+                    </div>
+                </div>
+                <div class="skills__level">
+                    <div class="skills__level-title">
+                        <div class="skills__level-head title title_fz14">AI-решения</div>
+                        <div class="skills__level-percent title_fz14">80%</div>
+                    </div>
+                    <div class="skills__level-bg">
+                        <div class="skills__level-line"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="portfolio" id="portfolio">
+        <div class="container">
+            <h2 class="title title_fz16 title__section-title">Портфолио</h2>
+            <div class="title title__section-subtitle portfolio__subtitle">Мои работы</div>
+            <div class="divider"></div>
+            <div class="projects__grid">
+                <div class="projects__card">
+                    <div class="projects__header">
+                        <div class="projects__title">Prod-RAG: Корпоративная база знаний с ИИ</div>
+                        <div class="projects__description">RAG-конвейер на self-hosted инфраструктуре: документы →
+                            векторный поиск → ответ ИИ со ссылкой на источник. Фильтрация по отделам.</div>
+                        <div class="projects__tags">
+                            <span class="projects__tag">n8n</span>
+                            <span class="projects__tag">Supabase + pgvector</span>
+                            <span class="projects__tag">GigaChat API</span>
+                            <span class="projects__tag">Docker / Dokploy</span>
+                        </div>
+                    </div>
+                    <div class="projects__links">
+                        <a href="case/prod-rag.html" class="projects__link">Читать кейс</a>
+                    </div>
+                </div>
+                <div class="projects__card">
+                    <div class="projects__header">
+                        <div class="projects__title">Self-Healing: Автономное восстановление workflow</div>
+                        <div class="projects__description">Система автоматического retry с exponential backoff, circuit
+                            breaker и идемпотентным UPSERT. Снижение ручных перезапусков на 90%.</div>
+                        <div class="projects__tags">
+                            <span class="projects__tag">n8n</span>
+                            <span class="projects__tag">Supabase</span>
+                            <span class="projects__tag">PostgREST</span>
+                            <span class="projects__tag">Telegram Bot</span>
+                            <span class="projects__tag">Grafana</span>
+                        </div>
+                    </div>
+                    <div class="projects__links">
+                        <a href="case/self-healing.html" class="projects__link">Читать кейс</a>
+                    </div>
+                </div>
+                <div class="projects__card">
+                    <div class="projects__header">
+                        <div class="projects__title">Enterprise AI Service Desk</div>
+                        <div class="projects__description">Полная автоматизация жизненного цикла сервисного обращения:
+                            от приёма заявки до постановки задачи инженеру с ИИ-классификацией и SLA-контролем.</div>
+                        <div class="projects__tags">
+                            <span class="projects__tag">n8n</span>
+                            <span class="projects__tag">Supabase</span>
+                            <span class="projects__tag">GigaChat</span>
+                            <span class="projects__tag">Битрикс24</span>
+                            <span class="projects__tag">Email</span>
+                        </div>
+                    </div>
+                    <div class="projects__links">
+                        <a href="case/SLA.html" class="projects__link">Читать кейс</a>
+                    </div>
+                </div>
+                <div class="projects__card">
+                    <div class="projects__header">
+                        <div class="projects__title">CRM + Оплата: Сквозной пайплайн на n8n</div>
+                        <div class="projects__description">AI-скоринг заявок, генерация КП, NocoDB Kanban, Robokassa с
+                            MD5-защитой. Сокращение Time-to-Response с 24 ч до 15 сек.</div>
+                        <div class="projects__tags">
+                            <span class="projects__tag">n8n</span>
+                            <span class="projects__tag">NocoDB</span>
+                            <span class="projects__tag">GigaChat AI</span>
+                            <span class="projects__tag">Robokassa API</span>
+                        </div>
+                    </div>
+                    <div class="projects__links">
+                        <a href="case/crm-automation.html" class="projects__link">Читать кейс</a>
+                    </div>
+                </div>
+                <div class="projects__card">
+                    <div class="projects__header">
+                        <div class="projects__title">ИИ-классификация обращений</div>
+                        <div class="projects__description">Автоматическая маршрутизация 100+ лидов в день. GigaChat LLM,
+                            Confidence Score, Human-in-the-Loop. Экономия ~624к ₽/год.</div>
+                        <div class="projects__tags">
+                            <span class="projects__tag">n8n</span>
+                            <span class="projects__tag">GigaChat LLM</span>
+                            <span class="projects__tag">NocoDB</span>
+                            <span class="projects__tag">Telegram API</span>
+                        </div>
+                    </div>
+                    <div class="projects__links">
+                        <a href="case/ai-classification.html" class="projects__link">Читать кейс</a>
+                    </div>
+                </div>
+                <div class="projects__card">
+                    <div class="projects__header">
+                        <div class="projects__title">Telegram-боты и интеграции</div>
+                        <div class="projects__description">Разработка Telegram-ботов для автоматизации: AI-ассистенты,
+                            уведомления, интеграция с CRM и внешними сервисами через Bot API.</div>
+                        <div class="projects__tags">
+                            <span class="projects__tag">Telegram Bot API</span>
+                            <span class="projects__tag">n8n</span>
+                            <span class="projects__tag">Python</span>
+                        </div>
+                    </div>
+                    <div class="projects__links">
+                        <a href="case/telegram-bot.html" class="projects__link">Читать кейс</a>
+                    </div>
+                </div>
+                <div class="projects__card">
+                    <div class="projects__header">
+                        <div class="projects__title">Адаптивная вёрстка (Bootstrap)</div>
+                        <div class="projects__description">Вёрстка по макету с использованием Bootstrap, SCSS, адаптив
+                            под все устройства.</div>
+                        <div class="projects__tags">
+                            <span class="projects__tag">HTML</span>
+                            <span class="projects__tag">SCSS</span>
+                            <span class="projects__tag">Bootstrap</span>
+                        </div>
+                    </div>
+                    <div class="projects__links">
+                        <a href="https://eduardurakov.github.io/uber/" target="_blank" class="projects__link">Демо</a>
+                    </div>
+                </div>
+                <div class="projects__card">
+                    <div class="projects__header">
+                        <div class="projects__title">Одностраничный магазин</div>
+                        <div class="projects__description">Полнофункциональный магазин с корзиной, оформлением заказа,
+                            админ-панелью на PHP и MySQL.</div>
+                        <div class="projects__tags">
+                            <span class="projects__tag">PHP</span>
+                            <span class="projects__tag">MySQL</span>
+                            <span class="projects__tag">HTML</span>
+                        </div>
+                    </div>
+                    <div class="projects__links">
+                        <a href="https://eduardurakov.github.io/Kettox/" target="_blank" class="projects__link">Демо</a>
+                    </div>
+                </div>
+                <div class="projects__card">
+                    <div class="projects__header">
+                        <div class="projects__title">Многостраничная форма</div>
+                        <div class="projects__description">Форма с валидацией, анимациями, андерлайном и полной
+                            адаптивностью.</div>
+                        <div class="projects__tags">
+                            <span class="projects__tag">SCSS</span>
+                            <span class="projects__tag">jQuery</span>
+                            <span class="projects__tag">Gulp</span>
+                        </div>
+                    </div>
+                    <div class="projects__links">
+                        <a href="https://eduardurakov.github.io/future-tech/" target="_blank"
+                            class="projects__link">Демо</a>
+                    </div>
+                </div>
+                <div class="projects__card">
+                    <div class="projects__header">
+                        <div class="projects__title">Glide — бизнес-приложение</div>
+                        <div class="projects__description">No-Code приложение на Glide для учёта расходов с
+                            синхронизацией данных.</div>
+                        <div class="projects__tags">
+                            <span class="projects__tag">Glide</span>
+                            <span class="projects__tag">No-Code</span>
+                        </div>
+                    </div>
+                    <div class="projects__links">
+                        <a href="https://kniga-rashodov-j4dd.glide.page" target="_blank" class="projects__link">Демо</a>
+                    </div>
+                </div>
+                <div class="projects__card">
+                    <div class="projects__header">
+                        <div class="projects__title">React — мебельный магазин</div>
+                        <div class="projects__description">SPA на React с корзиной, фильтрацией товаров и адаптивным
+                            интерфейсом.</div>
+                        <div class="projects__tags">
+                            <span class="projects__tag">React</span>
+                            <span class="projects__tag">JavaScript</span>
+                        </div>
+                    </div>
+                    <div class="projects__links">
+                        <a href="https://eduardurakov.github.io/furniture_shop/" target="_blank"
+                            class="projects__link">Демо</a>
+                    </div>
+                </div>
+                <div class="projects__card">
+                    <div class="projects__header">
+                        <div class="projects__title">Angular + TypeScript</div>
+                        <div class="projects__description">Приложения на Angular с типизацией через TypeScript. Два
+                            проекта: бургерная и каталог автомобилей.</div>
+                        <div class="projects__tags">
+                            <span class="projects__tag">Angular</span>
+                            <span class="projects__tag">TypeScript</span>
+                        </div>
+                    </div>
+                    <div class="projects__links">
+                        <a href="https://eduardurakov.github.io/burgers/" target="_blank"
+                            class="projects__link">Burgers</a>
+                        <a href="https://eduardurakov.github.io/cars/" target="_blank" class="projects__link">Cars</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="contacts" id="contacts">
+        <div class="container">
+            <h2 class="title title_fz16 title__section-title">Контакты</h2>
+            <div class="title title__section-subtitle contacts__subtitle">Свяжитесь со мной</div>
+            <div class="divider"></div>
+
+            <div class="ai-assistant__card">
+                <div class="ai-assistant__content">
+                    <div class="ai-assistant__title">Не хотите заполнять форму?</div>
+                    <p class="ai-assistant__text">
+                        Пообщайтесь с <strong>ИИ-ассистентом</strong> в Telegram — он ответит на вопросы по
+                        автоматизации, технологиям и процессам, используя актуальную базу знаний.
                     </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Stack -->
-    <section class="section">
-        <div class="container">
-            <div class="section__header">
-                <h2 class="section__title">Стек технологий</h2>
-            </div>
-            <div class="section__content">
-                <div class="section__col">
-                    <div class="skills__label">Frontend / Вёрстка</div>
-                    <div class="skills__tags">
-                        <span class="skills__tag">HTML5</span><span class="skills__tag">CSS3</span><span
-                            class="skills__tag">SCSS/SASS</span>
-                        <span class="skills__tag">JavaScript</span><span class="skills__tag">TypeScript</span>
-                        <span class="skills__tag">React</span><span class="skills__tag">Angular</span><span
-                            class="skills__tag">jQuery</span>
-                        <span class="skills__tag">Bootstrap</span><span class="skills__tag">БЭМ</span><span
-                            class="skills__tag">Gulp</span>
-                    </div>
-                    <div class="skills__label" style="margin-top: 24px;">Backend & Движки</div>
-                    <div class="skills__tags">
-                        <span class="skills__tag">Python</span><span class="skills__tag">Django</span><span
-                            class="skills__tag">Tilda</span>
-                        <span class="skills__tag">Glide</span><span class="skills__tag">NocoDB</span><span
-                            class="skills__tag">Supabase</span>
-                        <span class="skills__tag">Dokploy</span>
-                    </div>
-                </div>
-                <div class="section__col">
-                    <div class="skills__label">Инфраструктура</div>
-                    <div class="skills__tags">
-                        <span class="skills__tag">Docker</span><span class="skills__tag">Git</span><span
-                            class="skills__tag">Linux</span><span class="skills__tag">Bash</span>
-                    </div>
-                    <div class="skills__label" style="margin-top: 24px;">Базы данных</div>
-                    <div class="skills__tags">
-                        <span class="skills__tag">SQL</span><span class="skills__tag">MySQL</span>
-                    </div>
-                    <div class="skills__label" style="margin-top: 24px;">AI & Автоматизация</div>
-                    <div class="skills__tags">
-                        <span class="skills__tag">n8n</span><span class="skills__tag">Telegram Bot API</span>
-                        <span class="skills__tag">Бипиум</span><span class="skills__tag">SMAIPL</span><span
-                            class="skills__tag">AI-боты</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Portfolio (только демо-ссылки) -->
-    <section class="section">
-        <div class="container">
-            <div class="section__header">
-                <h2 class="section__title">Портфолио</h2>
-            </div>
-            <div class="section__content">
-                <div class="section__col--full">
-                    <div class="projects__grid">
-                        <!-- Project: Prod-RAG on Supabase -->
-                        <div class="projects__card">
-                            <div class="projects__header">
-                                <div class="projects__title">Prod-RAG: Корпоративная база знаний с ИИ</div>
-                                <div class="projects__description">
-                                    RAG-конвейер на self-hosted инфраструктуре: документы → векторный поиск →
-                                    ответ ИИ со ссылкой на источник. Фильтрация по отделам.
-                                </div>
-                                <div class="projects__tags">
-                                    <span class="projects__tag">n8n</span>
-                                    <span class="projects__tag">Supabase + pgvector</span>
-                                    <span class="projects__tag">GigaChat API</span>
-                                    <span class="projects__tag">Docker / Dokploy</span>
-                                </div>
-                            </div>
-                            <div class="projects__links">
-                                <a href="case/prod-rag.html" class="projects__link">Читать кейс</a>
-                            </div>
-                        </div>
-                        <div class="projects__card">
-                            <div class="projects__header">
-                                <div class="projects__title">Self-Healing: Автономное восстановление workflow</div>
-                                <div class="projects__description">
-                                    Система автоматического retry с exponential backoff (30с → 60с → 120с),
-                                    circuit breaker и идемпотентным UPSERT. Снижение ручных перезапусков на 90%,
-                                    автономная работа 24/7 без вмешательства оператора.
-                                </div>
-                                <div class="projects__tags">
-                                    <span class="projects__tag">n8n</span>
-                                    <span class="projects__tag">Supabase</span>
-                                    <span class="projects__tag">PostgREST</span>
-                                    <span class="projects__tag">Telegram Bot</span>
-                                    <span class="projects__tag">Grafana</span>
-                                </div>
-                            </div>
-                            <div class="projects__links">
-                                <a href="case/self-healing.html" class="projects__link">Читать кейс</a>
-                            </div>
-                        </div>
-                        <div class="projects__card">
-                            <div class="projects__header">
-                                <div class="projects__title">Enterprise AI Service Desk</div>
-                                <div class="projects__description">
-                                    «Помощник сервисного отдела» — полная автоматизация жизненного цикла сервисного
-                                    обращения: от приёма заявки клиента до постановки задачи инженеру в CRM с
-                                    ИИ-классификацией, SLA-контролем и проактивной эскалацией.
-                                </div>
-                                <div class="projects__tags">
-                                    <span class="projects__tag">n8n</span>
-                                    <span class="projects__tag">Supabase</span>
-                                    <span class="projects__tag">PostgREST</span>
-                                    <span class="projects__tag">Telegram Bot</span>
-                                    <span class="projects__tag">GigaChat</span>
-                                    <span class="projects__tag">Mock SMTP</span>
-                                    <span class="projects__tag">Битрикс24</span>
-                                    <span class="projects__tag">DummyJSON API</span>
-                                    <span class="projects__tag">FNV-1a hash</span>
-                                    <span class="projects__tag">Email</span>
-                                </div>
-                            </div>
-                            <div class="projects__links">
-                                <a href="case/SLA.html" class="projects__link">Читать кейс</a>
-                            </div>
-                        </div>
-                        <div class="projects__card">
-                            <div class="projects__header">
-                                <div class="projects__title">CRM + Оплата: Сквозной пайплайн на n8n</div>
-                                <div class="projects__description">
-                                    AI-скоринг заявок, генерация КП, NocoDB Kanban, Robokassa с MD5-защитой и
-                                    идемпотентностью.
-                                    Сокращение Time-to-Response с 24 ч до 15 сек.
-                                </div>
-                                <div class="projects__tags">
-                                    <span class="projects__tag">n8n</span>
-                                    <span class="projects__tag">NocoDB</span>
-                                    <span class="projects__tag">GigaChat AI</span>
-                                    <span class="projects__tag">Robokassa API</span>
-                                </div>
-                            </div>
-                            <div class="projects__links">
-                                <a href="case/crm-automation.html" class="projects__link">Читать кейс</a>
-                            </div>
-                        </div>
-                        <div class="projects__card">
-                            <div class="projects__header">
-                                <div class="projects__title">ИИ-классификация обращений</div>
-                                <div class="projects__description">
-                                    Автоматическая маршрутизация 100+ лидов в день. GigaChat LLM, Confidence Score,
-                                    Human-in-the-Loop и интеграция с NocoDB + Telegram. Экономия ~624к ₽/год.
-                                </div>
-                                <div class="projects__tags">
-                                    <span class="projects__tag">n8n</span>
-                                    <span class="projects__tag">GigaChat LLM</span>
-                                    <span class="projects__tag">NocoDB</span>
-                                    <span class="projects__tag">Telegram API</span>
-                                </div>
-                            </div>
-                            <div class="projects__links">
-                                <a href="case/ai-classification.html" class="projects__link"> Читать кейс</a>
-                            </div>
-                        </div>
-                        <!-- Project 1 -->
-                        <div class="projects__card">
-                            <div class="projects__header">
-                                <div class="projects__title">Адаптивная вёрстка (Bootstrap)</div>
-                                <div class="projects__description">Вёрстка по макету с использованием Bootstrap, SCSS,
-                                    адаптив под все устройства.</div>
-                                <div class="projects__tags">
-                                    <span class="projects__tag">HTML</span><span class="projects__tag">SCSS</span><span
-                                        class="projects__tag">Bootstrap</span>
-                                </div>
-                            </div>
-                            <div class="projects__links">
-                                <a href="https://eduardurakov.github.io/uber/" target="_blank"
-                                    class="projects__link">Демо</a>
-                            </div>
-                        </div>
-                        <!-- Project 2 -->
-                        <div class="projects__card">
-                            <div class="projects__header">
-                                <div class="projects__title">Одностраничный сайт</div>
-                                <div class="projects__description">Полнофункциональный магазин с корзиной, оформлением
-                                    заказа, админ-панелью.</div>
-                                <div class="projects__tags">
-                                    <span class="projects__tag">PHP</span><span class="projects__tag">MySQL</span><span
-                                        class="projects__tag">HTML</span>
-                                </div>
-                            </div>
-                            <div class="projects__links">
-                                <a href="https://eduardurakov.github.io/Kettox/" target="_blank"
-                                    class="projects__link">Демо</a>
-                            </div>
-                        </div>
-                        <!-- Project 3 -->
-                        <div class="projects__card">
-                            <div class="projects__header">
-                                <div class="projects__title">Многостраничная форма</div>
-                                <div class="projects__description">Форма с валидацией, анимациями, андерлайном и полной
-                                    адаптивностью.</div>
-                                <div class="projects__tags">
-                                    <span class="projects__tag">SCSS</span><span
-                                        class="projects__tag">jQuery</span><span class="projects__tag">Gulp</span>
-                                </div>
-                            </div>
-                            <div class="projects__links">
-                                <a href="https://eduardurakov.github.io/future-tech/" target="_blank"
-                                    class="projects__link">Демо</a>
-                            </div>
-                        </div>
-                        <!-- Project 4 -->
-                        <div class="projects__card">
-                            <div class="projects__header">
-                                <div class="projects__title">Glide — бизнес-приложение</div>
-                                <div class="projects__description">No-Code приложение на Glide для учёта расходов с
-                                    синхронизацией данных.</div>
-                                <div class="projects__tags">
-                                    <span class="projects__tag">Glide</span><span class="projects__tag">No-Code</span>
-                                </div>
-                            </div>
-                            <div class="projects__links">
-                                <a href="https://kniga-rashodov-j4dd.glide.page" target="_blank"
-                                    class="projects__link">Демо</a>
-                            </div>
-                        </div>
-                        <!-- Project 5 -->
-                        <div class="projects__card">
-                            <div class="projects__header">
-                                <div class="projects__title">React — мебельный магазин</div>
-                                <div class="projects__description">SPA на React с корзиной, фильтрацией товаров и
-                                    адаптивным интерфейсом.</div>
-                                <div class="projects__tags">
-                                    <span class="projects__tag">React</span><span
-                                        class="projects__tag">JavaScript</span>
-                                </div>
-                            </div>
-                            <div class="projects__links">
-                                <a href="https://eduardurakov.github.io/furniture_shop/" target="_blank"
-                                    class="projects__link">Демо</a>
-                            </div>
-                        </div>
-                        <!-- Project 6 -->
-                        <div class="projects__card">
-                            <div class="projects__header">
-                                <div class="projects__title">Angular + TypeScript</div>
-                                <div class="projects__description">Приложения на Angular с типизацией через TypeScript.
-                                </div>
-                                <div class="projects__tags">
-                                    <span class="projects__tag">Angular</span><span
-                                        class="projects__tag">TypeScript</span>
-                                </div>
-                            </div>
-                            <div class="projects__links">
-                                <a href="https://eduardurakov.github.io/burgers/" target="_blank"
-                                    class="projects__link">Burgers</a>
-                                <a href="https://eduardurakov.github.io/cars/" target="_blank"
-                                    class="projects__link">Cars</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Education -->
-    <section class="section">
-        <div class="container">
-            <div class="section__header">
-                <h2 class="section__title">Повышение квалификации</h2>
-            </div>
-            <div class="section__content">
-                <div class="section__col--full">
-                    <div class="education__list">
-                        <div class="education__item">
-                            <div class="education__year">2023</div>
-                            <div class="education__content">
-                                <h4>Python-программист</h4>
-                                <p>Университет «Синергия» — курс профессиональной переподготовки</p>
-                            </div>
-                        </div>
-                        <div class="education__item">
-                            <div class="education__year">2023</div>
-                            <div class="education__content">
-                                <h4>Frontend-разработчик / Верстальщик</h4>
-                                <p>ООО «ГикБреинс» — курс по адаптивной вёрстке и работе с макетами</p>
-                            </div>
-                        </div>
-                        <div class="education__item">
-                            <div class="education__year">2026</div>
-                            <div class="education__content">
-                                <h4>Автоматизация на n8n</h4>
-                                <p>Университет «Zerocoder»</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- About & Qualities -->
-    <section class="section">
-        <div class="container">
-            <div class="section__header">
-                <h2 class="section__title">Обо мне</h2>
-            </div>
-            <div class="section__content">
-                <div class="section__col">
-                    <p style="font-size: 16px; color: var(--color-text-muted); line-height: 1.7; margin-bottom: 32px;">
-                        Привлекательность разработки для меня — в создании и поддержании работоспособных сайтов.
-                        Именно этим я планирую заниматься в первую очередь, продолжая развивать навыки в направлении
-                        автоматизации и интеграций.
+                    <p class="ai-assistant__note">
+                        После диалога вы сможете передать нужные данные — полностью соблюдая политику
+                        конфиденциальности.
                     </p>
-                    <div class="qualities__list">
-                        <div class="qualities__item">
-                            <div class="qualities__bullet"></div>
-                            <div class="qualities__text">Аналитический склад ума</div>
-                        </div>
-                        <div class="qualities__item">
-                            <div class="qualities__bullet"></div>
-                            <div class="qualities__text">Позитивный настрой и самостоятельность</div>
-                        </div>
-                        <div class="qualities__item">
-                            <div class="qualities__bullet"></div>
-                            <div class="qualities__text">Профессиональная заинтересованность</div>
-                        </div>
-                        <div class="qualities__item">
-                            <div class="qualities__bullet"></div>
-                            <div class="qualities__text">Гибкость и творческий подход</div>
-                        </div>
-                        <div class="qualities__item">
-                            <div class="qualities__bullet"></div>
-                            <div class="qualities__text">Умение брать ответственность</div>
-                        </div>
-                        <div class="qualities__item">
-                            <div class="qualities__bullet"></div>
-                            <div class="qualities__text">Довожу начатое до конца</div>
-                        </div>
-                        <div class="qualities__item">
-                            <div class="qualities__bullet"></div>
-                            <div class="qualities__text">Умение работать с информацией</div>
-                        </div>
+                    <a href="https://t.me/EduardWIT_assistent_bot" target="_blank" class="ai-assistant__button">
+                        Написать @EduardWIT_assistent_bot
+                    </a>
+                </div>
+            </div>
+
+            <div class="contacts__wrapper">
+                <div class="contacts__photo">
+                    <img src="img/main_photo.jpg" alt="photo">
+                </div>
+                <div class="contacts__descr">
+                    <div class="title title_fz14 contacts__text">
+                        Оставьте ваши данные и я вам напишу:
                     </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Privacy Policy Banner -->
-    <section class="section">
-        <div class="container">
-            <!-- Конфиденциальность и ИИ (баннер) -->
-            <div class="privacy-banner"
-                style="background: rgba(0,212,255,0.05); border: 1px solid rgba(0,212,255,0.2); border-radius: 8px; padding: 16px; margin: 24px 0; font-size: 14px; color: var(--color-text-muted);">
-                <strong>🔒 Конфиденциальность и ИИ</strong><br>
-                Данные из форм используются только для связи. При разработке могут применяться ИИ-модели:
-                <strong>российские</strong> (GigaChat, YandexGPT) и <strong>иностранные</strong> (ChatGPT, Claude,
-                Gemini, Copilot и др.).<br>
-                Конфиденциальная информация заказчика <strong>не передаётся</strong> в публичные ИИ-сервисы без
-                согласования.
-                <a href="privacy-policy.html"
-                    style="color: var(--color-accent); display: inline-block; margin-top: 8px;">Полная версия политики
-                    →</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Form -->
-    <section class="contact" id="contact">
-        <div class="container">
-            <div class="section__header" style="text-align: center;">
-                <h2 class="section__title">Связаться со мной</h2>
-                <p class="section__description">Заполните форму — я отвечу в ближайшее время</p>
-                <!-- AI Assistant CTA -->
-                <div class="contact__ai-assistant">
-                    <div class="ai-assistant__card">
-                        <div class="ai-assistant__content">
-                            <h3 class="ai-assistant__title">Не хотите заполнять форму?</h3>
-                            <p class="ai-assistant__text">
-                                Пообщайтесь с <strong>ИИ-ассистентом</strong> в Telegram — он ответит на вопросы
-                                по автоматизации, технологиям и процессам, используя актуальную базу знаний.
-                            </p>
-                            <p class="ai-assistant__note">
-                                🔒 После диалога вы сможете передать нужные данные —
-                                <a href="privacy-policy.html">полностью соблюдая политику конфиденциальности</a>.
-                            </p>
-                            <a href="https://t.me/EduardWIT_assistent_bot" target="_blank" class="ai-assistant__button">
-                                ✈️ Написать @EduardWIT_assistent_bot
-                            </a>
+                    <form id="contact-form" class="contact-form" novalidate>
+                        <div class="contact-form__group">
+                            <label class="contact-form__label" for="name-input">Ваше имя *</label>
+                            <input type="text" id="name-input" name="name" class="contact-form__input"
+                                placeholder="Иван" autocomplete="name">
+                            <div class="contact-form__error" id="name-input-error"></div>
                         </div>
-                    </div>
+
+                        <div class="contact-form__group">
+                            <label class="contact-form__label" for="contact-input">Email *</label>
+                            <input type="text" id="contact-input" name="contact" class="contact-form__input"
+                                placeholder="email@example.com" autocomplete="email" inputmode="email">
+                            <div class="contact-form__error" id="contact-input-error"></div>
+                        </div>
+
+                        <div class="contact-form__group">
+                            <label class="contact-form__label" for="phone-input">Телефон</label>
+                            <input type="tel" id="phone-input" name="phone" class="contact-form__input"
+                                placeholder="+7 (999) 000-00-00" autocomplete="tel" inputmode="tel">
+                            <div class="contact-form__error" id="phone-input-error"></div>
+                        </div>
+
+                        <div class="contact-form__group">
+                            <label class="contact-form__label" for="topic-input">Тема *</label>
+                            <select id="topic-input" name="topic" class="contact-form__select">
+                                <option value="">Выберите тему</option>
+                                <option value="project">Разработка проекта</option>
+                                <option value="automation">Автоматизация / n8n</option>
+                                <option value="consultation">Консультация</option>
+                                <option value="other">Другое</option>
+                            </select>
+                            <div class="contact-form__error" id="topic-input-error"></div>
+                        </div>
+
+                        <div class="contact-form__group">
+                            <label class="contact-form__label" for="message-input">Сообщение *</label>
+                            <textarea id="message-input" name="message" class="contact-form__textarea"
+                                placeholder="Опишите задачу кратко..." autocomplete="off"></textarea>
+                            <div class="contact-form__error" id="message-input-error"></div>
+                        </div>
+
+                        <label class="contact-form__consent">
+                            <input type="checkbox" id="consent-input" name="consent">
+                            <span>Я согласен с <a href="privacy-policy.html">политикой конфиденциальности</a></span>
+                        </label>
+                        <div class="contact-form__error" id="consent-input-error"></div>
+
+                        <div class="contact-form__buttons">
+                            <button type="reset" class="contact-form__button cancel">Очистить</button>
+                            <button type="submit" class="contact-form__button submit">Отправить</button>
+                        </div>
+
+                        <div class="contact-form__success" id="success-message">Спасибо! Заявка отправлена.</div>
+                        <div class="contact-form__error" id="form-error" style="text-align:center;margin-top:16px;">
+                        </div>
+                    </form>
                 </div>
             </div>
-            <form id="contact-form" novalidate>
-                <!-- Name -->
-                <div class="contact-form__group">
-                    <label class="contact-form__label" for="name-input">Ваше имя *</label>
-                    <input type="text" id="name-input" name="name" class="contact-form__input" placeholder="Иван"
-                        autocomplete="name">
-                    <div class="contact-form__error" id="name-input-error"></div>
-                </div>
-
-                <!-- Contact -->
-                <div class="contact-form__group">
-                    <label class="contact-form__label" for="contact-input">Email *</label>
-                    <input type="text" id="contact-input" name="contact" class="contact-form__input"
-                        placeholder="email@example.com" autocomplete="email" inputmode="email">
-                    <div class="contact-form__error" id="contact-input-error"></div>
-                </div>
-
-                <!-- Phone -->
-                <div class="contact-form__group">
-                    <label class="contact-form__label" for="phone-input">Телефон</label>
-                    <input type="tel" id="phone-input" name="phone" class="contact-form__input"
-                        placeholder="+7 (999) 000-00-00" autocomplete="tel" inputmode="tel">
-                    <div class="contact-form__error" id="phone-input-error"></div>
-                </div>
-
-                <!-- Topic -->
-                <div class="contact-form__group">
-                    <label class="contact-form__label" for="topic-input">Тема *</label>
-                    <select id="topic-input" name="topic" class="contact-form__select" autocomplete="off">
-                        <option value="">Выберите тему</option>
-                        <option value="project">Разработка проекта</option>
-                        <option value="automation">Автоматизация / n8n</option>
-                        <option value="consultation">Консультация</option>
-                        <option value="other">Другое</option>
-                    </select>
-                    <div class="contact-form__error" id="topic-input-error"></div>
-                </div>
-
-                <!-- Message -->
-                <div class="contact-form__group">
-                    <label class="contact-form__label" for="message-input">Сообщение *</label>
-                    <textarea id="message-input" name="message" class="contact-form__textarea"
-                        placeholder="Опишите задачу кратко..." autocomplete="off"></textarea>
-                    <div class="contact-form__error" id="message-input-error"></div>
-                </div>
-
-                <!-- Consent -->
-                <label class="contact-form__consent">
-                    <input type="checkbox" id="consent-input" name="consent">
-                    <span>Я согласен с <a href="privacy-policy.html">политикой конфиденциальности</a></span>
-                </label>
-                <div class="contact-form__error" id="consent-input-error"></div>
-
-                <!-- Buttons -->
-                <div class="contact-form__buttons">
-                    <button type="reset" class="contact-form__button cancel">Очистить</button>
-                    <button type="submit" class="contact-form__button submit">Отправить</button>
-                </div>
-
-                <!-- Messages -->
-                <div class="contact-form__success" id="success-message">✅ Спасибо! Заявка отправлена.</div>
-                <div class="contact-form__error" id="form-error" style="text-align:center;margin-top:16px;"></div>
-            </form>
         </div>
     </section>
 
+    <div class="container">
+        <div class="privacy-banner">
+            <strong>Конфиденциальность и ИИ</strong><br>
+            Данные из форм используются только для связи. При разработке могут применяться ИИ-модели:
+            <strong>российские</strong> (GigaChat, YandexGPT) и <strong>иностранные</strong> (ChatGPT, Claude, Gemini,
+            Copilot и др.).<br>
+            Конфиденциальная информация заказчика <strong>не передаётся</strong> в публичные ИИ-сервисы без
+            согласования.
+            <a href="privacy-policy.html" style="display:inline-block;margin-top:8px;">Полная версия политики →</a>
+        </div>
+    </div>
 
-    <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>© 2026 EduardWIT • <a href="privacy-policy.html">Политика конфиденциальности</a> • <a
+            <p>&copy; 2026 EduardWIT &bull; <a href="privacy-policy.html">Политика конфиденциальности</a> &bull; <a
                     href="https://t.me/EduardWIT_assistent_bot" target="_blank">Telegram</a></p>
         </div>
     </footer>
 
-    <!-- Form Script (vanilla JS + n8n webhook) -->
+    <div id="metrica-notice"
+        style="position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #ccc;padding:16px 20px;font-size:14px;color:#555;z-index:1000;display:none;">
+        <div class="container"
+            style="max-width:900px;margin:0 auto;display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
+            <span>Мы используем Яндекс.Метрику для анализа посещаемости. Данные обезличены.</span>
+            <button id="metrica-accept"
+                style="background:#EBFF01;color:#000;border:none;padding:8px 16px;border-radius:6px;font-weight:700;cursor:pointer;">Принять</button>
+            <a href="privacy-policy.html" style="color:#000;font-weight:600;text-decoration:none;">Подробнее</a>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const form = document.getElementById('contact-form');
@@ -1262,8 +727,6 @@
                 const checks = [
                     { field: validate(name), id: 'name-input-error' },
                     { field: validate(contact), id: 'contact-input-error' },
-                    // 📞 Телефон опционален. Если хочешь сделать обязательным, раскомментируй строку ниже:
-                    // { field: validate(phone), id: 'phone-input-error' },
                     { field: validate(topic), id: 'topic-input-error' },
                     { field: validate(message), id: 'message-input-error' },
                     { field: consent ? { ok: true } : { ok: false, error: 'Необходимо согласие' }, id: 'consent-input-error' }
@@ -1301,7 +764,6 @@
                     });
 
                     if (response.ok) {
-                        // ✅ ЦЕЛЬ МЕТРИКИ — считается только при успешной отправке
                         if (typeof ym !== 'undefined') {
                             ym(109690102, 'reachGoal', 'form_submit');
                         }
@@ -1314,9 +776,9 @@
                         throw new Error('HTTP ' + response.status);
                     }
                 } catch (err) {
-                    console.error('❌ Ошибка:', err);
+                    console.error('Error:', err);
                     if (formError) {
-                        formError.innerHTML = '⚠️ Ошибка отправки. Напишите напрямую в <a href="https://t.me/EduardWIT_assistent_bot" style="color:#00d4ff">Telegram</a>';
+                        formError.innerHTML = 'Ошибка отправки. Напишите напрямую в <a href="https://t.me/EduardWIT_assistent_bot" style="color:#000;font-weight:700;">Telegram</a>';
                     }
                 } finally {
                     if (submitBtn) {
@@ -1333,39 +795,29 @@
                 });
             });
         });
-    </script>
 
-
-    <!-- Cookie / Метрика уведомление (152-ФЗ) -->
-    <div id="metrica-notice"
-        style="position:fixed;bottom:0;left:0;right:0;background:rgba(22,22,37,0.95);border-top:1px solid rgba(255,255,255,0.1);padding:16px 20px;font-size:14px;color:var(--color-text-muted);z-index:1000;display:none;">
-        <div class="container"
-            style="max-width:900px;margin:0 auto;display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
-            <span>🍪 Мы используем Яндекс.Метрику для анализа посещаемости. Данные обезличены.</span>
-            <button id="metrica-accept"
-                style="background:var(--color-accent);color:#0a0a0a;border:none;padding:8px 16px;border-radius:6px;font-weight:600;cursor:pointer;">Принять</button>
-            <a href="/privacy-policy.html" style="color:var(--color-accent);text-decoration:none;">Подробнее</a>
-        </div>
-    </div>
-
-    <script>
         document.addEventListener('DOMContentLoaded', function () {
             if (!localStorage.getItem('metrica_consent')) {
                 document.getElementById('metrica-notice').style.display = 'block';
-            } else {
-                // Согласие уже дано — Метрика уже работает из <head>
             }
         });
 
         document.getElementById('metrica-accept')?.addEventListener('click', function () {
             localStorage.setItem('metrica_consent', '1');
             document.getElementById('metrica-notice').style.display = 'none';
-            // Метрика уже загружена — просто фиксируем факт согласия
             if (typeof ym !== 'undefined') {
                 ym(109690102, 'params', { consent_given: 1 });
             }
         });
     </script>
+
+    <div class="modal" id="certModal">
+        <div class="modal__overlay"></div>
+        <div class="modal__content">
+            <button class="modal__close">&times;</button>
+            <img src="" alt="Сертификат" class="modal__img">
+        </div>
+    </div>
 </body>
 
 </html>

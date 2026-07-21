@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../css/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="../css/fonts.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <title>Кейс: Telegram AI-ассистент на n8n | EduardWIT</title>
+    <meta name="description"
+        content="Telegram-бот с AI-классификацией и RAG-поиском: 24/7 консультации, интеллектуальная маршрутизация и zero-hallucination.">
+
+    <script src="../js/analytics.js" defer></script>
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --bg-alt: #161625;
+            --text: #f3f4f6;
+            --muted: #9ca3af;
+            --accent: #00d4ff;
+            --accent-alt: #00ff88;
+            --border: rgba(255, 255, 255, 0.08);
+            --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font);
+            background: linear-gradient(180deg, var(--bg) 0%, var(--bg-alt) 100%);
+            color: var(--text);
+            line-height: 1.6;
+            padding-bottom: 60px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .header {
+            padding: 60px 0 40px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header h1 {
+            font-size: clamp(28px, 5vw, 42px);
+            margin-bottom: 12px;
+        }
+
+        .header .meta {
+            color: var(--muted);
+            font-size: 14px;
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .header .meta span {
+            background: rgba(0, 212, 255, 0.1);
+            padding: 4px 10px;
+            border-radius: 4px;
+        }
+
+        .header .subtitle {
+            color: var(--muted);
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .demo-link {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 10px 24px;
+            background: var(--accent);
+            color: #0a0a0a;
+            font-weight: 700;
+            border-radius: 8px;
+            text-decoration: none;
+        }
+        .demo-link:hover {
+            background: var(--accent-alt);
+            text-decoration: none;
+        }
+
+        .section {
+            padding: 40px 0;
+        }
+
+        .section h2 {
+            font-size: 24px;
+            margin-bottom: 16px;
+            color: var(--accent);
+        }
+
+        .section h3 {
+            font-size: 18px;
+            margin: 20px 0 10px;
+            color: var(--text);
+        }
+
+        .section p {
+            margin-bottom: 16px;
+            color: var(--muted);
+        }
+
+        .section ul {
+            margin: 12px 0 12px 24px;
+            color: var(--muted);
+        }
+
+        .section li {
+            margin-bottom: 8px;
+        }
+
+        .architecture {
+            background: rgba(0, 212, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            color: var(--accent-alt);
+            white-space: pre;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .metric {
+            background: var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .metric .value {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--accent-alt);
+            margin-bottom: 4px;
+        }
+
+        .metric .label {
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .data-card {
+            background: var(--border);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .data-card h4 {
+            color: var(--text);
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .flow-steps {
+            display: grid;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .flow-step {
+            display: flex;
+            gap: 16px;
+            align-items: start;
+            padding: 16px;
+            background: var(--border);
+            border-radius: 8px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .flow-step .num {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent);
+            min-width: 30px;
+        }
+
+        .flow-step .desc {
+            color: var(--muted);
+            font-size: 14px;
+        }
+        .flow-step .desc strong {
+            color: var(--text);
+        }
+
+        .cta {
+            text-align: center;
+            padding: 32px;
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 12px;
+            margin: 32px 0;
+        }
+
+        .cta .button {
+            display: inline-block;
+            padding: 12px 28px;
+            background: var(--accent);
+            color: #0a0a0a;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-top: 16px;
+        }
+
+        .cta .button:hover {
+            background: var(--accent-alt);
+        }
+
+        .footer {
+            text-align: center;
+            color: var(--muted);
+            font-size: 14px;
+            padding-top: 40px;
+            border-top: 1px solid var(--border);
+        }
+
+        @media (max-width: 640px) {
+            .header {
+                padding: 40px 0 30px;
+            }
+            .section {
+                padding: 30px 0;
+            }
+            .header .meta {
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div style="position:fixed;top:0;left:0;right:0;z-index:1000;background:#fff;border-bottom:1px solid #e0e0e0;padding:10px 20px;display:flex;align-items:center;gap:16px;font-family:Open Sans, sans-serif;">
+        <a href="../index.html" style="background:#EBFF01;color:#000;font-weight:700;text-decoration:none;padding:6px 16px;border-radius:4px;font-size:13px;">&#8592; На главную</a>
+        <a href="../index.html#portfolio" style="color:#555;font-size:13px;font-weight:500;text-decoration:none;">Портфолио</a>
+    </div>
+    <header class="header">
+        <div class="container">
+            <h1>Telegram AI-ассистент</h1>
+            <div class="meta">
+                <span>📱 Telegram Bot API</span>
+                <span>🧠 GigaChat + RAG</span>
+                <span>⚡ n8n 2.27.3</span>
+                <span>🗄 Supabase (pgvector)</span>
+                <span>🐳 Docker</span>
+            </div>
+            <p class="subtitle">
+                Интеллектуальный Telegram-бот с AI-классификацией, RAG-поиском по базе знаний и маршрутизацией по темам.
+                24/7 обрабатывает консультации, вопросы по проектам, заявки на автоматизацию и лиды.
+            </p>
+            <a href="https://t.me/EduardWIT_assistent_bot" target="_blank" class="demo-link">Попробовать демо-бота</a>
+        </div>
+    </header>
+
+    <main class="container">
+        <div style="margin-bottom:30px;background:var(--border);border-radius:12px;padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:20px;font-family:var(--font);">
+            <div><strong style="color:var(--accent);display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Задача</strong><span style="color:var(--muted);font-size:14px;">Посетители не получают быстрых ответов вне рабочего времени. Менеджеры тратят часы на типовые вопросы вместо продаж.</span></div>
+            <div><strong style="color:var(--accent);display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Моя работа</strong><span style="color:var(--muted);font-size:14px;">Разработал Telegram-бота на n8n с LangChain-агентом, RAG-поиском по базе знаний, классификацией темы и интеллектуальной маршрутизацией.</span></div>
+            <div><strong style="color:var(--accent);display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Технологии</strong><span style="color:var(--muted);font-size:14px;">n8n 2.27.3, GigaChat, Supabase (pgvector), Ollama, Telegram Bot API, Docker</span></div>
+            <div><strong style="color:var(--accent);display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Результат</strong><span style="color:var(--muted);font-size:14px;">24/7 поддержка, &lt;5 сек на ответ, 0 галлюцинаций, семантический кэш экономит до 60% токенов</span></div>
+        </div>
+
+        <section class="section">
+            <h2>Бизнес-проблема</h2>
+            <p>У специалиста или небольшой компании нет возможности держать менеджера онлайн 24/7. Клиенты приходят с вопросами в Telegram в нерабочее время и не получают ответа. Типовые вопросы (цена, сроки, технологии) отнимают часы у продавца.</p>
+            <ul>
+                <li><strong>Потеря клиентов:</strong> посетитель не дождался ответа и ушёл к конкуренту</li>
+                <li><strong>Рутина:</strong> продавец отвечает на одни и те же вопросы по 10 раз в день</li>
+                <li><strong>Без базы знаний:</strong> ответы разрознены, нет единого источника истины</li>
+                <li><strong>Нет аналитики:</strong> непонятно, какие темы чаще всего интересуют клиентов</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>Цель решения</h2>
+            <p>Создать Telegram-бота, который:</p>
+            <ul>
+                <li>Принимает вопросы в свободной форме на естественном языке</li>
+                <li>Классифицирует тему: <em>автоматизация, веб-проекты, консультация, продажи</em></li>
+                <li>Ищет ответ в базе знаний через RAG (векторный поиск)</li>
+                <li>Отвечает со ссылкой на источник — без галлюцинаций</li>
+                <li>Передаёт сложные запросы менеджеру в Telegram</li>
+                <li>Кэширует повторяющиеся вопросы для экономии токенов</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>Архитектура</h2>
+            <div class="architecture">[Telegram] → IN_Telegram_Trigger
+    ↓
+    IN_Normalize_And_Classify (Code)
+    ↓ { chatInput, filter_topic, sessionId }
+    ├── /start → приветствие
+    ├── automation → RAG (база знаний по n8n)
+    ├── project → RAG (портфолио)
+    ├── consultation → RAG (услуги)
+    ├── sales → уведомление менеджеру
+    └── без темы → RAG (общий поиск)
+                ↓
+    CORE_RAG_Agent (LangChain + GigaChat)
+        ├── контекст из Supabase (pgvector)
+        └── семантический кэш (проверка перед LLM)
+                ↓
+    OUT_Format_Response (Code)
+                ↓
+    OUT_Reply_Telegram</div>
+            <p><strong>Инфраструктура:</strong> Self-hosted n8n, Supabase (pgvector), GigaChat API, Ollama (all-minilm для эмбеддингов), Telegram Bot API, Docker / Dokploy.</p>
+        </section>
+
+        <section class="section">
+            <h2>Как это работает</h2>
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <div class="num">1</div>
+                    <div class="desc"><strong>Приём сообщения</strong> — Telegram Trigger ловит входящее сообщение. Извлекается текст, chat ID, информация о чате.</div>
+                </div>
+                <div class="flow-step">
+                    <div class="num">2</div>
+                    <div class="desc"><strong>Классификация</strong> — Code-нода определяет тему по ключевым словам: автоматизация, веб-проекты, консультация, продажи. Если тема не распознана — используется общий поиск.</div>
+                </div>
+                <div class="flow-step">
+                    <div class="num">3</div>
+                    <div class="desc"><strong>Поиск по базе знаний</strong> — LangChain-агент получает контекст из Supabase (pgvector). Эмбеддинги считаются локально через Ollama — приватность и скорость.</div>
+                </div>
+                <div class="flow-step">
+                    <div class="num">4</div>
+                    <div class="desc"><strong>Генерация ответа</strong> — GigaChat формирует ответ на основе контекста. Строгий системный промпт запрещает выдумывать факты. Ответ содержит ссылку на источник.</div>
+                </div>
+                <div class="flow-step">
+                    <div class="num">5</div>
+                    <div class="desc"><strong>Кэширование</strong> — семантический кэш проверяет, задавался ли похожий вопрос ранее. Если да — ответ отдаётся без вызова LLM. Экономия до 60% токенов.</div>
+                </div>
+                <div class="flow-step">
+                    <div class="num">6</div>
+                    <div class="desc"><strong>Обратная связь</strong> — инлайн-кнопки 👍/👎 под каждым ответом. Оценки сохраняются для анализа качества.</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Детали реализации</h2>
+            <div class="data-grid">
+                <div class="data-card">
+                    <h4>Классификация по темам</h4>
+                    <p style="color:var(--muted);margin:0;">Code-нода анализирует текст по ключевым словам. 4 темы: automation, project, consultation, sales + общий поиск. Без вызова LLM — мгновенно.</p>
+                </div>
+                <div class="data-card">
+                    <h4>RAG с pgvector</h4>
+                    <p style="color:var(--muted);margin:0;">Векторный поиск по документации, кейсам и FAQ. Эмбеддинги считаются на стороне через Ollama — полный контроль над данными.</p>
+                </div>
+                <div class="data-card">
+                    <h4>Zero-Hallucination</h4>
+                    <p style="color:var(--muted);margin:0;">Жёсткий системный промпт: если ответа нет в базе — бот честно говорит об этом и предлагает связаться с менеджером.</p>
+                </div>
+                <div class="data-card">
+                    <h4>Семантический кэш</h4>
+                    <p style="color:var(--muted);margin:0;">Перед вызовом GigaChat проверяется кэш. Повторные вопросы получают ответ за &lt;1 сек без затрат токенов.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Результат</h2>
+            <div class="metrics">
+                <div class="metric">
+                    <div class="value">24/7</div>
+                    <div class="label">Доступность консультаций</div>
+                </div>
+                <div class="metric">
+                    <div class="value">&lt; 5 сек</div>
+                    <div class="label">Скорость ответа</div>
+                </div>
+                <div class="metric">
+                    <div class="value">−60%</div>
+                    <div class="label">Экономия токенов (кэш)</div>
+                </div>
+                <div class="metric">
+                    <div class="value">0</div>
+                    <div class="label">Галлюцинаций</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Ценность для бизнеса</h2>
+            <ul>
+                <li><strong>Рост конверсии:</strong> клиент получает ответ мгновенно, в любое время суток</li>
+                <li><strong>Разгрузка менеджеров:</strong> типовые вопросы закрывает бот, продажи занимаются сложными лидами</li>
+                <li><strong>Единая база знаний:</strong> все ответы основаны на актуальных материалах, исключён человеческий фактор</li>
+                <li><strong>Аналитика:</strong> в NocoDB пишется каждый диалог — видно, какие темы волнуют клиентов</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>Где ещё применимо</h2>
+            <ul>
+                <li>Сервисные компании — приём заявок через бота с классификацией</li>
+                <li>E-commerce — консультации по товарам, статус заказа</li>
+                <li>EdTech — FAQ по курсам, запись на пробный урок</li>
+                <li>HR — первичный скрининг кандидатов, ответы на типовые вопросы</li>
+                <li>Медицина — запись на приём, напоминания, результаты анализов</li>
+            </ul>
+        </section>
+
+        <div class="cta">
+            <h3>Попробовать в деле</h3>
+            <p style="color:var(--muted);margin:12px 0 0;">
+                Бот работает на self-hosted инфраструктуре. Напишите ему в Telegram — он ответит на вопросы
+                про автоматизацию, веб-разработку и услуги.
+            </p>
+            <p style="color:var(--muted);margin:12px 0 0;font-size:13px;">
+                JSON-экспорт workflow: <a href="../n8n/telegram-bot-workflow.json" style="color:var(--accent);">telegram-bot-workflow.json</a>
+            </p>
+            <a href="https://t.me/EduardWIT_assistent_bot" target="_blank" class="button">Написать боту</a>
+        </div>
+    </main>
+
+    <footer style="text-align:center;padding:40px 24px;border-top:1px solid rgba(255,255,255,0.08);color:#94a3b8;font-size:14px;font-family:'Inter',sans-serif;">
+        <div style="max-width:1100px;margin:0 auto;">
+            <p>&copy; 2026 EduardWIT &bull; <a href="../index.html" style="color:#06b6d4;">На главную</a> &bull; <a href="../privacy-policy.html" style="color:#06b6d4;">Политика конфиденциальности</a></p>
+        </div>
+    </footer>
+</body>
+
+</html>

@@ -1,183 +1,98 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Политика конфиденциальности | EduardWIT</title>
     <meta name="description" content="Политика обработки персональных данных в соответствии с 152-ФЗ.">
-    
-    <!-- Yandex.Metrika counter -->
-    <script type="text/javascript">
-        (function(m,e,t,r,i,k,a){
-            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-            m[i].l=1*new Date();
-            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=109690102', 'ym');
-    
-        ym(109690102, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
-    </script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/109690102" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-    <!-- /Yandex.Metrika counter -->
-
-    <script src="js/analytics.js" defer></script>
+    <link rel="stylesheet" href="css/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="css/style.css">
     <style>
-        :root {
-            --bg: #0a0a0a;
-            --bg-alt: #161625;
-            --text: #f3f4f6;
-            --muted: #9ca3af;
-            --accent: #00d4ff;
-            --accent-alt: #00ff88;
-            --border: rgba(255, 255, 255, 0.08);
-            --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        .policy-page {
+            padding: 60px 0;
         }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+        .policy-page h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 10px;
         }
-
-        body {
-            font-family: var(--font);
-            background: linear-gradient(180deg, var(--bg) 0%, var(--bg-alt) 100%);
-            color: var(--text);
-            line-height: 1.7;
-            padding-bottom: 60px;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        a {
-            color: var(--accent);
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        .header {
-            padding: 60px 0 40px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .header h1 {
-            font-size: clamp(28px, 5vw, 42px);
-            margin-bottom: 12px;
-        }
-
-        .header .meta {
-            color: var(--muted);
+        .policy-page .meta {
             font-size: 14px;
+            color: #555;
             display: flex;
             gap: 16px;
             flex-wrap: wrap;
+            margin-bottom: 40px;
         }
-
-        .header .meta span {
-            background: rgba(0, 212, 255, 0.1);
+        .policy-page .meta span {
+            background: #f5f5f5;
             padding: 4px 10px;
             border-radius: 4px;
+            font-weight: 600;
         }
-
-        .section {
-            padding: 32px 0;
-        }
-
-        .section h2 {
+        .policy-page h2 {
             font-size: 20px;
-            margin: 24px 0 12px;
-            color: var(--accent);
+            font-weight: 700;
+            margin: 32px 0 12px;
         }
-
-        .section h3 {
+        .policy-page h3 {
             font-size: 18px;
-            margin: 20px 0 10px;
-            color: var(--text);
+            font-weight: 700;
+            margin: 24px 0 10px;
         }
-
-        .section p {
+        .policy-page p {
             margin-bottom: 16px;
-            color: var(--muted);
+            color: #555;
+            font-size: 14px;
+            line-height: 1.7;
         }
-
-        .section ul {
+        .policy-page ul {
             margin: 12px 0 12px 24px;
-            color: var(--muted);
+            color: #555;
+            font-size: 14px;
         }
-
-        .section li {
+        .policy-page li {
             margin-bottom: 8px;
         }
-
-        .highlight {
-            background: rgba(0, 212, 255, 0.05);
-            border-left: 3px solid var(--accent);
+        .policy-page .highlight {
+            background: #f9f9f9;
+            border-left: 3px solid #EBFF01;
             padding: 16px;
             border-radius: 0 8px 8px 0;
             margin: 20px 0;
-        }
-
-        .footer {
-            text-align: center;
-            color: var(--muted);
             font-size: 14px;
-            padding-top: 40px;
-            border-top: 1px solid var(--border);
         }
-
-        @media (max-width: 640px) {
-            .header {
-                padding: 40px 0 30px;
-            }
-
-            .section {
-                padding: 24px 0;
-            }
-
-            .header .meta {
-                flex-direction: column;
-                gap: 8px;
-            }
+        .policy-back {
+            display: inline-block;
+            margin-top: 40px;
+            font-weight: 700;
+            color: #000;
+            border-bottom: 2px solid #EBFF01;
+            padding-bottom: 2px;
+        }
+        .policy-back:hover {
+            color: #555;
         }
     </style>
 </head>
-
 <body>
-    <header class="header">
-        <div class="container">
-            <h1>Политика конфиденциальности</h1>
-            <div class="meta">
-                <span>📅 Обновлено: май 2026</span>
-                <span>🇷🇺 152-ФЗ</span>
-                <span>🔒 Self-hosted</span>
-            </div>
+    <div class="container policy-page">
+        <h1>Политика конфиденциальности</h1>
+        <div class="meta">
+            <span>Обновлено: май 2026</span>
+            <span>152-ФЗ</span>
+            <span>Self-hosted</span>
         </div>
-    </header>
 
-    <main class="container">
-        <!-- 1. Общие положения -->
-        <section class="section">
+        <section>
             <h2>1. Общие положения</h2>
-            <p>Настоящая Политика конфиденциальности (далее — Политика) разработана в соответствии с Федеральным законом
-                от 27.07.2006 № 152-ФЗ «О персональных данных» и определяет порядок обработки персональных данных и меры
-                по обеспечению их безопасности, предпринимаемые ИП/ООО (далее — Оператор).</p>
-            <p>Оператор ставит своей задачей соблюдение прав и свобод субъектов персональных данных, включая защиту
-                неприкосновенности частной жизни, личной и семейной тайны.</p>
-            <p>Политика применяется ко всей информации, получаемой Оператором через веб-сайт
-                <strong>eduardwit.ru</strong> и иные каналы взаимодействия.
-            </p>
+            <p>Настоящая Политика конфиденциальности (далее — Политика) разработана в соответствии с Федеральным законом от 27.07.2006 № 152-ФЗ «О персональных данных» и определяет порядок обработки персональных данных и меры по обеспечению их безопасности, предпринимаемые Оператором.</p>
+            <p>Оператор ставит своей задачей соблюдение прав и свобод субъектов персональных данных, включая защиту неприкосновенности частной жизни, личной и семейной тайны.</p>
+            <p>Политика применяется ко всей информации, получаемой Оператором через веб-сайт <strong>eduardwit.ru</strong> и иные каналы взаимодействия.</p>
         </section>
 
-        <!-- 2. Какие данные собираются -->
-        <section class="section">
+        <section>
             <h2>2. Какие данные собираются</h2>
             <p>Оператор может обрабатывать следующие персональные данные Пользователя:</p>
             <ul>
@@ -186,18 +101,13 @@
                 <li>Номера телефонов</li>
                 <li>Текст обращения / сообщения</li>
             </ul>
-            <p>На сайте также происходит сбор и обработка обезличенных данных о посетителях (в том числе файлов
-                «cookie») с помощью сервисов интернет-статистики (Яндекс Метрика, Google Analytics и других), при
-                условии получения согласия Пользователя на использование cookie, кроме строго необходимых.</p>
+            <p>На сайте также происходит сбор и обработка обезличенных данных о посетителях (в том числе файлов «cookie») с помощью сервисов интернет-статистики (Яндекс Метрика и других), при условии получения согласия Пользователя на использование cookie, кроме строго необходимых.</p>
             <div class="highlight">
-                ⚠️ <strong>Обработка специальных категорий персональных данных</strong> (расовая, национальная
-                принадлежность, политические взгляды, религиозные убеждения, интимная жизнь и др.) Оператором не
-                осуществляется.
+                <strong>Обработка специальных категорий персональных данных</strong> (расовая, национальная принадлежность, политические взгляды, религиозные убеждения, интимная жизнь и др.) Оператором не осуществляется.
             </div>
         </section>
 
-        <!-- 3. Цели обработки -->
-        <section class="section">
+        <section>
             <h2>3. Цели обработки персональных данных</h2>
             <ul>
                 <li>Предоставление доступа к сервисам, информации и материалам, размещённым на веб-сайте</li>
@@ -207,26 +117,21 @@
             </ul>
         </section>
 
-        <!-- 4. Использование ИИ -->
-        <section class="section">
+        <section>
             <h2>4. Использование ИИ-моделей в разработке</h2>
             <p>В процессе разработки и тестирования проектов Оператор может использовать следующие ИИ-модели:</p>
             <ul>
                 <li><strong>Российские модели:</strong> GigaChat, YandexGPT</li>
                 <li><strong>Иностранные модели:</strong> ChatGPT, Claude, Gemini, Copilot и другие аналоги</li>
             </ul>
-            <p><strong>Цели использования:</strong> генерация шаблонного кода, оптимизация текстов, тестирование
-                гипотез, отладка интеграций.</p>
+            <p><strong>Цели использования:</strong> генерация шаблонного кода, оптимизация текстов, тестирование гипотез, отладка интеграций.</p>
             <div class="highlight">
-                🔐 <strong>Конфиденциальная информация заказчика НЕ передаётся в публичные ИИ-сервисы без письменного
-                    согласия.</strong><br>
-                При работе с чувствительными данными используются локальные модели, self-hosted решения или
-                анонимизированные данные.
+                <strong>Конфиденциальная информация заказчика НЕ передаётся в публичные ИИ-сервисы без письменного согласия.</strong><br>
+                При работе с чувствительными данными используются локальные модели, self-hosted решения или анонимизированные данные.
             </div>
         </section>
 
-        <!-- 5. Принципы обработки -->
-        <section class="section">
+        <section>
             <h2>5. Принципы обработки персональных данных</h2>
             <ul>
                 <li>Обработка осуществляется на законной, справедливой и прозрачной основе</li>
@@ -238,66 +143,57 @@
             </ul>
         </section>
 
-        <!-- 6. Безопасность -->
-        <section class="section">
+        <section>
             <h2>6. Защита данных</h2>
-            <p>Безопасность персональных данных обеспечивается посредством реализации правовых, организационных и
-                технических мер:</p>
+            <p>Безопасность персональных данных обеспечивается посредством реализации правовых, организационных и технических мер:</p>
             <ul>
                 <li>Данные хранятся в зашифрованном виде на self-hosted инфраструктуре</li>
                 <li>Доступ имеют только авторизованные лица</li>
                 <li>Регулярно выполняется резервное копирование</li>
-                <li>Персональные данные не передаются третьим лицам без согласия субъекта, за исключением случаев,
-                    предусмотренных законодательством РФ</li>
+                <li>Персональные данные не передаются третьим лицам без согласия субъекта, за исключением случаев, предусмотренных законодательством РФ</li>
             </ul>
         </section>
 
-        <!-- 7. Права субъекта -->
-        <section class="section">
+        <section>
             <h2>7. Ваши права</h2>
             <p>Субъект персональных данных имеет право:</p>
             <ul>
                 <li>Получать информацию, касающуюся обработки его персональных данных</li>
-                <li>Требовать уточнения, блокирования или уничтожения своих данных, если они неполные, устаревшие или
-                    неточные</li>
+                <li>Требовать уточнения, блокирования или уничтожения своих данных, если они неполные, устаревшие или неточные</li>
                 <li>Отзывать своё согласие на обработку персональных данных в любое время</li>
                 <li>Обжаловать действия Оператора в уполномоченный орган или в судебном порядке</li>
             </ul>
         </section>
 
-        <!-- 8. Срок хранения и удаление -->
-        <section class="section">
+        <section>
             <h2>8. Срок хранения и удаление данных</h2>
-            <p>Персональные данные хранятся не дольше, чем этого требуют цели обработки. По достижении целей или при
-                отзыве согласия данные подлежат удалению либо обезличиванию.</p>
-            <p>Пользователь может запросить удаление своих данных, направив уведомление на <a
-                    href="mailto:admin@eduardwit.ru">admin@eduardwit.ru</a> с пометкой «Удаление персональных данных».
-            </p>
+            <p>Персональные данные хранятся не дольше, чем этого требуют цели обработки. По достижении целей или при отзыве согласия данные подлежат удалению либо обезличиванию.</p>
+            <p>Пользователь может запросить удаление своих данных, направив уведомление на <a href="mailto:admin@eduardwit.ru">admin@eduardwit.ru</a> с пометкой «Удаление персональных данных».</p>
         </section>
 
-        <!-- 9. Контакты -->
-        <section class="section">
+        <section>
             <h2>9. Контакты</h2>
             <p>По вопросам обработки персональных данных и конфиденциальности обращайтесь:</p>
             <ul>
-                <li>📧 Email: <a href="mailto:admin@eduardwit.ru">admin@eduardwit.ru</a></li>
-                <li>💬 Telegram: <a href="https://t.me/EduardWIT_assistent_bot">@EduardWIT_assistent_bot</a></li>
+                <li>Email: <a href="mailto:admin@eduardwit.ru">admin@eduardwit.ru</a></li>
+                <li>Telegram: <a href="https://t.me/EduardWIT_assistent_bot">@EduardWIT_assistent_bot</a></li>
             </ul>
         </section>
 
-        <!-- 10. Заключительные положения -->
-        <section class="section">
+        <section>
             <h2>10. Заключительные положения</h2>
-            <p>Оператор оставляет за собой право вносить изменения в настоящую Политику. Все изменения вступают в силу с
-                момента их публикации в актуальной версии.</p>
+            <p>Оператор оставляет за собой право вносить изменения в настоящую Политику. Все изменения вступают в силу с момента их публикации в актуальной версии.</p>
             <p>Настоящая Политика действует бессрочно до момента её замены новой редакцией.</p>
-            <p style="margin-top: 24px; font-size: 13px; color: #6b7280;">Последнее обновление: май 2026</p>
+            <p style="margin-top: 24px; font-size: 13px; color: #777;">Последнее обновление: май 2026</p>
         </section>
-    </main>
 
-    <footer class="footer container">
-        <p>© 2026 EduardWIT • <a href="index.html">Вернуться на главную</a></p>
+        <a href="index.html" class="policy-back">Вернуться на главную</a>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 EduardWIT &bull; <a href="privacy-policy.html">Политика конфиденциальности</a> &bull; <a href="https://t.me/EduardWIT_assistent_bot" target="_blank">Telegram</a></p>
+        </div>
     </footer>
 </body>
-
 </html>

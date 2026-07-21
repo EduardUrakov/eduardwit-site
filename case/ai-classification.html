@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../css/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="../css/fonts.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <title>Кейс: ИИ-классификация обращений в n8n | EduardWIT</title>
+    <meta name="description"
+        content="Автоматическая маршрутизация 100+ обращений в день с использованием GigaChat, Confidence Score и Human-in-the-Loop.">
+
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function (m, e, t, r, i, k, a) {
+            m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments) };
+            m[i].l = 1 * new Date();
+            for (var j = 0; j < document.scripts.length; j++) { if (document.scripts[j].src === r) { return; } }
+            k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
+        })(window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js?id=109690102', 'ym');
+
+        ym(109690102, 'init', { ssr: true, webvisor: true, clickmap: true, ecommerce: "dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce: true, trackLinks: true });
+    </script>
+    <noscript>
+        <div><img src="https://mc.yandex.ru/watch/109690102" style="position:absolute; left:-9999px;" alt="" /></div>
+    </noscript>
+    <!-- /Yandex.Metrika counter -->
+
+    <script src="../js/analytics.js" defer></script>
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --bg-alt: #161625;
+            --text: #f3f4f6;
+            --muted: #9ca3af;
+            --accent: #00d4ff;
+            --accent-alt: #00ff88;
+            --border: rgba(255, 255, 255, 0.08);
+            --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font);
+            background: linear-gradient(180deg, var(--bg) 0%, var(--bg-alt) 100%);
+            color: var(--text);
+            line-height: 1.6;
+            padding-bottom: 60px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .header {
+            padding: 60px 0 40px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header h1 {
+            font-size: clamp(28px, 5vw, 42px);
+            margin-bottom: 12px;
+        }
+
+        .header .meta {
+            color: var(--muted);
+            font-size: 14px;
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .header .meta span {
+            background: rgba(0, 212, 255, 0.1);
+            padding: 4px 10px;
+            border-radius: 4px;
+        }
+
+        .header .subtitle {
+            color: var(--muted);
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .section {
+            padding: 40px 0;
+        }
+
+        .section h2 {
+            font-size: 24px;
+            margin-bottom: 16px;
+            color: var(--accent);
+        }
+
+        .section h3 {
+            font-size: 18px;
+            margin: 20px 0 10px;
+            color: var(--text);
+        }
+
+        .section p {
+            margin-bottom: 16px;
+            color: var(--muted);
+        }
+
+        .section ul {
+            margin: 12px 0 12px 24px;
+            color: var(--muted);
+        }
+
+        .section li {
+            margin-bottom: 8px;
+        }
+
+        .architecture {
+            background: rgba(0, 212, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            color: var(--accent-alt);
+            white-space: pre;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .metric {
+            background: var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .metric .value {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--accent-alt);
+            margin-bottom: 4px;
+        }
+
+        .metric .label {
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .data-card {
+            background: var(--border);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .data-card h4 {
+            color: var(--text);
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .cta {
+            text-align: center;
+            padding: 32px;
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 12px;
+            margin: 32px 0;
+        }
+
+        .cta .button {
+            display: inline-block;
+            padding: 12px 28px;
+            background: var(--accent);
+            color: #0a0a0a;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-top: 16px;
+        }
+
+        .cta .button:hover {
+            background: var(--accent-alt);
+        }
+
+        .footer {
+            text-align: center;
+            color: var(--muted);
+            font-size: 14px;
+            padding-top: 40px;
+            border-top: 1px solid var(--border);
+        }
+
+        @media (max-width: 640px) {
+            .header {
+                padding: 40px 0 30px;
+            }
+
+            .section {
+                padding: 30px 0;
+            }
+
+            .header .meta {
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div style="position:fixed;top:0;left:0;right:0;z-index:1000;background:#fff;border-bottom:1px solid #e0e0e0;padding:10px 20px;display:flex;align-items:center;gap:16px;font-family:Open Sans, sans-serif;">
+        <a href="../index.html" style="background:#EBFF01;color:#000;font-weight:700;text-decoration:none;padding:6px 16px;border-radius:4px;font-size:13px;">&#8592; На главную</a>
+        <a href="../index.html#portfolio" style="color:#555;font-size:13px;font-weight:500;text-decoration:none;">Портфолио</a>
+    </div>
+    <header class="header">
+        <div class="container">
+            <h1>ИИ-классификация входящих обращений</h1>
+            <div class="meta">
+                <span>🛠 n8n + NocoDB</span>
+                <span>🧠 GigaChat LLM</span>
+                <span>📱 Telegram API</span>
+                <span>🔌 Webhooks</span>
+                <span>⚡ ~3 дня</span>
+            </div>
+            <p class="subtitle">
+                Автоматическая маршрутизация 100+ клиентских обращений в день с использованием Confidence Score и
+                Human-in-the-Loop подхода.
+            </p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div style="margin-bottom:30px;background:var(--border);border-radius:12px;padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:20px;font-family:var(--font);">
+            <div><strong style="color:var(--accent);display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Задача</strong><span style="color:var(--muted);font-size:14px;">Клиент терял 3-4 часа в день на ручной сортировке 100+ обращений. VIP-заявки тонули в потоке.</span></div>
+            <div><strong style="color:var(--accent);display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Моя работа</strong><span style="color:var(--muted);font-size:14px;">Спроектировал и развернул AI-классификатор на n8n с GigaChat. Настроил Confidence Score, Human-in-the-Loop, защиту от спама, алерты в Telegram.</span></div>
+            <div><strong style="color:var(--accent);display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Технологии</strong><span style="color:var(--muted);font-size:14px;">n8n 2.27.3, GigaChat (LangChain), NocoDB, Telegram Bot API</span></div>
+            <div><strong style="color:var(--accent);display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Результат</strong><span style="color:var(--muted);font-size:14px;">−95% времени на сортировку, &lt;3 сек на классификацию, ~90% accuracy</span></div>
+        </div>
+        <!-- Контекст -->
+        <section class="section">
+            <h2>🎯 Бизнес-проблема</h2>
+            <p>Компания ежедневно получает более 100 обращений через формы, email и чаты. Менеджеры тратят 3–4 часа в
+                день на ручную сортировку вместо работы с клиентами.</p>
+            <ul>
+                <li><strong>Потеря времени:</strong> ручной разбор очереди вместо активных продаж</li>
+                <li><strong>Потеря VIP-клиентов:</strong> срочные жалобы тонут в общем потоке</li>
+                <li><strong>Холодные лиды:</strong> отдел продаж получает нерелевантные запросы</li>
+                <li><strong>Нет аналитики:</strong> невозможно понять, какие отделы перегружены</li>
+            </ul>
+        </section>
+
+        <!-- Цель -->
+        <section class="section">
+            <h2>✅ Цель решения</h2>
+            <p>Создать интеллектуального ассистента, который автоматически:</p>
+            <ul>
+                <li>Принимает обращения через единый Webhook-эндпоинт</li>
+                <li>Классифицирует по 5 категориям: <em>Маркетинг, Продажи, Поддержка, Жалоба, Вопрос</em></li>
+                <li>Маршрутизирует в нужный отдел через CRM (NocoDB)</li>
+                <li>Отправляет срочные уведомления в Telegram для критичных тем</li>
+                <li>Передаёт на ручную проверку неоднозначные случаи (<strong>Human-in-the-Loop</strong>)</li>
+            </ul>
+        </section>
+
+        <!-- Архитектура -->
+        <section class="section">
+            <h2>⚙️ Архитектура</h2>
+            <div class="architecture">[Web-форма / Email / API] → Webhook /intake
+                ↓
+                [AI Agent: GigaChat + Structured Output]
+                ↓ JSON { category, confidence }
+                ↓
+                [IF: Confidence Score]
+                ├── ≥ 80% → [Switch] → [CRM: NocoDB] + [Telegram Alert]
+                └── < 80% → [Manual Review Queue] → [Telegram: "Нужна проверка" ] </div>
+                    <p><strong>Инфраструктура:</strong> Self-hosted n8n, NocoDB (CRM), внешние API (GigaChat, Telegram
+                        Bot API), Nginx (Rate Limiting).</p>
+
+        </section>
+
+        <!-- Детали реализации -->
+        <section class="section">
+            <h2>🔧 Детали реализации</h2>
+            <div class="data-grid">
+                <div class="data-card">
+                    <h4>🧠 Confidence Score</h4>
+                    <p style="color:var(--muted);margin:0">ИИ возвращает не только категорию, но и уверенность (0-100%).
+                        Если она низкая — включается режим ручной модерации.</p>
+                </div>
+                <div class="data-card">
+                    <h4>📝 Structured Output</h4>
+                    <p style="color:var(--muted);margin:0">Parser гарантирует валидный JSON от модели. Никакого Markdown
+                        или «текста вперемешку» — система не ломается.</p>
+                </div>
+                <div class="data-card">
+                    <h4>🛡️ Защита от спама</h4>
+                    <p style="color:varuted;margin:0">Валидация обязательных полей, дедупликация по email + хешу текста
+                        за 24 часа, лимиты запросов.</p>
+                </div>
+                <div class="data-card">
+                    <h4>📊 Мониторинг</h4>
+                    <p style="color:var(--muted);margin:0">Алерт в Telegram, если средняя уверенность падает ниже 70%
+                        или API недоступно более 5 минут.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Метрики -->
+        <section class="section">
+            <h2>📊 Результат</h2>
+            <div class="metrics">
+                <div class="metric">
+                    <div class="value">−95%</div>
+                    <div class="label">Время на сортировку</div>
+                </div>
+                <div class="metric">
+                    <div class="value">&lt; 3 сек</div>
+                    <div class="label">Скорость классификации</div>
+                </div>
+                <div class="metric">
+                    <div class="value">~90%</div>
+                    <div class="label">Точность ИИ (Accuracy)</div>
+                </div>
+                <div class="metric">
+                    <div class="value">~624к ₽</div>
+                    <div class="label">Экономия в год (ФОТ)</div>
+                </div>
+            </div>
+            <p style="color:var(--muted);font-size:14px;margin-top:16px;">
+                При ставке менеджера 800 ₽/час экономия 15 часов в неделю окупает разработку за 1–2 месяца.
+            </p>
+        </section>
+
+        <!-- Ценность -->
+        <section class="section">
+            <h2>💡 Ценность для бизнеса</h2>
+            <ul>
+                <li><strong>Рост конверсии:</strong> отдел продаж работает только с «горячими» лидами</li>
+                <li><strong>Снижение оттока:</strong> жалобы VIP обрабатываются за 15 минут вместо суток</li>
+                <li><strong>Data-driven:</strong> автоматическая сегментация обращений для BI-отчётов</li>
+                <li><strong>Масштабируемость:</strong> рост потока обращений не требует пропорционального роста штата
+                </li>
+            </ul>
+        </section>
+
+        <!-- Где применимо -->
+        <section class="section">
+            <h2>🌍 Где ещё применимо</h2>
+            <ul>
+                <li>E-commerce — маршрутизация заявок с маркетплейсов и возвратов</li>
+                <li>Финтех — классификация обращений (кредиты, карты, мошенничество)</li>
+                <li>Медицина — сортировка пациентов по срочности и специализации</li>
+                <li>EdTech — распределение лидов между отделами продаж и кураторами</li>
+                <li>HR — первичная сортировка откликов кандидатов</li>
+            </ul>
+        </section>
+
+        <!-- CTA -->
+        <div class="cta">
+            <h3>📦 Артефакты кейса</h3>
+            <p style="color:var(--muted);margin:12px 0 0;">
+                JSON-экспорт workflow, примеры промптов, схема базы данных NocoDB и расчёт ROI
+                доступны по запросу для верификации production-ready архитектуры.
+            </p>
+        </div>
+    </main>
+
+    <footer class="footer container">
+        <p>© 2026 EduardWIT • <a href="../index.html">Главная</a> </p>
+    </footer>
+    <footer style="text-align:center;padding:40px 24px;border-top:1px solid rgba(255,255,255,0.08);color:#94a3b8;font-size:14px;font-family:'Inter',sans-serif;">
+        <div style="max-width:1100px;margin:0 auto;">
+            <p>&copy; 2026 EduardWIT &bull; <a href="../index.html" style="color:#06b6d4;">На главную</a> &bull; <a href="../privacy-policy.html" style="color:#06b6d4;">Политика конфиденциальности</a></p>
+        </div>
+    </footer>
+</body>
+
+</html>
