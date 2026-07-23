@@ -116,27 +116,46 @@
                     <h2 class="title title_fz16 about__title">Про меня</h2>
                     <div class="title about__subtitle">Меня зовут Эдуард</div>
                     <div class="divider"></div>
-                    <p class="about__text">Превращаю рутинные процессы в автоматизированные системы, а идеи — в
-                        работающие цифровые продукты.
-                        Специализируюсь на стыке веб-разработки и интеллектуальной автоматизации. Создаю сайты, лендинги
-                        и быстрые MVP, а также выстраиваю сложные интеграции на базе n8n, Telegram-ботов и
-                        AI-инструментов.</p>
-                    <p class="about__text">Что это даёт бизнесу: <br>
-                        • Экономия времени: сокращаю время реакции на заявки с часов до секунд (как в кейсе с
-                        автоматизацией CRM и оплатой).<br>
-                        • Снижение затрат: внедряю ИИ-классификацию и обработку обращений, экономя сотни тысяч рублей в
-                        год на ручном труде.<br>
-                        • Надёжность: беру на себя полный цикл — от прототипа и адаптивной вёрстки до настройки
-                        пайплайнов, интеграции с CRM/базами данных и деплоя на сервер.</p>
-                    <p class="about__text">Моя цель — не просто написать код, а создать решение, которое будет стабильно
-                        работать и приносить пользу без постоянного участия человека.
+
+                    <p class="about__text">
+                        Автоматизирую бизнес-процессы и создаю веб-продукты, которые стабильно работают
+                        без вашего постоянного участия. Беру задачу «под ключ»: от прототипа
+                        и адаптивной вёрстки до интеграций, деплоя и поддержки.
                     </p>
-                    <p class="about__text">Мой подход: каждое решение тестируется, оптимизируется и сдаётся «под ключ».
-                        Я отвечаю не за процесс написания кода, а за работоспособный инструмент, который решает
-                        конкретную задачу вашего бизнеса.
+
+                    <p class="about__text">
+                        <strong>Какие проблемы бизнеса я решаю:</strong><br>
+                        <strong>Заявки теряются, ответ клиенту — через часы.</strong>
+                        Настраиваю автоматизацию CRM и Telegram: заявка фиксируется, клиент получает
+                        ответ за секунды.<br>
+                        <strong>Менеджеры тонут в однотипных обращениях.</strong>
+                        Внедряю ИИ-классификацию и автообработку: бот сортирует, отвечает на типовые
+                        вопросы, эскалирует только сложное.<br>
+                        <strong>Сервисы не «дружат» между собой.</strong>
+                        Выстраиваю пайплайны на n8n: CRM, оплаты, базы данных, уведомления, Telegram —
+                        всё связано и работает как единый механизм.<br>
+                        <strong>Нужен сайт или MVP «вчера».</strong>
+                        Прототип, вёрстка, интеграции, деплой — рабочий продукт за 1–3 недели.<br>
+                        <strong>Сайт есть, но «кривой» и никто не поддерживает.</strong>
+                        Читаю чужой код, нахожу баги, оптимизирую. Беру на поддержку то,
+                        от чего отказались другие.
+                    </p>
+
+                    <p class="about__text">
+                        <strong>Как я работаю:</strong> полный цикл — прототип, вёрстка, интеграции,
+                        тестирование, деплой, поддержка. Сдаю не «код», а работающий инструмент.
+                        Вы видите прогресс на каждом этапе и получаете решение, которое можно
+                        передать дальше без «магии».
+                    </p>
+
+                    <p class="about__text">
+                        Кому подойду: малый и средний бизнес, стартапы на стадии MVP, проекты,
+                        где нужен один человек, который закроет задачу целиком.
                     </p>
                     <p class="about__text" style="margin-top:24px;">
-                        <a href="#contacts" style="display:inline-block;background:#EBFF01;color:#000;font-weight:700;padding:12px 28px;border-radius:6px;text-decoration:none;font-size:15px;">Обсудить ваш проект</a>
+                        <a href="#contacts"
+                            style="display:inline-block;background:#EBFF01;color:#000;font-weight:700;padding:12px 28px;border-radius:6px;text-decoration:none;font-size:15px;">Обсудить
+                            ваш проект</a>
                     </p>
                 </div>
                 <div class="about__skills">
@@ -517,7 +536,8 @@
                 <div class="projects__card">
                     <div class="projects__header">
                         <div class="projects__title">FutureTech AI News – Информационный портал</div>
-                        <div class="projects__description">Адаптивный многостраничный сайт с BEM-вёрсткой, ES-модулями, табами и современным UI/UX.</div>
+                        <div class="projects__description">Адаптивный многостраничный сайт с BEM-вёрсткой, ES-модулями,
+                            табами и современным UI/UX.</div>
                         <div class="projects__tags">
                             <span class="projects__tag">HTML</span>
                             <span class="projects__tag">CSS (BEM)</span>
@@ -713,7 +733,7 @@
 
             function validate(value) {
                 const val = (value || '').toString().trim();
-                return val ? { ok: true, error: '' } : { ok: false, error: 'Это поле обязательно' };
+                return val ? {ok: true, error: ''} : {ok: false, error: 'Это поле обязательно'};
             }
 
             function clearErrors() {
@@ -736,11 +756,11 @@
                 const consent = document.getElementById('consent-input')?.checked || false;
 
                 const checks = [
-                    { field: validate(name), id: 'name-input-error' },
-                    { field: validate(contact), id: 'contact-input-error' },
-                    { field: validate(topic), id: 'topic-input-error' },
-                    { field: validate(message), id: 'message-input-error' },
-                    { field: consent ? { ok: true } : { ok: false, error: 'Необходимо согласие' }, id: 'consent-input-error' }
+                    {field: validate(name), id: 'name-input-error'},
+                    {field: validate(contact), id: 'contact-input-error'},
+                    {field: validate(topic), id: 'topic-input-error'},
+                    {field: validate(message), id: 'message-input-error'},
+                    {field: consent ? {ok: true} : {ok: false, error: 'Необходимо согласие'}, id: 'consent-input-error'}
                 ];
 
                 const hasErrors = checks.some(check => {
@@ -761,7 +781,7 @@
                 try {
                     const response = await fetch(WEBHOOK_URL, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({
                             name: name.trim(),
                             contact: contact.trim(),
@@ -781,7 +801,7 @@
                         form.reset();
                         if (successMsg) {
                             successMsg.style.display = 'block';
-                            setTimeout(() => { successMsg.style.display = 'none'; }, 5000);
+                            setTimeout(() => {successMsg.style.display = 'none';}, 5000);
                         }
                     } else {
                         throw new Error('HTTP ' + response.status);
@@ -817,7 +837,7 @@
             localStorage.setItem('metrica_consent', '1');
             document.getElementById('metrica-notice').style.display = 'none';
             if (typeof ym !== 'undefined') {
-                ym(109690102, 'params', { consent_given: 1 });
+                ym(109690102, 'params', {consent_given: 1});
             }
         });
     </script>
