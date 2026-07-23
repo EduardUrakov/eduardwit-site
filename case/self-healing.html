@@ -7,730 +7,72 @@
     <link rel="stylesheet" href="../css/bootstrap-reboot.min.css">
     <link rel="stylesheet" href="../css/fonts.css">
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/case.css">
     <title>Self-Healing Platform: автономное восстановление workflow | EduardWIT</title>
     <style>
-        :root {
-            --bg: #0a0e1a;
-            --surface: #131826;
-            --surface-2: #1a2033;
-            --border: #242b3d;
-            --text: #e5e7eb;
-            --muted: #94a3b8;
-            --accent: #00d9ff;
-            --accent-2: #7c3aed;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --g1: linear-gradient(135deg, #00d9ff 0%, #7c3aed 100%);
-            --g2: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
-            --g3: linear-gradient(135deg, #10b981 0%, #00d9ff 100%);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.7;
-            overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        /* ===== HERO ===== */
+        body { padding-top: 50px; }
         .hero {
-            min-height: 100vh;
+            min-height: 85vh;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 4rem 2rem;
+            align-items: center;
+            padding: 6rem 2rem 4rem;
             position: relative;
-            background: radial-gradient(circle at 20% 30%, rgba(0, 217, 255, 0.12) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(124, 58, 237, 0.12) 0%, transparent 50%),
-                var(--bg);
+            background: radial-gradient(circle at 20% 30%, rgba(235, 255, 1, 0.12) 0%, transparent 50%),
+                radial-gradient(circle at 80% 40%, rgba(0, 0, 0, 0.04) 0%, transparent 50%);
         }
 
         .hero::before {
             content: '';
             position: absolute;
             inset: 0;
-            background-image: linear-gradient(rgba(0, 217, 255, 0.04) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 217, 255, 0.04) 1px, transparent 1px);
+            background-image: linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
             background-size: 60px 60px;
             pointer-events: none;
             mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
         }
 
-        .badge {
-            display: inline-block;
-            padding: 0.5rem 1.2rem;
-            background: rgba(0, 217, 255, 0.08);
-            border: 1px solid rgba(0, 217, 255, 0.3);
-            border-radius: 100px;
-            color: var(--accent);
-            font-size: 0.85rem;
-            font-weight: 600;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin-bottom: 2rem;
-            max-width: max-content;
-        }
-
         .hero h1 {
-            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
             font-weight: 800;
             line-height: 1.05;
             margin-bottom: 1.5rem;
-            background: var(--g1);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            max-width: 900px;
-        }
-
-        .hero .subtitle {
-            font-size: clamp(1.1rem, 2vw, 1.4rem);
-            color: var(--muted);
-            max-width: 750px;
-            margin-bottom: 3rem;
-        }
-
-        .hero-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 2rem;
-            max-width: 900px;
-        }
-
-        .hero-stat {
-            padding: 1.5rem;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-        }
-
-        .hero-stat .value {
-            font-size: 2.8rem;
-            font-weight: 800;
-            background: var(--g3);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            line-height: 1;
-        }
-
-        .hero-stat .label {
-            color: var(--muted);
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        /* ===== SECTIONS ===== */
-        section {
-            padding: 6rem 2rem;
-        }
-
-        .section-inner {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        .section-label {
-            display: inline-block;
-            color: var(--accent);
-            font-size: 0.85rem;
-            font-weight: 600;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 1rem;
-        }
-
-        h2 {
-            font-size: clamp(2rem, 4vw, 3rem);
-            font-weight: 800;
-            margin-bottom: 1rem;
-            line-height: 1.2;
-        }
-
-        .section-lead {
-            color: var(--muted);
-            font-size: 1.15rem;
-            max-width: 800px;
-            margin-bottom: 3rem;
-        }
-
-        /* ===== CHALLENGE ===== */
-        .challenge-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .challenge-card {
-            background: var(--surface);
-            padding: 2rem;
-            border-radius: 16px;
-            border: 1px solid var(--border);
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .challenge-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: var(--g1);
-        }
-
-        .challenge-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--accent);
-        }
-
-        .challenge-card .icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .challenge-card h3 {
-            font-size: 1.25rem;
-            margin-bottom: 0.8rem;
-        }
-
-        .challenge-card p {
-            color: var(--muted);
-            font-size: 0.95rem;
-        }
-
-        /* ===== ARCHITECTURE ===== */
-        .arch-wrap {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 3rem 2rem;
-            margin-top: 2rem;
-        }
-
-        .arch-flow {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.8rem;
-            justify-content: center;
-            align-items: center;
-            margin-top: 2rem;
-        }
-
-        .node {
-            padding: 1rem 1.4rem;
-            background: var(--bg);
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            text-align: center;
-            min-width: 130px;
-            transition: all 0.25s;
-        }
-
-        .node:hover {
-            transform: translateY(-3px);
-        }
-
-        .node.trigger {
-            border-color: var(--danger);
-        }
-
-        .node.handler {
-            border-color: var(--accent);
-        }
-
-        .node.decision {
-            border-color: var(--warning);
-            border-radius: 50%;
-            width: 90px;
-            height: 90px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
-            min-width: auto;
-        }
-
-        .node.db {
-            border-color: var(--success);
-        }
-
-        .node.action {
-            border-color: var(--accent-2);
-        }
-
-        .node .icon {
-            font-size: 1.6rem;
-            display: block;
-            margin-bottom: 0.3rem;
-        }
-
-        .node .label {
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        .arrow {
-            color: var(--accent);
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-
-        /* ===== SCREENSHOT PLACEHOLDER ===== */
-        .screenshot {
-            margin: 3rem 0;
-            background: var(--surface);
-            border: 2px dashed var(--border);
-            border-radius: 16px;
-            padding: 3rem 2rem;
-            text-align: center;
-            position: relative;
-        }
-
-        .screenshot::before {
-            content: '📸';
-            font-size: 3rem;
-            display: block;
-            margin-bottom: 1rem;
-            opacity: 0.6;
-        }
-
-        .screenshot img {
-            max-width: 100%;
-            border-radius: 10px;
-            display: block;
-            margin: 0 auto;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-        }
-
-        .screenshot .caption {
-            color: var(--muted);
-            font-size: 0.9rem;
-            margin-top: 1rem;
-            font-style: italic;
-        }
-
-        .screenshot .placeholder-label {
-            color: var(--accent);
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 0.5rem;
-        }
-
-        /* ===== PATTERNS ===== */
-        .patterns-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .pattern-card {
-            background: var(--surface);
-            padding: 2rem;
-            border-radius: 16px;
-            border: 1px solid var(--border);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .pattern-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: var(--g1);
-        }
-
-        .pattern-card.p2::before {
-            background: var(--g2);
-        }
-
-        .pattern-card.p3::before {
-            background: var(--g3);
-        }
-
-        .pattern-card.p4::before {
-            background: linear-gradient(135deg, #f59e0b, #ef4444);
-        }
-
-        .pattern-tag {
-            display: inline-block;
-            padding: 0.25rem 0.7rem;
-            background: rgba(0, 217, 255, 0.1);
-            color: var(--accent);
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            margin-bottom: 1rem;
-        }
-
-        .pattern-card h3 {
-            font-size: 1.25rem;
-            margin-bottom: 0.8rem;
-        }
-
-        .pattern-card p {
-            color: var(--muted);
-            font-size: 0.95rem;
-            margin-bottom: 1rem;
-        }
-
-        .code {
-            background: #0d1117;
-            padding: 1rem;
-            border-radius: 8px;
-            color: #7ee787;
-            font-family: 'Fira Code', 'Courier New', monospace;
-            font-size: 0.85rem;
-            border-left: 3px solid var(--success);
-            overflow-x: auto;
-            white-space: pre;
-        }
-
-        /* ===== TIMELINE ===== */
-        .timeline {
-            position: relative;
-            padding-left: 2.5rem;
-            margin-top: 2rem;
-        }
-
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 10px;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: var(--g1);
-        }
-
-        .t-item {
-            position: relative;
-            padding-bottom: 2.5rem;
-        }
-
-        .t-item::before {
-            content: '';
-            position: absolute;
-            left: -2.5rem;
-            top: 0;
-            width: 22px;
-            height: 22px;
-            background: var(--accent);
-            border-radius: 50%;
-            box-shadow: 0 0 0 4px var(--bg), 0 0 0 6px var(--accent);
-        }
-
-        .t-item .time {
-            color: var(--accent);
-            font-weight: 600;
-            font-size: 0.85rem;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin-bottom: 0.3rem;
-        }
-
-        .t-item h3 {
-            font-size: 1.3rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .t-item p {
-            color: var(--muted);
-        }
-
-        /* ===== CODE BLOCK ===== */
-        .code-block {
-            background: #0d1117;
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin: 2rem 0;
-            overflow-x: auto;
-            border: 1px solid var(--border);
-            font-family: 'Fira Code', monospace;
-            font-size: 0.9rem;
-            line-height: 1.7;
-        }
-
-        .code-block .c {
-            color: #8b949e;
-        }
-
-        .code-block .k {
-            color: #ff7b72;
-        }
-
-        .code-block .s {
-            color: #a5d6ff;
-        }
-
-        .code-block .f {
-            color: #d2a8ff;
-        }
-
-        .code-block .n {
-            color: #79c0ff;
-        }
-
-        .code-block .v {
-            color: #c9d1d9;
-        }
-
-        /* ===== METRICS BANNER ===== */
-        .metrics-banner {
-            background: var(--g1);
-            padding: 4rem 2rem;
-            border-radius: 24px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            margin: 4rem 0;
-        }
-
-        .metrics-banner::before {
-            content: '';
-            position: absolute;
-            inset: -50%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
-            animation: pulse 4s ease-in-out infinite;
         }
 
         @keyframes pulse {
-
-            0%,
-            100% {
-                transform: scale(1);
-                opacity: 0.5;
-            }
-
-            50% {
-                transform: scale(1.1);
-                opacity: 0.9;
-            }
-        }
-
-        .metrics-banner h2 {
-            font-size: 2.5rem;
-            margin-bottom: 3rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        .metric .value {
-            font-size: 3.5rem;
-            font-weight: 800;
-            line-height: 1;
-            margin-bottom: 0.5rem;
-        }
-
-        .metric .label {
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            opacity: 0.9;
-        }
-
-        /* ===== INSIGHTS ===== */
-        .insights-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .insight {
-            background: var(--surface);
-            padding: 2rem;
-            border-radius: 14px;
-            border: 1px solid var(--border);
-        }
-
-        .insight h3 {
-            font-size: 1.15rem;
-            margin-bottom: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-        }
-
-        .insight p {
-            color: var(--muted);
-            font-size: 0.95rem;
-        }
-
-        .insight code {
-            background: #0d1117;
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
-            color: var(--success);
-            font-size: 0.85em;
-        }
-
-        /* ===== STACK ===== */
-        .stack-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-            gap: 1rem;
-        }
-
-        .stack-item {
-            background: var(--surface);
-            padding: 1.5rem;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            text-align: center;
-            transition: all 0.25s;
-        }
-
-        .stack-item:hover {
-            border-color: var(--accent);
-            transform: translateY(-3px);
-        }
-
-        .stack-item .ico {
-            font-size: 2.2rem;
-            margin-bottom: 0.5rem;
-            display: block;
-        }
-
-        .stack-item h4 {
-            font-size: 1rem;
-            margin-bottom: 0.3rem;
-        }
-
-        .stack-item p {
-            color: var(--muted);
-            font-size: 0.8rem;
-        }
-
-        /* ===== CTA ===== */
-        .cta {
-            background: var(--surface-2);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 4rem 2rem;
-            text-align: center;
-            margin: 4rem 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cta::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at 50% 0%, rgba(0, 217, 255, 0.1) 0%, transparent 60%);
-            pointer-events: none;
-        }
-
-        .cta h2 {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            position: relative;
-        }
-
-        .cta p {
-            color: var(--muted);
-            max-width: 600px;
-            margin: 0 auto 2rem;
-            position: relative;
-        }
-
-        .cta-btn {
-            display: inline-block;
-            padding: 1rem 2.5rem;
-            background: var(--g1);
-            color: white;
-            text-decoration: none;
-            border-radius: 100px;
-            font-weight: 600;
-            font-size: 1rem;
-            transition: transform 0.25s;
-            position: relative;
-        }
-
-        .cta-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(0, 217, 255, 0.3);
-        }
-
-        /* ===== FOOTER ===== */
-        footer {
-            text-align: center;
-            padding: 3rem 2rem;
-            color: var(--muted);
-            font-size: 0.9rem;
-            border-top: 1px solid var(--border);
-        }
-
-        footer .sig {
-            font-size: 1.1rem;
-            background: var(--g1);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.1); opacity: 0.6; }
         }
 
         @media (max-width: 768px) {
-            section {
-                padding: 4rem 1.5rem;
-            }
-
-            .hero {
-                padding: 3rem 1.5rem;
-            }
-
-            .hero-stats {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .arch-flow {
-                gap: 0.5rem;
-            }
-
-            .node {
-                min-width: 100px;
-                padding: 0.7rem;
-            }
-
-            .node .icon {
-                font-size: 1.3rem;
-            }
-
-            .node .label {
-                font-size: 0.7rem;
-            }
+            .hero { padding: 5rem 1.5rem 2rem; }
+        }
+        .section-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        .screenshot {
+            margin: 30px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+            background: #f9fafb;
+        }
+        .screenshot img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+        .screenshot .caption {
+            padding: 12px 16px;
+            font-size: 13px;
+            color: #4b5563;
+            border-top: 1px solid #e0e0e0;
+        }
+        .screenshot .placeholder-label {
+            display: none;
         }
     </style>
 </head>
@@ -772,11 +114,11 @@
     </div>
 
     <div style="margin:0 auto 40px;max-width:1100px;padding:0 2rem;">
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;">
-            <div><strong style="color:var(--accent);display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Задача</strong><span style="color:var(--muted);font-size:14px;">Production-workflow падали из-за таймаутов и rate limit'ов. Каждый сбой требовал ручного перезапуска.</span></div>
-            <div><strong style="color:var(--accent);display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Моя работа</strong><span style="color:var(--muted);font-size:14px;">Разработал self-healing платформу: атомарный RPC (PostgreSQL), exponential backoff с jitter, circuit breaker, дедупликация алертов.</span></div>
-            <div><strong style="color:var(--accent);display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Технологии</strong><span style="color:var(--muted);font-size:14px;">n8n 2.27.3, Supabase (PostgreSQL + PostgREST), Telegram Bot API, Grafana, Docker/Dokploy</span></div>
-            <div><strong style="color:var(--accent);display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Результат</strong><span style="color:var(--muted);font-size:14px;">90% меньше ручных перезапусков, &lt;3 мин восстановление, 0 race conditions</span></div>
+        <div style="background:#f9fafb;border:1px solid #e0e0e0;border-radius:16px;padding:28px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;">
+            <div><strong style="color:#EBFF01;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Задача</strong><span style="color:#4b5563;font-size:14px;">Production-workflow падали из-за таймаутов и rate limit'ов. Каждый сбой требовал ручного перезапуска.</span></div>
+            <div><strong style="color:#EBFF01;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Моя работа</strong><span style="color:#4b5563;font-size:14px;">Разработал self-healing платформу: атомарный RPC (PostgreSQL), exponential backoff с jitter, circuit breaker, дедупликация алертов.</span></div>
+            <div><strong style="color:#EBFF01;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Технологии</strong><span style="color:#4b5563;font-size:14px;">n8n 2.27.3, Supabase (PostgreSQL + PostgREST), Telegram Bot API, Grafana, Docker/Dokploy</span></div>
+            <div><strong style="color:#EBFF01;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Результат</strong><span style="color:#4b5563;font-size:14px;">90% меньше ручных перезапусков, &lt;3 мин восстановление, 0 race conditions</span></div>
         </div>
     </div>
 
@@ -817,7 +159,7 @@
     </section>
 
     <!-- ============ ARCHITECTURE ============ -->
-    <section style="background: var(--surface);">
+    <section style="background: #f9fafb;">
         <div class="section-inner">
             <div class="section-label">Архитектура</div>
             <h2>Атомарный state machine на PostgreSQL RPC</h2>
@@ -902,7 +244,7 @@
     </section>
 
     <!-- ============ CODE DEEP DIVE ============ -->
-    <section style="background: var(--surface);">
+    <section style="background: #f9fafb;">
         <div class="section-inner">
             <div class="section-label">Код</div>
             <h2>Атомарная RPC-функция PostgreSQL</h2>
@@ -1044,12 +386,11 @@
                 <div class="placeholder-label">Скриншот: Telegram-чат</div>
             </div>
 
-
         </div>
     </section>
 
     <!-- ============ INSIGHTS ============ -->
-    <section style="background: var(--surface);">
+    <section style="background: #f9fafb;">
         <div class="section-inner">
             <div class="section-label">Инсайты</div>
             <h2>Четыре вывода для production</h2>
@@ -1147,14 +488,9 @@
         </div>
     </section>
 
-    <!-- ============ FOOTER ============ -->
     <footer>
-        <p>© 2026 EduardWIT • <a href="../index.html">Главная</a> </p>
-    </footer>
-
-    <footer style="text-align:center;padding:40px 24px;border-top:1px solid rgba(255,255,255,0.08);color:#94a3b8;font-size:14px;font-family:'Inter',sans-serif;">
         <div style="max-width:1100px;margin:0 auto;">
-            <p>&copy; 2026 EduardWIT &bull; <a href="../index.html" style="color:#06b6d4;">На главную</a> &bull; <a href="../privacy-policy.html" style="color:#06b6d4;">Политика конфиденциальности</a></p>
+            <p>&copy; 2026 EduardWIT &bull; <a href="../index.html">На главную</a> &bull; <a href="../privacy-policy.html">Политика конфиденциальности</a></p>
         </div>
     </footer>
 </body>

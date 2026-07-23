@@ -7,53 +7,12 @@
     <link rel="stylesheet" href="../css/bootstrap-reboot.min.css">
     <link rel="stylesheet" href="../css/fonts.css">
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/case.css">
     <title>Enterprise AI Service Desk</title>
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     <style>
-        :root {
-            --primary: #010102;
-            --primary-dark: #4338ca;
-            --primary-light: #818cf8;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --info: #3b82f6;
-            --purple: #8b5cf6;
-            --pink: #ec4899;
-            --gray-50: #f9fafb;
-            --gray-100: #f3f4f6;
-            --gray-200: #e5e7eb;
-            --gray-300: #d1d5db;
-            --gray-600: #4b5563;
-            --gray-800: #1f2937;
-            --gray-900: #111827;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.7;
-            color: var(--gray-800);
-            background: var(--gray-50);
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 40px 30px;
-        }
-
-        /* Cover page */
         .cover {
-            background: linear-gradient(135deg,
-                    var(--primary) 0%,
-                    var(--purple) 50%,
-                    var(--pink) 100%);
+            background: linear-gradient(135deg, #111827 0%, #7c3aed 50%, #ec4899 100%);
             color: white;
             padding: 80px 50px;
             border-radius: 16px;
@@ -62,9 +21,7 @@
             box-shadow: 0 20px 40px rgba(99, 102, 241, 0.3);
             position: relative;
             overflow: hidden;
-            page-break-after: always;
         }
-
         .cover::before {
             content: '';
             position: absolute;
@@ -72,10 +29,9 @@
             right: -100px;
             width: 400px;
             height: 400px;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
             border-radius: 50%;
         }
-
         .cover h1 {
             font-size: 3.2rem;
             margin-bottom: 20px;
@@ -83,18 +39,8 @@
             position: relative;
             z-index: 1;
             line-height: 1.2;
+            color: #fff;
         }
-
-        .cover .course {
-            font-size: 1.3rem;
-            opacity: 0.95;
-            margin-bottom: 30px;
-            position: relative;
-            z-index: 1;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
         .cover .subtitle {
             font-size: 1.2rem;
             opacity: 0.9;
@@ -103,7 +49,6 @@
             position: relative;
             z-index: 1;
         }
-
         .cover .meta {
             display: flex;
             justify-content: center;
@@ -113,427 +58,109 @@
             position: relative;
             z-index: 1;
         }
-
         .cover .meta-item {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255,255,255,0.15);
             padding: 12px 24px;
             border-radius: 30px;
-            backdrop-filter: blur(10px);
             font-size: 0.95rem;
             font-weight: 500;
         }
-
-        /* TOC */
         .toc {
-            background: white;
-            border: 1px solid var(--gray-200);
+            background: #fff;
+            border: 1px solid #e0e0e0;
             border-radius: 12px;
             padding: 30px;
             margin-bottom: 40px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-            page-break-inside: avoid;
         }
-
         .toc h2 {
             font-size: 1.5rem;
             margin-bottom: 20px;
-            color: var(--gray-900);
-            border-bottom: 2px solid var(--primary);
+            border-bottom: 2px solid #000;
             padding-bottom: 10px;
         }
-
         .toc-columns {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 10px 30px;
         }
-
         .toc ol {
             list-style: none;
             counter-reset: toc;
         }
-
         .toc-columns ol:last-child {
             counter-reset: toc 10;
         }
-
         .toc li {
             counter-increment: toc;
             padding: 6px 0;
-            border-bottom: 1px solid var(--gray-100);
+            border-bottom: 1px solid #f3f4f6;
         }
-
-        .toc li:last-child {
-            border-bottom: none;
-        }
-
         .toc a {
-            color: var(--gray-800);
+            color: #111827;
             text-decoration: none;
             font-weight: 500;
         }
-
         .toc a::before {
             content: counter(toc, decimal-leading-zero) ". ";
-            color: var(--primary);
+            color: #000;
             font-weight: 700;
             margin-right: 8px;
         }
-
-        .toc a:hover {
-            color: var(--primary);
-        }
-
-        /* Sections */
-        section {
-            background: white;
-            border: 1px solid var(--gray-200);
-            border-radius: 12px;
-            padding: 40px;
-            margin-bottom: 30px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-            page-break-inside: avoid;
-        }
-
-        h2 {
-            font-size: 1.9rem;
-            color: var(--gray-900);
-            margin-bottom: 20px;
-            padding-bottom: 12px;
-            border-bottom: 3px solid var(--primary);
-            page-break-after: avoid;
-        }
-
-        h3 {
-            font-size: 1.3rem;
-            color: var(--gray-800);
-            margin-top: 25px;
-            margin-bottom: 12px;
-        }
-
-        h4 {
-            font-size: 1.05rem;
-            color: var(--primary-dark);
-            margin-top: 18px;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        p {
-            margin-bottom: 14px;
-        }
-
-        pre {
-            background: var(--gray-900);
-            color: #e5e7eb;
-            padding: 18px;
-            border-radius: 8px;
-            overflow-x: auto;
-            margin: 12px 0;
-            font-size: 0.85rem;
-            line-height: 1.5;
-        }
-
-        code {
-            font-family: 'JetBrains Mono', Consolas, monospace;
-            background: var(--gray-100);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.88em;
-            color: var(--primary-dark);
-        }
-
-        pre code {
-            background: transparent;
-            padding: 0;
-            color: #e5e7eb;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 15px 0;
-            font-size: 0.92rem;
-        }
-
-        thead {
-            background: var(--gray-100);
-        }
-
-        th {
-            text-align: left;
-            padding: 10px 12px;
-            font-weight: 600;
-            color: var(--gray-900);
-            border-bottom: 2px solid var(--gray-300);
-        }
-
-        td {
-            padding: 10px 12px;
-            border-bottom: 1px solid var(--gray-200);
-            vertical-align: top;
-        }
-
-        tbody tr:hover {
-            background: var(--gray-50);
-        }
-
-        /* Callouts */
-        .callout {
+        .answer {
+            background: #f0f9ff;
+            border-left: 4px solid #000;
             padding: 14px 18px;
-            border-radius: 8px;
-            margin: 15px 0;
-            border-left: 4px solid;
+            margin: 10px 0 15px;
+            border-radius: 0 8px 8px 0;
+            color: #111827;
         }
-
-        .callout.info {
-            background: #dbeafe;
-            border-color: var(--info);
-            color: #1e3a8a;
-        }
-
-        .callout.warning {
+        .answer.example {
             background: #fef3c7;
-            border-color: var(--warning);
-            color: #78350f;
+            border-left-color: #f59e0b;
+            font-style: italic;
         }
-
-        .callout.success {
-            background: #d1fae5;
-            border-color: var(--success);
-            color: #065f46;
-        }
-
-        .callout.danger {
-            background: #fee2e2;
-            border-color: var(--danger);
-            color: #7f1d1d;
-        }
-
-        .callout.purple {
-            background: #ede9fe;
-            border-color: var(--purple);
-            color: #5b21b6;
-        }
-
-        .callout strong {
-            display: block;
-            margin-bottom: 4px;
-        }
-
         .mermaid {
-            background: white;
+            background: #fff;
             padding: 20px;
             border-radius: 8px;
             margin: 15px 0;
             overflow-x: auto;
-            border: 1px solid var(--gray-200);
+            border: 1px solid #e0e0e0;
         }
-
-        /* Stats */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-
         .stat-card {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--purple) 100%);
+            background: linear-gradient(135deg, #111827 0%, #7c3aed 100%);
             color: white;
             padding: 20px;
             border-radius: 12px;
             text-align: center;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
         }
-
         .stat-card.success {
-            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
         }
-
         .stat-card.warning {
-            background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
         }
-
         .stat-card.danger {
-            background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
         }
-
         .stat-value {
             font-size: 2.2rem;
             font-weight: 700;
             margin-bottom: 4px;
         }
-
         .stat-label {
             font-size: 0.85rem;
             opacity: 0.95;
         }
-
-        ul,
-        ol {
-            padding-left: 22px;
-            margin-bottom: 12px;
-        }
-
-        li {
-            margin-bottom: 6px;
-        }
-
-        /* Answer block */
-        .answer {
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-            border-left: 4px solid var(--primary);
-            padding: 14px 18px;
-            margin: 10px 0 15px;
-            border-radius: 0 8px 8px 0;
-            color: var(--gray-900);
-        }
-
-        .answer.example {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-            border-left-color: var(--warning);
-            font-style: italic;
-        }
-
-        /* Tech stack */
-        .tech-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 12px;
-            margin: 15px 0;
-        }
-
-        .tech-item {
-            background: var(--gray-100);
-            padding: 14px;
-            border-radius: 8px;
-            text-align: center;
-            border: 1px solid var(--gray-200);
-        }
-
-        .tech-item .tech-icon {
-            font-size: 1.8rem;
-            margin-bottom: 6px;
-        }
-
-        .tech-item .tech-name {
-            font-weight: 600;
-            color: var(--gray-900);
-            font-size: 0.95rem;
-        }
-
-        .tech-item .tech-role {
-            font-size: 0.8rem;
-            color: var(--gray-600);
-            margin-top: 4px;
-        }
-
-        /* Checklist */
-        .checklist {
-            background: var(--gray-50);
-            border-radius: 8px;
-            padding: 15px 20px;
-            margin: 15px 0;
-            border: 1px solid var(--gray-200);
-        }
-
-        .checklist-item {
-            padding: 6px 0;
-            display: flex;
-            align-items: start;
-            gap: 8px;
-        }
-
-        .checklist-item .check {
-            color: var(--success);
-            font-weight: 700;
-            flex-shrink: 0;
-        }
-
-        /* Footer */
-        footer {
-            background: var(--gray-900);
-            color: var(--gray-300);
-            padding: 30px 40px;
-            border-radius: 12px;
-            margin-top: 40px;
-            text-align: center;
-            page-break-inside: avoid;
-        }
-
-        footer h3 {
-            color: white;
-            margin-bottom: 10px;
-        }
-
-        footer a {
-            color: #93c5fd;
-            text-decoration: none;
-        }
-
-        footer a:hover {
-            text-decoration: underline;
-        }
-
-        .check {
-            color: var(--success);
-            font-weight: 700;
-        }
-
-        .cross {
-            color: var(--danger);
-            font-weight: 700;
-        }
-
         .highlight {
-            background: linear-gradient(120deg, #fef3c7 0%, #fef3c7 100%);
+            background: #EBFF01;
             padding: 2px 6px;
             border-radius: 4px;
             font-weight: 600;
         }
-
-        @media print {
-            .container {
-                padding: 15px;
-            }
-
-            section {
-                page-break-inside: avoid;
-                box-shadow: none;
-            }
-
-            .cover {
-                page-break-after: always;
-            }
-
-            .toc {
-                page-break-inside: avoid;
-            }
-
-            body {
-                background: white;
-            }
-
-            h2,
-            h3,
-            h4 {
-                page-break-after: avoid;
-            }
-        }
-
         @media (max-width: 768px) {
-            .cover h1 {
-                font-size: 2rem;
-            }
-
-            .container {
-                padding: 20px 15px;
-            }
-
-            section {
-                padding: 20px 15px;
-            }
+            .cover h1 { font-size: 2rem; }
+            .cover { padding: 40px 24px; }
         }
     </style>
 </head>
@@ -590,12 +217,16 @@
             </div>
         </nav>
 
-    <div style="margin-bottom:30px;background:#f9fafb;border:1px solid var(--gray-200);border-radius:12px;padding:30px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;">
+    <div style="margin-bottom:30px;background:#f9fafb;border:1px solid #e0e0e0;border-radius:12px;padding:30px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;">
         <div><strong style="color:#4338ca;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Задача</strong><span style="color:#4b5563;font-size:14px;">Сервисный отдел терял заявки, ошибался в классификации, нарушал SLA. Ручная обработка до 15 мин на заявку.</span></div>
         <div><strong style="color:#4338ca;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Моя работа</strong><span style="color:#4b5563;font-size:14px;">Собрал 7 workflow n8n: приём с дедупликацией, ИИ-классификация (GigaChat), диспетчеризация в Bitrix24, SLA-мониторинг с эскалацией в Telegram, обработка ошибок.</span></div>
         <div><strong style="color:#4338ca;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Технологии</strong><span style="color:#4b5563;font-size:14px;">n8n 2.27.3, Supabase (PostgreSQL), GigaChat, Bitrix24 REST API, Telegram Bot API</span></div>
         <div><strong style="color:#4338ca;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Результат</strong><span style="color:#4b5563;font-size:14px;">Полная автоматизация жизненного цикла заявки, 4 уровня защиты, 60x больше заявок без расширения штата</span></div>
     </div>
+
+        <div class="mockup-wrapper">
+            <img src="../images/SLA.jpg" alt="Workflow Enterprise AI Service Desk в n8n">
+        </div>
 
         <!-- 1. Название проекта -->
         <section id="s1">
@@ -1312,6 +943,10 @@
                 </div>
             </div>
 
+            <div class="mockup-wrapper">
+                <img src="../images/Статистика SLA.jpg" alt="Статистика после выполнения всех тестов">
+            </div>
+
             <h4>Какие ошибки были найдены во время тестирования?</h4>
             <div class="answer">
                 <ol>
@@ -1551,7 +1186,7 @@
             </div>
         </section>
         <footer class="footer container">
-            <p>© 2026 EduardWIT • <a href="../index.html">Главная</a> </p>
+            <p>© 2026 EduardWIT • <a href="../index.html">Главная</a> • <a href="../privacy-policy.html">Политика конфиденциальности</a></p>
         </footer>
 
     </div>
@@ -1567,11 +1202,6 @@
             }
         });
     </script>
-    <footer style="text-align:center;padding:40px 24px;border-top:1px solid rgba(255,255,255,0.08);color:#94a3b8;font-size:14px;font-family:'Inter',sans-serif;">
-        <div style="max-width:1100px;margin:0 auto;">
-            <p>&copy; 2026 EduardWIT &bull; <a href="../index.html" style="color:#06b6d4;">На главную</a> &bull; <a href="../privacy-policy.html" style="color:#06b6d4;">Политика конфиденциальности</a></p>
-        </div>
-    </footer>
 </body>
 
 </html>
