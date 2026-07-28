@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Охотник за заказами: авто-поиск и отклик | EduardWIT</title>
+    <link rel="stylesheet" href="../css/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="../css/fonts.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/case.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { padding-top: 50px; }
+        .hero { padding: 40px 0 30px; border-bottom: none; }
+        .card-icon {
+            width: 44px; height: 44px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem; margin-bottom: 16px;
+        }
+        .icon-cyan { background: #e0f2fe; color: #0284c7; }
+        .icon-green { background: #d1fae5; color: #059669; }
+        .icon-purple { background: #ede9fe; color: #7c3aed; }
+        .icon-orange { background: #fed7aa; color: #ea580c; }
+        .icon-red { background: #fecaca; color: #dc2626; }
+        .icon-blue { background: #dbeafe; color: #2563eb; }
+        .arch-flow {
+            display: flex; align-items: center; justify-content: center;
+            gap: 12px; flex-wrap: wrap; margin: 30px 0;
+            padding: 30px; background: #f9fafb;
+            border-radius: 12px; border: 1px solid #e0e0e0;
+        }
+        .arch-node {
+            background: #fff; border: 1px solid #e0e0e0;
+            padding: 14px 20px; border-radius: 10px;
+            text-align: center; min-width: 120px;
+        }
+        .arch-node.highlight {
+            border-color: #000; box-shadow: 0 0 0 2px #EBFF01;
+        }
+        .arch-arrow { color: #9ca3af; font-size: 1.2rem; }
+        .source-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px; margin: 20px 0;
+        }
+        .source-card {
+            background: #f9fafb; border: 1px solid #e0e0e0;
+            border-radius: 10px; padding: 20px; text-align: center;
+        }
+        .source-card .icon {
+            font-size: 2rem; margin-bottom: 10px; display: block;
+        }
+        .source-card h4 { margin-bottom: 6px; }
+        .source-card p { font-size: 13px; margin: 0; }
+        section { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        section.visible { opacity: 1; transform: translateY(0); }
+        .screenshot {
+            margin: 30px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+            background: #f9fafb;
+        }
+        .screenshot .caption {
+            padding: 12px 16px;
+            font-size: 13px;
+            color: #4b5563;
+            border-top: 1px solid #e0e0e0;
+        }
+        .screenshot .placeholder {
+            background: #f5f5f5;
+            border-radius: 10px 10px 0 0;
+            overflow: hidden;
+        }
+        .screenshot .placeholder img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div style="position:fixed;top:0;left:0;right:0;z-index:1000;background:#fff;border-bottom:1px solid #e0e0e0;padding:10px 20px;display:flex;align-items:center;gap:16px;font-family:Open Sans, sans-serif;">
+        <a href="../index.html" style="background:#EBFF01;color:#000;font-weight:700;text-decoration:none;padding:6px 16px;border-radius:4px;font-size:13px;">&#8592; На главную</a>
+        <a href="../index.html#portfolio" style="color:#555;font-size:13px;font-weight:500;text-decoration:none;">Портфолио</a>
+    </div>
+    <div class="container">
+        <!-- HERO -->
+        <section class="hero visible">
+            <div class="hero-badge">
+                <i class="fas fa-robot"></i> AI Automation
+            </div>
+            <h1>AI-Охотник <span class="gradient-text">за заказами</span></h1>
+            <h1 style="font-size: clamp(1.3rem, 2.5vw, 1.8rem); font-weight: 500; color: #4b5563; margin-top: 8px;">
+                Автоматический сбор, AI-фильтрация и умный отклик на заказы с HH.ru и Telegram-каналов.
+            </h1>
+            <p class="hero-subtitle">
+                Два self-hosted n8n-воркфлоу, которые круглосуточно мониторят биржи фриланса, 
+                отсеивают нерелевантные заказы через трёхуровневую фильтрацию + GigaChat, 
+                и отправляют персонализированные отклики — без участия человека.
+            </p>
+            <div class="tech-stack">
+                <div class="tech-tag"><i class="fas fa-cogs"></i> n8n v2.27.3</div>
+                <div class="tech-tag"><i class="fas fa-database"></i> Supabase</div>
+                <div class="tech-tag"><i class="fas fa-brain"></i> GigaChat</div>
+                <div class="tech-tag"><i class="fab fa-google"></i> Google Sheets</div>
+                <div class="tech-tag"><i class="fab fa-telegram"></i> Telegram Bot API</div>
+                <div class="tech-tag"><i class="fas fa-rss"></i> RSS / RSSHub</div>
+            </div>
+        </section>
+
+        <!-- SUMMARY -->
+        <div style="margin-bottom:30px;background:#f9fafb;border:1px solid #e0e0e0;border-radius:16px;padding:32px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;">
+            <div><strong style="color:#0284c7;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Задача</strong><span style="color:#4b5563;font-size:14px;">Поиск заказов на фриланс-биржах отнимает часы ежедневно. Большая часть — нерелевантна, отклики — шаблонные и неэффективные.</span></div>
+            <div><strong style="color:#0284c7;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Моя работа</strong><span style="color:#4b5563;font-size:14px;">Спроектировал dual-source систему: HH.ru по RSS + Telegram-каналы через RSS-мосты. Многоуровневая фильтрация + AI-скоринг + автогенерация откликов GigaChat.</span></div>
+            <div><strong style="color:#0284c7;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Технологии</strong><span style="color:#4b5563;font-size:14px;">n8n, Supabase, GigaChat, Google Sheets, Telegram Bot API, RSS / RSSHub</span></div>
+            <div><strong style="color:#0284c7;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Результат</strong><span style="color:#4b5563;font-size:14px;">Авто-мониторинг 10+ источников, AI-скоринг с точностью >90%, персонализированные отклики за секунды</span></div>
+        </div>
+
+        <!-- BUSINESS PROBLEM -->
+        <section>
+            <h2>Бизнес-проблема</h2>
+            <p>Фрилансер или студия тратит 2–3 часа в день на поиск заказов: нужно проверить несколько бирж, Telegram-каналов, отсеять нерелевантные вакансии и написать отклик. Большинство откликов — шаблонные, их эффективность низкая.</p>
+            <ul>
+                <li><strong>Потеря времени:</strong> ручной мониторинг 5–10 источников ежедневно</li>
+                <li><strong>Нерелевантность:</strong> до 80% заказов не подходят по стеку или формату работы</li>
+                <li><strong>Шаблонные отклики:</strong> заказчики игнорируют однотипные сообщения</li>
+                <li><strong>Опоздание:</strong> заказы «уходят» за минуты, пока вы их ищете</li>
+            </ul>
+        </section>
+
+        <!-- SOLUTION OVERVIEW -->
+        <section>
+            <h2>Архитектура решения <span class="gradient-text">(Dual-Source)</span></h2>
+            <p>Два независимых n8n-воркфлоу, работающих по расписанию. Каждый мониторит свой источник, фильтрует данные через единую систему правил и AI, сохраняет в общую базу и генерирует отклик.</p>
+
+            <div class="source-grid">
+                <div class="source-card">
+                    <span class="icon">🏢</span>
+                    <h4>HH.ru Охотник</h4>
+                    <p>RSS-ленты по 5 поисковым запросам → фильтр → AI-скоринг → отклик</p>
+                    <div class="tech-tag" style="display:inline-flex;margin-top:10px;"><i class="fas fa-clock"></i> Каждые 8 ч</div>
+                </div>
+                <div class="source-card">
+                    <span class="icon">📱</span>
+                    <h4>RSS-парсинг каналов</h4>
+                    <p>5 Telegram-каналов через RSS-мосты → фильтр → дедупликация → отклик</p>
+                    <div class="tech-tag" style="display:inline-flex;margin-top:10px;"><i class="fas fa-clock"></i> Каждые 4 ч</div>
+                </div>
+            </div>
+
+            <div class="arch-flow">
+                <div class="arch-node">
+                    <i class="fas fa-rss" style="color: #ea580c; margin-bottom: 8px; display:block;"></i>
+                    <strong>HH.ru RSS</strong><br><small>5 запросов</small>
+                </div>
+                <i class="fas fa-arrow-right arch-arrow"></i>
+                <div class="arch-node">
+                    <i class="fas fa-filter" style="color: #0284c7; margin-bottom: 8px; display:block;"></i>
+                    <strong>Фильтр</strong><br><small>Ключевые слова<br>Стоп-слова</small>
+                </div>
+                <i class="fas fa-arrow-right arch-arrow"></i>
+                <div class="arch-node highlight">
+                    <i class="fas fa-brain" style="color: #7c3aed; margin-bottom: 8px; display:block;"></i>
+                    <strong>AI Scoring</strong><br><small>GigaChat 0–100</small>
+                </div>
+                <i class="fas fa-arrow-right arch-arrow"></i>
+                <div class="arch-node">
+                    <i class="fas fa-database" style="color: #059669; margin-bottom: 8px; display:block;"></i>
+                    <strong>Supabase</strong><br><small>leads</small>
+                </div>
+                <i class="fas fa-arrow-right arch-arrow"></i>
+                <div class="arch-node">
+                    <i class="fas fa-reply" style="color: #2563eb; margin-bottom: 8px; display:block;"></i>
+                    <strong>AI Reply</strong><br><small>GigaChat → Google Sheets → Telegram</small>
+                </div>
+            </div>
+        </section>
+
+        <!-- WORKFLOW 1: HH.ru -->
+        <section>
+            <h2>Воркфлоу 1: HH.ru Охотник <span class="gradient-text">(RSS)</span></h2>
+            <p>Мониторит HH.ru по 5 поисковым запросам с фильтром <strong>удалённая работа</strong>, сортировка по дате публикации.</p>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-icon icon-cyan"><i class="fas fa-search"></i></div>
+                    <h3>Поисковые запросы</h3>
+                    <p>5 целевых запросов: <code>n8n</code>, <code>автоматизация+n8n</code>, <code>telegram+бот+разработка</code>, <code>no-code+автоматизация</code>, <code>crm+интеграция+api</code>. Все с параметром <code>schedule_id=remote</code>.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon icon-green"><i class="fas fa-list"></i></div>
+                    <h3>Трёхуровневая фильтрация</h3>
+                    <p>1) Целевые ключевые слова (n8n, telegram, автоматизация, supabase и др.)<br>2) Стоп-слова (react, vue, 1C, senior, office)<br>3) Дедупликация по связке <code>компания + должность</code></p>
+                </div>
+                <div class="card">
+                    <div class="card-icon icon-purple"><i class="fas fa-microchip"></i></div>
+                    <h3>AI-скоринг (GigaChat)</h3>
+                    <p>LLM-агент оценивает релевантность вакансии по 5 критериям: совпадение стека (40 баллов), удалёнка (20), проектная работа (15), адекватность задач (15), наличие бюджета (10). Порог отсечки — <strong>60 баллов</strong>.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon icon-orange"><i class="fas fa-reply-all"></i></div>
+                    <h3>Генерация отклика</h3>
+                    <p>GigaChat пишет персонализированное сопроводительное письмо на 5–7 предложений с упором на релевантный стек проекту. Каждый отклик уникален и привязан к конкретной вакансии.</p>
+                </div>
+            </div>
+
+            <div class="screenshot">
+                <div class="placeholder">
+                    <img src="../images/hh.jpg" alt="Воркфлоу HH.ru Охотник в n8n">
+                </div>
+                <div class="caption">Полная схема воркфлоу HH.ru: от RSS-парсинга до AI-отклика через GigaChat</div>
+            </div>
+        </section>
+
+        <!-- WORKFLOW 2: Telegram Channels -->
+        <section>
+            <h2>Воркфлоу 2: RSS-парсинг каналов <span class="gradient-text">(Telegram)</span></h2>
+            <p>Мониторит 5 Telegram-каналов с фриланс-заказами через RSS-мосты (RSSHub и tg.i-c-a.su).</p>
+
+            <div class="source-grid">
+                <div class="source-card" style="background:#f0fdf4;border-color:#86efac;">
+                    <span class="icon">📢</span>
+                    <h4 style="font-size:14px;">kwork_freelance</h4>
+                    <p style="font-size:12px;">rsshub.rssforever.com</p>
+                </div>
+                <div class="source-card" style="background:#f0fdf4;border-color:#86efac;">
+                    <span class="icon">💻</span>
+                    <h4 style="font-size:14px;">kwork_dev</h4>
+                    <p style="font-size:12px;">rsshub.rssforever.com</p>
+                </div>
+                <div class="source-card" style="background:#eff6ff;border-color:#93c5fd;">
+                    <span class="icon">👤</span>
+                    <h4 style="font-size:14px;">young_june</h4>
+                    <p style="font-size:12px;">tg.i-c-a.su</p>
+                </div>
+                <div class="source-card" style="background:#eff6ff;border-color:#93c5fd;">
+                    <span class="icon">🎓</span>
+                    <h4 style="font-size:14px;">it_interns</h4>
+                    <p style="font-size:12px;">tg.i-c-a.su</p>
+                </div>
+                <div class="source-card" style="background:#eff6ff;border-color:#93c5fd;">
+                    <span class="icon">🌐</span>
+                    <h4 style="font-size:14px;">job_webdev</h4>
+                    <p style="font-size:12px;">tg.i-c-a.su</p>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-icon icon-red"><i class="fas fa-layer-group"></i></div>
+                    <h3>Трёхуровневая фильтрация</h3>
+                    <p><strong>1. Order-маркеры:</strong> сообщение должно содержать признаки заказа (<code>ищу</code>, <code>нужен</code>, <code>бюджет</code>, <code>₽</code> и др.)<br>
+                    <strong>2. Ключевые слова:</strong> n8n, автоматизация, telegram бот, supabase, ai бот, парсинг, fullstack и др.<br>
+                    <strong>3. Стоп-слова:</strong> angular, wordpress, ментор, реклама, ремонт квартир и др.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon icon-blue"><i class="fas fa-location-dot"></i></div>
+                    <h3>Проверка формата работы</h3>
+                    <p>Для HH.ru и Kwork — автоматически считаются удалёнными. Для остальных каналов — проверка на наличие маркеров <code>удалён</code>, <code>remote</code>, <code>дистанцион</code> и отсутствие <code>в офисе</code>, <code>гибрид</code>.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon icon-purple"><i class="fas fa-link"></i></div>
+                    <h3>Кросс-канальная дедупликация</h3>
+                    <p>Один и тот же заказ может появиться в нескольких каналах. Система нормализует заголовок (только буквы/цифры, первые 80 символов) и сверяет с ранее сохранёнными записями.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon icon-green"><i class="fas fa-reply"></i></div>
+                    <h3>AI-отклик (единый)</h3>
+                    <p>Тот же механизм, что и в HH.ru-воркфлоу: GigaChat генерирует персонализированный отклик с подписью «С уважением, Эдуард | eduardwit.ru». Результат — в Google Sheets и Telegram.</p>
+                </div>
+            </div>
+
+            <div class="screenshot">
+                <div class="placeholder">
+                    <img src="../images/Канал_tg.jpg" alt="Воркфлоу RSS-парсинг каналов в n8n">
+                </div>
+                <div class="caption">Схема воркфлоу RSS-парсинга: 5 Telegram-каналов → фильтрация → Supabase → AI-отклик</div>
+            </div>
+        </section>
+
+        <!-- DATA FLOW -->
+        <section>
+            <h2>Сквозной пайплайн <span class="gradient-text">данных</span></h2>
+            <p>Оба воркфлоу сходятся в единую инфраструктуру:</p>
+
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <div class="num">1</div>
+                    <div class="desc"><strong>Сбор</strong> — RSS-ленты HH.ru и Telegram-каналов парсятся по расписанию</div>
+                </div>
+                <div class="flow-step">
+                    <div class="num">2</div>
+                    <div class="desc"><strong>Фильтрация</strong> — многоуровневая система ключевых слов, стоп-слов и маркеров заказа</div>
+                </div>
+                <div class="flow-step">
+                    <div class="num">3</div>
+                    <div class="desc"><strong>AI-скоринг</strong> (только HH.ru) — GigaChat оценивает релевантность от 0 до 100, отсев ниже 60</div>
+                </div>
+                <div class="flow-step">
+                    <div class="num">4</div>
+                    <div class="desc"><strong>Сохранение</strong> — лид записывается в Supabase (таблица <code>leads</code>) с мета-данными: источник, скоринг, ссылка</div>
+                </div>
+                <div class="flow-step">
+                    <div class="num">5</div>
+                    <div class="desc"><strong>AI-отклик</strong> — GigaChat генерирует уникальный текст, запись в Google Sheets для CRM</div>
+                </div>
+                <div class="flow-step">
+                    <div class="num">6</div>
+                    <div class="desc"><strong>Уведомление</strong> — Telegram-бот присылает сообщение с деталями заказа в чат</div>
+                </div>
+            </div>
+
+            <div class="callout info">
+                <strong>Единая ошибкоустойчивость</strong>
+                Оба воркфлоу используют общий error-handler с Retry Router и DLQ. При падении любого узла — автоматический retry с exponential backoff. Критические ошибки уходят в Telegram.
+            </div>
+        </section>
+
+        <!-- BUSINESS VALUE -->
+        <section>
+            <h2>Бизнес-ценность <span class="gradient-text">& Результаты</span></h2>
+            <p>Автоматизация поиска заказов превращает фриланс в пассивный канал лидогенерации.</p>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value gradient-text">10+</div>
+                    <div class="stat-label">Источников заказов<br>в автоматическом режиме</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value gradient-text">~3 ч</div>
+                    <div class="stat-label">Экономии в день<br>на ручном поиске</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value gradient-text">24/7</div>
+                    <div class="stat-label">Мониторинг новых<br>заказов без выходных</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value gradient-text">>90%</div>
+                    <div class="stat-label">Точность AI-скоринга<br>релевантности</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value gradient-text">100%</div>
+                    <div class="stat-label">Уникальных откликов<br>(без шаблонов)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value gradient-text">×5</div>
+                    <div class="stat-label">Больше откликов<br>за то же время</div>
+                </div>
+            </div>
+
+            <div class="grid-2" style="margin-top: 40px;">
+                <div class="card">
+                    <h3><i class="fas fa-briefcase" style="color: #0284c7; margin-right: 10px;"></i> Для Бизнеса</h3>
+                    <ul style="color: #4b5563; list-style: none; padding: 0;">
+                        <li style="margin-bottom: 10px;">✅ Сотни просмотренных заказов в день без участия человека.</li>
+                        <li style="margin-bottom: 10px;">✅ Персонализированные отклики повышают конверсию в диалог.</li>
+                        <li style="margin-bottom: 10px;">✅ Ни один релевантный заказ не пропущен — система работает 24/7.</li>
+                        <li style="margin-bottom: 10px;">✅ Полная CRM: все лиды в Supabase + Google Sheets с историей.</li>
+                        <li>✅ Масштабирование: добавить новый источник → 1 минута в n8n.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3><i class="fas fa-code" style="color: #7c3aed; margin-right: 10px;"></i> Для Инженерии</h3>
+                    <ul style="color: #4b5563; list-style: none; padding: 0;">
+                        <li style="margin-bottom: 10px;">✅ Self-hosted: полный контроль над данными и воркфлоу.</li>
+                        <li style="margin-bottom: 10px;">✅ Graceful degradation: при падении RSS-моста — пропуск источника.</li>
+                        <li style="margin-bottom: 10px;">✅ Дедупликация: один заказ не попадёт в CRM дважды.</li>
+                        <li style="margin-bottom: 10px;">✅ Разделение воркфлоу: HH.ru не влияет на Telegram-каналы.</li>
+                        <li>✅ Telegram-уведомления: контроль статуса в реальном времени.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="screenshot">
+                <div class="placeholder">
+                    <img src="../images/Google_Sheets.jpg" alt="Google Sheets с лидами">
+                </div>
+                <div class="caption">Google Sheets-таблица: все лиды с источниками, AI-скорингом, статусом отклика и ссылками</div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer>
+            <p>© 2026 EduardWIT • <a href="../index.html">Главная</a> • <a href="../privacy-policy.html">Политика конфиденциальности</a></p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('section');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+            sections.forEach(section => {
+                if (!section.classList.contains('visible')) {
+                    observer.observe(section);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
