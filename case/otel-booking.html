@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Бронирование отелей: заявка → оплата | EduardWIT</title>
+    <meta name="description"
+        content="Кейс автоматизации бронирования отелей: форма → атомарная бронь → оплата Robokassa → письма и Telegram-отчёты. n8n 2.31.5, Supabase, Dokploy.">
+    <link rel="stylesheet" href="../css/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="../css/fonts.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/case.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            padding-top: 50px;
+        }
+
+        .hero {
+            padding: 40px 0 30px;
+            border-bottom: none;
+        }
+
+        .pull {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 22px;
+        }
+
+        .btn-c {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 26px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 14px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-c.gold {
+            background: #EBFF01;
+            color: #000;
+        }
+
+        .btn-c.ghost {
+            background: transparent;
+            color: #333;
+            border: 1px solid #d0d0d0;
+        }
+
+        .btn-c:hover {
+            opacity: 0.85;
+        }
+
+        .shot {
+            margin: 26px 0;
+        }
+
+        .shot figure {
+            margin: 0;
+            background: #f9fafb;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .shot img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            margin: 0 auto;
+            cursor: zoom-in;
+        }
+
+        .shot figcaption {
+            padding: 10px 16px;
+            font-size: 13px;
+            color: #4b5563;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .shot__num {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 700;
+            background: #EBFF01;
+            color: #000;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-right: 8px;
+        }
+
+        .arch-node .tag {
+            display: inline-block;
+            margin-top: 6px;
+            font-size: 11px;
+            background: #f0f0f0;
+            border: 1px solid #e0e0e0;
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: #6b7280;
+            font-weight: 600;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .s-free {
+            background: #d1fae5;
+            color: #059669;
+        }
+
+        .s-reserved {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .s-paid {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .s-cancelled {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body>
+    <div
+        style="position:fixed;top:0;left:0;right:0;z-index:1000;background:#fff;border-bottom:1px solid #e0e0e0;padding:10px 20px;display:flex;align-items:center;gap:16px;font-family:Open Sans, sans-serif;">
+        <a href="../index.html"
+            style="background:#EBFF01;color:#000;font-weight:700;text-decoration:none;padding:6px 16px;border-radius:4px;font-size:13px;">&#8592;
+            На главную</a>
+        <a href="../index.html#portfolio"
+            style="color:#555;font-size:13px;font-weight:500;text-decoration:none;">Портфолио</a>
+    </div>
+    <div class="container">
+
+        <!-- HERO -->
+        <section class="hero visible">
+            <div class="hero-badge">
+                <i class="fas fa-bolt"></i> AI Automation · Бронирование
+            </div>
+            <h1>Бронирование отелей: <span class="gradient-text">от заявки до оплаты</span> — без ручного труда</h1>
+            <p class="hero-subtitle">
+                Туристическое агентство принимало заявки вручную: проверка номеров, письма, таблица, подтверждения.
+                Я собрал пайплайн, который делает это сам — атомарно, без двойных броней и с онлайн-оплатой.
+            </p>
+
+            <div class="tech-stack">
+                <div class="tech-tag"><i class="fas fa-cogs"></i> n8n 2.31.5 · self-hosted</div>
+                <div class="tech-tag"><i class="fas fa-database"></i> Supabase · PostgreSQL 15</div>
+                <div class="tech-tag"><i class="fas fa-credit-card"></i> Robokassa API</div>
+                <div class="tech-tag"><i class="fab fa-docker"></i> Dokploy · Docker</div>
+                <div class="tech-tag"><i class="fab fa-telegram"></i> Telegram Bot API</div>
+                <div class="tech-tag"><i class="fas fa-envelope"></i> SMTP</div>
+            </div>
+
+            <div class="pull">
+                <a href="#flows" class="btn-c gold">Смотреть сценарии</a>
+                <a href="#runs" class="btn-c ghost">Результаты запусков</a>
+            </div>
+        </section>
+
+        <!-- SUMMARY -->
+        <div
+            style="margin-bottom:30px;background:#f9fafb;border:1px solid #e0e0e0;border-radius:16px;padding:32px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;">
+            <div><strong
+                    style="color:#0284c7;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Задача</strong><span
+                    style="color:#4b5563;font-size:14px;">Заявки обрабатывались часами, номера бронировались дважды,
+                    неоплаченные брони блокировали номера.</span></div>
+            <div><strong
+                    style="color:#0284c7;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Моя
+                    работа</strong><span style="color:#4b5563;font-size:14px;">Пайплайн из 4 workflow: атомарная бронь
+                    через SQL-функцию book_room(), Robokassa-оплата, письма и Telegram-отчёты.</span></div>
+            <div><strong
+                    style="color:#0284c7;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Технологии</strong><span
+                    style="color:#4b5563;font-size:14px;">n8n 2.31.5, Supabase (Postgres 15), Robokassa, Telegram Bot
+                    API, SMTP, Dokploy</span></div>
+            <div><strong
+                    style="color:#0284c7;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Результат</strong><span
+                    style="color:#4b5563;font-size:14px;">Заявка → оплата за секунды, 0 двойных броней (на уровне БД),
+                    автоотмена через 24 ч</span></div>
+        </div>
+
+        <!-- PIPELINE -->
+        <section>
+            <h2>Сквозной пайплайн <span class="gradient-text">данных</span></h2>
+            <p>Семь нод превращают входящую заявку в подтверждённую оплату — без единого ручного действия.</p>
+
+            <div class="arch-flow">
+                <div class="arch-node"><i class="fas fa-file-signature"
+                        style="color:#ea580c;margin-bottom:8px;display:block;"></i><strong>Форма</strong> <br>
+                    <div class="tag">idempotency-key</div>
+                </div>
+                <i class="fas fa-arrow-right arch-arrow"></i>
+                <div class="arch-node"><i class="fas fa-plug"
+                        style="color:#2563eb;margin-bottom:8px;display:block;"></i><strong>Webhook</strong> <br>
+                    <div class="tag">POST /v2</div>
+                </div>
+                <i class="fas fa-arrow-right arch-arrow"></i>
+                <div class="arch-node"><i class="fas fa-broom"
+                        style="color:#7c3aed;margin-bottom:8px;display:block;"></i><strong>Валидация</strong> <br>
+                    <div class="tag">+ карантин</div>
+                </div>
+                <i class="fas fa-arrow-right arch-arrow"></i>
+                <div class="arch-node"><i class="fas fa-database"
+                        style="color:#059669;margin-bottom:8px;display:block;"></i><strong>book_room()</strong> <br>
+                    <div class="tag">SQL · атомарно</div>
+                </div>
+                <i class="fas fa-arrow-right arch-arrow"></i>
+                <div class="arch-node"><i class="fas fa-credit-card"
+                        style="color:#d97706;margin-bottom:8px;display:block;"></i><strong>Robokassa</strong> <br>
+                    <div class="tag">ссылка на оплату</div>
+                </div>
+                <i class="fas fa-arrow-right arch-arrow"></i>
+                <div class="arch-node"><i class="fas fa-envelope"
+                        style="color:#0284c7;margin-bottom:8px;display:block;"></i><strong>Письмо</strong> <br>
+                    <div class="tag">клиенту</div>
+                </div>
+                <i class="fas fa-arrow-right arch-arrow"></i>
+                <div class="arch-node"><i class="fab fa-telegram"
+                        style="color:#0ea5e9;margin-bottom:8px;display:block;"></i><strong>Telegram</strong> <br>
+                    <div class="tag">менеджеру</div>
+                </div>
+            </div>
+
+            <div class="shot">
+                <figure>
+                    <img src="../images/otel/Форма брони.jpg" alt="Форма бронирования отеля">
+                    <figcaption><span class="shot__num">СТАРТ</span>Пользователь заполняет форму бронирования — система
+                        генерирует idempotency-key</figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <!-- 01 ЗАДАЧА -->
+        <section id="task">
+            <h2><span class="gradient-text">01</span> · Заявки обрабатывались вручную — и номера бронировались дважды
+            </h2>
+            <div class="grid-2">
+                <div>
+                    <h3 style="color:#111827;">Боль</h3>
+                    <div class="grid-2" style="margin-top:0;">
+                        <div class="card">
+                            <div class="card-icon icon-red"><i class="fas fa-clock"></i></div>
+                            <p>Менеджер вручную проверял свободные номера, писал клиенту, обновлял таблицу и отправлял
+                                подтверждение. <strong>Заявки обрабатывались часами.</strong></p>
+                        </div>
+                        <div class="card">
+                            <div class="card-icon icon-red"><i class="fas fa-exclamation-triangle"></i></div>
+                            <p>Из-за ручного обновления таблицы свободный номер могли <strong>забронировать
+                                    дважды</strong> — конфликт, извинения, потеря клиента.</p>
+                        </div>
+                    </div>
+                    <div class="card" style="margin-top:24px;">
+                        <div class="card-icon icon-red"><i class="fas fa-hourglass-half"></i></div>
+                        <p>Неоплаченные брони <strong>висели вечно</strong> и блокировали номера для других гостей.</p>
+                    </div>
+                </div>
+                <div>
+                    <h3 style="color:#111827;">Решение</h3>
+                    <div class="checklist">
+                        <div class="checklist-item"><span class="check">✔</span> Приём заявки через форму —
+                            автоматически</div>
+                        <div class="checklist-item"><span class="check">✔</span> Проверка свободных номеров в базе</div>
+                        <div class="checklist-item"><span class="check">✔</span> Создание брони и смена статуса номера
+                        </div>
+                        <div class="checklist-item"><span class="check">✔</span> Письмо клиенту со ссылкой на оплату
+                        </div>
+                        <div class="checklist-item"><span class="check">✔</span> Уведомления и ежедневный отчёт
+                            менеджеру</div>
+                        <div class="checklist-item"><span class="check">✔</span> Автооткрытие неоплаченных броней через
+                            24 часа</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 02 АРХИТЕКТУРА -->
+        <section id="stack">
+            <h2><span class="gradient-text">02</span> · Спецификация решения</h2>
+            <p>Всё развёрнуто на одном VPS через Dokploy (Docker). Секреты — в n8n Credentials и таблице AppConfig,
+                ничего не хранится в коде.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Компонент</th>
+                        <th>Роль</th>
+                        <th>Версия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>n8n</strong></td>
+                        <td>Оркестрация: 4 workflow, webhook, schedule, Code-узлы</td>
+                        <td>2.31.5 self-hosted</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Supabase</strong></td>
+                        <td>PostgreSQL: таблицы, триггеры, SQL-функции, RLS</td>
+                        <td>Postgres 15</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Robokassa</strong></td>
+                        <td>Приём платежей: ссылка на оплату + Result-уведомления</td>
+                        <td>sandbox → prod</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Telegram Bot</strong></td>
+                        <td>Мгновенные уведомления менеджеру + отчёт в 18:00</td>
+                        <td>Bot API</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SMTP</strong></td>
+                        <td>Письма клиенту: подтверждение / отказ / оплата</td>
+                        <td>Mailtrap → боевой</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Dokploy</strong></td>
+                        <td>Деплой и окружения: n8n, Supabase, NocoDB</td>
+                        <td>Docker</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- 03 СЦЕНАРИИ -->
+        <section id="flows">
+            <h2><span class="gradient-text">03</span> · Четыре связанных сценария</h2>
+            <p>Основной пайплайн обработки заявки и три сервисных. Каждый защищён от сбоев: ноды
+                <code>onError → continue</code>, Global Error Handler, ретраи.
+            </p>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-icon icon-cyan"><i class="fas fa-inbox"></i></div>
+                    <h3>WF-01 · Обработка заявки <span class="status s-reserved"
+                            style="vertical-align:middle;">ACTIVE</span></h3>
+                    <p>Принимает заявку, нормализует данные, атомарно создаёт бронь через <code>book_room()</code>,
+                        генерирует ссылку Robokassa, отправляет письмо и уведомление. Корректные HTTP-коды: <strong>200
+                            / 400 / 409 / 503</strong>.</p>
+                    <p style="margin-top:8px;font-size:13px;color:#6b7280;">
+                        <code>IN_Webhook_Form → IN_Validate_Normalize → CORE_Book_Room_RPC → SWITCH_Booking_Result → CORE_Generate_Payment_Url → OUT_Email_Client → OUT_Notify_Manager</code>
+                    </p>
+                </div>
+                <div class="card">
+                    <div class="card-icon icon-green"><i class="fas fa-credit-card"></i></div>
+                    <h3>WF-02 · Приём оплаты <span class="status s-reserved"
+                            style="vertical-align:middle;">ACTIVE</span></h3>
+                    <p>Принимает Result URL от Robokassa, проверяет MD5-подпись, подтверждает оплату и переводит бронь в
+                        <code>confirmed</code>.
+                    </p>
+                </div>
+                <div class="card">
+                    <div class="card-icon icon-purple"><i class="fas fa-file-invoice"></i></div>
+                    <h3>WF-03 · Ежедневный отчёт <span class="status s-reserved"
+                            style="vertical-align:middle;">ACTIVE</span></h3>
+                    <p>Каждый день в 18:00 (Europe/Moscow) отправляет менеджеру отчёт: новые брони, неподтверждённые,
+                        номера в reserved.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon icon-orange"><i class="fas fa-clock"></i></div>
+                    <h3>WF-04 · Автоотмена <span class="status s-reserved" style="vertical-align:middle;">ACTIVE</span>
+                    </h3>
+                    <p>Каждые 15 минут отменяет неоплаченные брони старше 24 часов и освобождает номера. Менеджер
+                        получает список отменённых броней в Telegram.</p>
+                </div>
+            </div>
+
+            <div class="shot">
+                <figure>
+                    <img src="../images/otel/сценарий-1.jpg" alt="Сценарий обработки заявки">
+                    <figcaption><span class="shot__num">СКРИН 1</span>Сценарий обработки заявки —
+                        OTELI_Bronirovanie_Otelei v2</figcaption>
+                </figure>
+            </div>
+            <div class="grid-2">
+                <div class="shot" style="margin:0;">
+                    <figure>
+                        <img src="../images/otel/сценарий-2.jpg" alt="Сценарий автоотмены">
+                        <figcaption><span class="shot__num">СКРИН 2</span>Сценарий автоотмены просроченных броней
+                        </figcaption>
+                    </figure>
+                </div>
+                <div class="shot" style="margin:0;">
+                    <figure>
+                        <img src="../images/otel/сценарий-3.jpg" alt="Сценарий ежедневного отчёта">
+                        <figcaption><span class="shot__num">СКРИН 3</span>Сценарий ежедневного отчёта</figcaption>
+                    </figure>
+                </div>
+            </div>
+            <div class="shot">
+                <figure>
+                    <img src="../images/otel/сценарий-4.jpg" alt="Сценарий приёма оплаты">
+                    <figcaption><span class="shot__num">СКРИН 4</span>Сценарий приёма оплаты (Robokassa Result URL →
+                        confirmed)</figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <!-- 04 БАЗА ДАННЫХ -->
+        <section id="db">
+            <h2><span class="gradient-text">04</span> · Rooms и Bookings — сердце системы</h2>
+            <p>6 таблиц, 8 SQL-функций, триггеры аудита и освобождения номеров. Ниже — живое превью данных.</p>
+
+            <h3 style="margin-top:20px;">Таблица <code>public.Rooms</code></h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>Отель</th>
+                        <th>Тип</th>
+                        <th>Даты</th>
+                        <th>Цена</th>
+                        <th>Статус</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>3</td>
+                        <td>Test Hotel</td>
+                        <td>Standard</td>
+                        <td>01.08–31.08</td>
+                        <td>10 000 ₽</td>
+                        <td><span class="status s-reserved">reserved</span></td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>Test Hotel</td>
+                        <td>Standard</td>
+                        <td>01.08–31.08</td>
+                        <td>10 000 ₽</td>
+                        <td><span class="status s-reserved">reserved</span></td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>Test Hotel</td>
+                        <td>Standard</td>
+                        <td>01.08–31.08</td>
+                        <td>10 000 ₽</td>
+                        <td><span class="status s-free">free</span></td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>Test Hotel</td>
+                        <td>Standard</td>
+                        <td>01.08–31.08</td>
+                        <td>10 000 ₽</td>
+                        <td><span class="status s-free">free</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 style="margin-top:20px;">Таблица <code>public.Bookings</code></h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>Клиент</th>
+                        <th>Даты</th>
+                        <th>Бронь</th>
+                        <th>Оплата</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>9</td>
+                        <td>Тест Форма</td>
+                        <td>21.08–26.08</td>
+                        <td><span class="status s-paid">confirmed</span></td>
+                        <td><span class="status s-paid">paid</span></td>
+                    </tr>
+                    <tr>
+                        <td>11</td>
+                        <td>Тест Оплата</td>
+                        <td>23.08–28.08</td>
+                        <td><span class="status s-reserved">reserved</span></td>
+                        <td><span class="status s-reserved">pending</span></td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>Иван Тестов</td>
+                        <td>14.08–19.08</td>
+                        <td><span class="status s-cancelled">cancelled</span></td>
+                        <td><span class="status s-cancelled">pending</span></td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>Иван Тестов</td>
+                        <td>16.08–21.08</td>
+                        <td><span class="status s-cancelled">cancelled</span></td>
+                        <td><span class="status s-cancelled">pending</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="grid-2">
+                <div class="shot" style="margin:26px 0 0;">
+                    <figure>
+                        <img src="../images/otel/bookings.jpg" alt="Таблица Bookings в Supabase">
+                        <figcaption><span class="shot__num">СКРИН 5</span>Таблица Bookings в Supabase</figcaption>
+                    </figure>
+                </div>
+                <div class="shot" style="margin:26px 0 0;">
+                    <figure>
+                        <img src="../images/otel/rooms.jpg" alt="Таблица Rooms в Supabase">
+                        <figcaption><span class="shot__num">СКРИН 6</span>Таблица Rooms в Supabase</figcaption>
+                    </figure>
+                </div>
+            </div>
+        </section>
+
+        <!-- 05 НАДЁЖНОСТЬ -->
+        <section id="reliability">
+            <h2><span class="gradient-text">05</span> · Защита от двойного брони — на уровне базы</h2>
+            <p>Главный риск задачи — race condition: два клиента одновременно бронируют один номер. Решение —
+                многослойное.</p>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-icon icon-green"><i class="fas fa-lock"></i></div>
+                    <h4>Атомарная транзакция <code>[SQL]</code></h4>
+                    <p>Функция <code>book_room()</code> одной транзакцией: блокирует номер <code>FOR UPDATE</code>,
+                        проверяет <code>status='free'</code>, создаёт броню. Любой сбой — полный откат.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon icon-purple"><i class="fas fa-key"></i></div>
+                    <h4>Идемпотентность <code>[UUID]</code></h4>
+                    <p>Форма генерирует <code>idempotency_key</code>. Повторная отправка той же заявки вернёт
+                        существующую бронь, а не создаст дубль.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon icon-blue"><i class="fas fa-fingerprint"></i></div>
+                    <h4>Бизнес-защита от дублей <code>[UNIQUE]</code></h4>
+                    <p>Уникальный индекс: один email + отель + тип + даты = одна активная броня. Даже с новым ключом
+                        дубль не пройдёт.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon icon-orange"><i class="fas fa-bug-slash"></i></div>
+                    <h4>Обработка ошибок <code>[try/catch]</code></h4>
+                    <p>Все внешние вызовы обёрнуты, ошибки логируются в <code>workflow_errors</code>, менеджер получает
+                        алерт. Ни одна заявка не теряется — невалидные уходят в карантин.</p>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <span><i class="fas fa-database"></i> SQL — атомарное бронирование</span>
+                    <span>Supabase RPC</span>
+                </div>
+                <div class="code-content">
+                    <span class="comment">-- атомарное бронирование: guard от race condition</span>
+                    <span class="keyword">UPDATE</span> public.<span class="variable">"Rooms"</span>
+                    <span class="keyword">SET</span> status=<span class="string">'reserved'</span>, updated_at=now()
+                    <span class="keyword">WHERE</span> room_id = v_room.room_id
+                    <span class="keyword">AND</span> status=<span class="string">'free'</span>
+                    <span class="keyword">RETURNING</span> room_id, price;
+
+                    <span class="comment">-- идемпотентность: один ключ = одна броня</span>
+                    <span class="keyword">CREATE UNIQUE INDEX</span> uq_bookings_idempotency
+                    <span class="keyword">ON</span> public.<span class="variable">"Bookings"</span>(idempotency_key);
+
+                    <span class="comment">-- бизнес-защита от повторной брони</span>
+                    <span class="keyword">CREATE UNIQUE INDEX</span> uq_active_client_request
+                    <span class="keyword">ON</span> public.<span class="variable">"Bookings"</span>(email, hotel, dates)
+                    <span class="keyword">WHERE</span> status <span class="keyword">IN</span> (<span
+                        class="string">'reserved'</span>, <span class="string">'confirmed'</span>);
+                </div>
+            </div>
+        </section>
+
+        <!-- 06 ОПЛАТА -->
+        <section id="payment">
+            <h2><span class="gradient-text">06</span> · Robokassa: ссылка в письме → автоподтверждение</h2>
+            <p>Клиент платит по ссылке из письма. Robokassa шлёт Result-уведомление, подпись проверяется, статус
+                меняется сам.</p>
+
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <div class="num">1</div>
+                    <div class="desc"><strong>Бронь создана</strong> — <code>status: reserved, payment: pending</code>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="num">2</div>
+                    <div class="desc"><strong>Генерация ссылки</strong> — MD5-подпись, сумма, InvId</div>
+                </div>
+                <div class="flow-step">
+                    <div class="num">3</div>
+                    <div class="desc"><strong>Письмо клиенту</strong> — кнопка «Оплатить»</div>
+                </div>
+                <div class="flow-step">
+                    <div class="num">4</div>
+                    <div class="desc"><strong>Оплата</strong> — страница Robokassa</div>
+                </div>
+                <div class="flow-step">
+                    <div class="num">5</div>
+                    <div class="desc"><strong>Result URL → n8n</strong> — проверка подписи</div>
+                </div>
+                <div class="flow-step">
+                    <div class="num">6</div>
+                    <div class="desc"><strong>paid + confirmed</strong> — менеджер уведомлён</div>
+                </div>
+            </div>
+
+            <div class="shot">
+                <figure>
+                    <img src="../images/otel/запуски.jpg" alt="Успешные executions в n8n">
+                    <figcaption><span class="shot__num">СКРИН 7</span>Успешные executions в n8n</figcaption>
+                </figure>
+            </div>
+            <div class="shot">
+                <figure>
+                    <img src="../images/otel/Письмо.jpg" alt="Письмо клиенту">
+                    <figcaption><span class="shot__num">СКРИН 8</span>Реальное письмо клиенту со ссылкой на оплату
+                    </figcaption>
+                </figure>
+            </div>
+            <div class="shot">
+                <figure>
+                    <img src="../images/otel/телеграм.jpg" alt="Ежедневный отчёт в Telegram">
+                    <figcaption><span class="shot__num">СКРИН 9</span>Ежедневный отчёт менеджеру в Telegram</figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <!-- 07 КОММУНИКАЦИИ -->
+        <section id="letter">
+            <h2><span class="gradient-text">07</span> · Письмо клиенту и отчёт менеджеру</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <h3><i class="fas fa-envelope-open-text" style="color:#0284c7;margin-right:10px;"></i> Письмо
+                        клиенту</h3>
+                    <div style="font-size:13px;color:#6b7280;margin-bottom:10px;"><strong>От:</strong>
+                        admin@eduardwit.ru &nbsp;·&nbsp; <strong>Кому:</strong> client@example.com</div>
+                    <p style="font-size:13px;"><strong>Тема:</strong> Бронирование подтверждено — Test Hotel</p>
+                    <div class="answer">Здравствуйте, Тест Форма!<br>Ваше бронирование создано:<br>Отель: <strong>Test
+                            Hotel</strong>, Тип номера: <strong>Standard</strong>, Даты: <strong>21.08.2026 →
+                            26.08.2026</strong>, Стоимость: <strong>10 000 ₽</strong>, Номер брони:
+                        <strong>#9</strong><br>[ кнопка «Оплатить бронирование →» ]<br>После оплаты статус брони
+                        изменится автоматически. Ждём вас!
+                    </div>
+                </div>
+                <div class="card">
+                    <h3><i class="fab fa-telegram" style="color:#0ea5e9;margin-right:10px;"></i> Отчёт менеджеру (18:00)
+                    </h3>
+                    <div class="answer"><span style="font-family:JetBrains Mono,monospace;font-size:13px;">📊 ЕЖЕДНЕВНЫЙ
+                            ОТЧЁТ ПО БРОНИРОВАНИЯМ<br>🗓 01.08.2026 | 18:00<br>━━━━━━━━━━━━━━━━━━<br>✅ 1. НОВЫЕ БРОНИ ЗА
+                            ДЕНЬ<br>• #9 | Тест Форма | Test Hotel | Standard | 21.08 → 26.08 | 10 000 ₽<br>⏳ 2.
+                            НЕПОДТВЕРЖДЁННЫЕ БРОНИ<br>• #11 | Тест Оплата | оплата: pending<br>🚧 3. НОМЕРА В СТАТУСЕ
+                            reserved<br>• #3 | Test Hotel | Standard | 10 000 ₽<br>📌 ИТОГО: новых 3 · неоплаченных 5 ·
+                            reserved 5</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 08 РЕЗУЛЬТАТЫ -->
+        <section id="runs">
+            <h2><span class="gradient-text">08</span> · Успешные запуски и метрики</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value gradient-text">4</div>
+                    <div class="stat-label">workflow active</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value gradient-text">8</div>
+                    <div class="stat-label">SQL-функций</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value gradient-text">6</div>
+                    <div class="stat-label">таблиц в БД</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value gradient-text">15 мин</div>
+                    <div class="stat-label">автоотмена</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value gradient-text">24 ч</div>
+                    <div class="stat-label">окно оплаты</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value gradient-text">100%</div>
+                    <div class="stat-label">покрытие ошибок</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 09 ИТОГИ -->
+        <section id="summary">
+            <h2><span class="gradient-text">09</span> · Что получил бизнес</h2>
+            <div class="checklist">
+                <div class="checklist-item"><span class="check">✔</span> Заявка обрабатывается за секунды, а не часы
+                </div>
+                <div class="checklist-item"><span class="check">✔</span> Двойное бронирование исключено на уровне БД
+                </div>
+                <div class="checklist-item"><span class="check">✔</span> Оплата онлайн — статус меняется автоматически
+                </div>
+                <div class="checklist-item"><span class="check">✔</span> Неоплаченные брони не блокируют номера</div>
+                <div class="checklist-item"><span class="check">✔</span> Менеджер видит всё в Telegram в реальном
+                    времени</div>
+            </div>
+
+            <div class="callout info">
+                <strong>Следующие шаги</strong>
+                Боевой SMTP вместо Mailtrap · реальные ключи Robokassa · форма на домене + CORS · Cloudflare Turnstile ·
+                NocoDB-кабинет менеджера · подтверждение оплаты кнопкой в Telegram.
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <h3><i class="fas fa-briefcase" style="color:#0284c7;margin-right:10px;"></i> Для Бизнеса</h3>
+                    <ul style="color:#4b5563;list-style:none;padding:0;">
+                        <li style="margin-bottom:10px;">✅ Заявка → оплата без ручного труда, поток заказов не теряется.
+                        </li>
+                        <li style="margin-bottom:10px;">✅ Ноль двойных броней — конфликты и извинения исключены.</li>
+                        <li style="margin-bottom:10px;">✅ Оплата онлайн сразу фиксирует клиента.</li>
+                        <li>✅ Неоплаченные брони не забирают номера у платящих гостей.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3><i class="fas fa-code" style="color:#7c3aed;margin-right:10px;"></i> Для Инженерии</h3>
+                    <ul style="color:#4b5563;list-style:none;padding:0;">
+                        <li style="margin-bottom:10px;">✅ Атомарные транзакции + уникальные индексы в PostgreSQL.</li>
+                        <li style="margin-bottom:10px;">✅ Идемпотентность (idempotency_key) защищает от дублей.</li>
+                        <li style="margin-bottom:10px;">✅ Корректные HTTP-коды: 200 / 400 / 409 / 503.</li>
+                        <li>✅ Global Error Handler + карантин для невалидных заявок.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer>
+            <p>© 2026 EduardWIT • <a href="../index.html">Главная</a> • <a href="../privacy-policy.html">Политика
+                    конфиденциальности</a></p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('section');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {threshold: 0.1});
+            sections.forEach(section => {
+                if (!section.classList.contains('visible')) {
+                    observer.observe(section);
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
