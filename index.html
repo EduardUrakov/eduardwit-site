@@ -424,8 +424,45 @@
                 </div>
                 <div class="projects__card">
                     <div class="projects__header">
+                        <div class="projects__title">DataInsight: Big Data аналитика на n8n</div>
+                        <div class="projects__description">Полный конвейер обработки больших данных: загрузка из внешних
+                            API, очистка и агрегация, AI-анализ с выявлением аномалий и прогнозом, HTML-отчёты в
+                            Telegram. 6 036 записей, 100% идемпотентность.</div>
+                        <div class="projects__tags">
+                            <span class="projects__tag">n8n</span>
+                            <span class="projects__tag">Supabase</span>
+                            <span class="projects__tag">GigaChat</span>
+                            <span class="projects__tag">PostgreSQL</span>
+                            <span class="projects__tag">Telegram Bot</span>
+                        </div>
+                    </div>
+                    <div class="projects__links">
+                        <a href="case/bigdata.html" class="projects__link">Читать кейс</a>
+                    </div>
+                </div>
+                <div class="projects__card">
+                    <div class="projects__header">
+                        <div class="projects__title">Enterprise AI Service Desk</div>
+                        <div class="projects__description">Полная автоматизация жизненного цикла сервисного обращения:
+                            от приёма заявки до постановки задачи инженеру с ИИ-классификацией и SLA-контролем.</div>
+                        <div class="projects__tags">
+                            <span class="projects__tag">n8n</span>
+                            <span class="projects__tag">Supabase</span>
+                            <span class="projects__tag">GigaChat</span>
+                            <span class="projects__tag">Битрикс24</span>
+                            <span class="projects__tag">Email</span>
+                        </div>
+                    </div>
+                    <div class="projects__links">
+                        <a href="case/SLA.html" class="projects__link">Читать кейс</a>
+                    </div>
+                </div>
+                <div class="projects__card">
+                    <div class="projects__header">
                         <div class="projects__title">AI-Охотник за заказами</div>
-                        <div class="projects__description">Авто-поиск и AI-отклик на заказы с HH.ru и Telegram-каналов. Двухконтурная система на n8n с GigaChat-скорингом и генерацией персонализированных ответов.</div>
+                        <div class="projects__description">Авто-поиск и AI-отклик на заказы с HH.ru и Telegram-каналов.
+                            Двухконтурная система на n8n с GigaChat-скорингом и генерацией персонализированных ответов.
+                        </div>
                         <div class="projects__tags">
                             <span class="projects__tag">n8n</span>
                             <span class="projects__tag">GigaChat</span>
@@ -441,7 +478,9 @@
                 <div class="projects__card">
                     <div class="projects__header">
                         <div class="projects__title">Бронирование отелей: заявка → оплата</div>
-                        <div class="projects__description">Автоматический пайплайн бронирования: атомарная бронь через SQL-функцию book_room(), онлайн-оплата Robokassa, письма и Telegram-отчёты. Ноль двойных броней.</div>
+                        <div class="projects__description">Автоматический пайплайн бронирования: атомарная бронь через
+                            SQL-функцию book_room(), онлайн-оплата Robokassa, письма и Telegram-отчёты. Ноль двойных
+                            броней.</div>
                         <div class="projects__tags">
                             <span class="projects__tag">n8n</span>
                             <span class="projects__tag">Supabase</span>
@@ -469,23 +508,6 @@
                     </div>
                     <div class="projects__links">
                         <a href="case/self-healing.html" class="projects__link">Читать кейс</a>
-                    </div>
-                </div>
-                <div class="projects__card">
-                    <div class="projects__header">
-                        <div class="projects__title">Enterprise AI Service Desk</div>
-                        <div class="projects__description">Полная автоматизация жизненного цикла сервисного обращения:
-                            от приёма заявки до постановки задачи инженеру с ИИ-классификацией и SLA-контролем.</div>
-                        <div class="projects__tags">
-                            <span class="projects__tag">n8n</span>
-                            <span class="projects__tag">Supabase</span>
-                            <span class="projects__tag">GigaChat</span>
-                            <span class="projects__tag">Битрикс24</span>
-                            <span class="projects__tag">Email</span>
-                        </div>
-                    </div>
-                    <div class="projects__links">
-                        <a href="case/SLA.html" class="projects__link">Читать кейс</a>
                     </div>
                 </div>
                 <div class="projects__card">
@@ -765,7 +787,7 @@
 
             function validate(value) {
                 const val = (value || '').toString().trim();
-                return val ? {ok: true, error: ''} : {ok: false, error: 'Это поле обязательно'};
+                return val ? { ok: true, error: '' } : { ok: false, error: 'Это поле обязательно' };
             }
 
             function clearErrors() {
@@ -788,11 +810,11 @@
                 const consent = document.getElementById('consent-input')?.checked || false;
 
                 const checks = [
-                    {field: validate(name), id: 'name-input-error'},
-                    {field: validate(contact), id: 'contact-input-error'},
-                    {field: validate(topic), id: 'topic-input-error'},
-                    {field: validate(message), id: 'message-input-error'},
-                    {field: consent ? {ok: true} : {ok: false, error: 'Необходимо согласие'}, id: 'consent-input-error'}
+                    { field: validate(name), id: 'name-input-error' },
+                    { field: validate(contact), id: 'contact-input-error' },
+                    { field: validate(topic), id: 'topic-input-error' },
+                    { field: validate(message), id: 'message-input-error' },
+                    { field: consent ? { ok: true } : { ok: false, error: 'Необходимо согласие' }, id: 'consent-input-error' }
                 ];
 
                 const hasErrors = checks.some(check => {
@@ -813,7 +835,7 @@
                 try {
                     const response = await fetch(WEBHOOK_URL, {
                         method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
+                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             name: name.trim(),
                             contact: contact.trim(),
@@ -833,7 +855,7 @@
                         form.reset();
                         if (successMsg) {
                             successMsg.style.display = 'block';
-                            setTimeout(() => {successMsg.style.display = 'none';}, 5000);
+                            setTimeout(() => { successMsg.style.display = 'none'; }, 5000);
                         }
                     } else {
                         throw new Error('HTTP ' + response.status);
@@ -869,7 +891,7 @@
             localStorage.setItem('metrica_consent', '1');
             document.getElementById('metrica-notice').style.display = 'none';
             if (typeof ym !== 'undefined') {
-                ym(109690102, 'params', {consent_given: 1});
+                ym(109690102, 'params', { consent_given: 1 });
             }
         });
     </script>
