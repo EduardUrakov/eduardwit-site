@@ -1,0 +1,2057 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DataInsight — Кейс автоматизации Big Data | Eduard Wit</title>
+    <style>
+        :root {
+            --ink: #0f172a;
+            --muted: #64748b;
+            --line: #e2e8f0;
+            --brand: #2563eb;
+            --warn: #f59e0b;
+            --ok: #16a34a;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --placeholder-bg: #f1f5f9;
+            --placeholder-border: #cbd5e1;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            color: var(--ink);
+            margin: 0;
+            background: var(--bg);
+            line-height: 1.65;
+        }
+
+        .page {
+            max-width: 64rem;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .brand {
+            background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+            color: #fff;
+            padding: 2rem 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .brand a {
+            color: #fff;
+            text-decoration: underline;
+        }
+
+        .brand h1 {
+            color: #fff;
+            font-size: 2rem;
+            margin: 0 0 0.5rem;
+        }
+
+        .brand .tagline {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        h1 {
+            font-size: 1.875rem;
+            margin: 0 0 0.5rem;
+        }
+
+        h2 {
+            font-size: 1.375rem;
+            margin: 0 0 1rem;
+            border-bottom: 2px solid var(--brand);
+            padding-bottom: 0.5rem;
+        }
+
+        h3 {
+            font-size: 1.125rem;
+            margin: 1.5rem 0 0.5rem;
+            color: var(--brand);
+        }
+
+        h4 {
+            font-size: 1rem;
+            margin: 1rem 0 0.5rem;
+            color: var(--ink);
+            font-weight: 600;
+        }
+
+        .meta {
+            color: var(--muted);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #f1f5f9;
+            border-radius: 999px;
+            padding: 0.125rem 0.75rem;
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin: 0.125rem;
+        }
+
+        .badge--ok {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge--brand {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .kpis {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .kpi {
+            flex: 1 1 9rem;
+            background: #f1f5f9;
+            border-radius: 0.5rem;
+            padding: 0.875rem 1rem;
+        }
+
+        .kpi__value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--brand);
+        }
+
+        .kpi__label {
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+            margin: 0.75rem 0;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 0.5rem 0.75rem;
+            border-bottom: 1px solid var(--line);
+            vertical-align: top;
+        }
+
+        th {
+            background: #f1f5f9;
+            font-weight: 600;
+        }
+
+        code {
+            background: #f1f5f9;
+            border-radius: 0.25rem;
+            padding: 0.125rem 0.375rem;
+            font-size: 0.85em;
+            font-family: 'Consolas', 'Monaco', monospace;
+            color: #be185d;
+        }
+
+        pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            overflow-x: auto;
+            font-size: 0.8rem;
+            line-height: 1.5;
+        }
+
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+
+        .flow {
+            background: #f1f5f9;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            font-family: 'Consolas', monospace;
+            font-size: 0.85rem;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        ul,
+        ol {
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.375rem;
+        }
+
+        .check {
+            color: var(--ok);
+            font-weight: 700;
+        }
+
+        .warn {
+            color: var(--warn);
+            font-weight: 700;
+        }
+
+        footer {
+            color: var(--muted);
+            font-size: 0.75rem;
+            text-align: center;
+            padding: 2rem 0 1rem;
+            border-top: 1px solid var(--line);
+            margin-top: 2rem;
+        }
+
+        footer a {
+            color: var(--brand);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .toc {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .toc li {
+            margin-bottom: 0.5rem;
+        }
+
+        .toc a {
+            color: var(--brand);
+            text-decoration: none;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        /* === ЗАГОЛОВКИ СЕКЦИЙ СО СКРИНШОТАМИ === */
+        .section-header {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border-left: 4px solid var(--brand);
+            border-radius: 0.5rem;
+            padding: 1rem 1.25rem;
+            margin: 1.5rem 0 1rem;
+        }
+
+        .section-header h4 {
+            margin: 0 0 0.25rem;
+            color: var(--brand);
+            font-size: 1.125rem;
+        }
+
+        .section-header p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        /* === СЕТКА СКРИНШОТОВ === */
+        .screens-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 1rem 0 1.5rem;
+        }
+
+        .screens-grid--wide {
+            grid-template-columns: 1fr;
+        }
+
+        /* === ПЛЕЙСХОЛДЕРЫ СКРИНШОТОВ === */
+        .screenshot {
+            border: 2px dashed var(--placeholder-border);
+            background: var(--placeholder-bg);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.875rem;
+            min-height: 220px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .screenshot:hover {
+            border-color: var(--brand);
+            background: #e0e7ff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(37, 99, 235, 0.1);
+        }
+
+        .screenshot .icon {
+            font-size: 2.5rem;
+            opacity: 0.6;
+            transition: transform 0.3s ease;
+        }
+
+        .screenshot:hover .icon {
+            transform: scale(1.1);
+        }
+
+        .screenshot .caption {
+            font-weight: 700;
+            color: var(--ink);
+            font-size: 0.95rem;
+            margin-top: 0.25rem;
+        }
+
+        .screenshot .hint {
+            font-size: 0.8rem;
+            font-style: italic;
+            max-width: 400px;
+            line-height: 1.4;
+        }
+
+        .screenshot .zoom-hint {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--brand);
+            color: #fff;
+            padding: 0.125rem 0.5rem;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            opacity: 0.8;
+        }
+
+        .screenshot img {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease;
+        }
+
+        .screenshot:hover img {
+            transform: scale(1.02);
+        }
+
+        /* === МОДАЛЬНОЕ ОКНО === */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            max-width: 95%;
+            max-height: 95vh;
+            margin: auto;
+            display: block;
+            animation: zoomIn 0.3s ease;
+            border-radius: 0.5rem;
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-caption {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #fff;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            max-width: 90%;
+            font-size: 0.95rem;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            color: #fff;
+            font-size: 3rem;
+            font-weight: bold;
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0.5);
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+            border: none;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 0, 0, 0.7);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* === ВИДЕО === */
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 0.75rem;
+            background: #000;
+            margin: 1rem 0;
+        }
+
+        .video-wrapper iframe,
+        .video-wrapper video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+            border-radius: 0.75rem;
+        }
+
+        .video-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-radius: 0.75rem;
+        }
+
+        .video-placeholder .play-icon {
+            font-size: 4rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.9;
+        }
+
+        .print-btn {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            background: var(--brand);
+            color: #fff;
+            padding: 0.75rem 1.25rem;
+            border-radius: 999px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            transition: transform 0.2s;
+            z-index: 100;
+        }
+
+        .print-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+        }
+
+        @media print {
+            body {
+                background: #fff;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            .card {
+                page-break-inside: avoid;
+                border: 1px solid #ddd;
+            }
+
+            .brand {
+                background: #1e40af !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .screenshot {
+                border: 2px dashed #94a3b8;
+                background: #f8fafc !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                page-break-inside: avoid;
+            }
+
+            .section-header {
+                background: #eff6ff !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .modal {
+                display: none !important;
+            }
+
+            .screenshot .zoom-hint {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .screens-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .screenshot {
+                min-height: 180px;
+                padding: 0.75rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div
+        style="position:fixed;top:0;left:0;right:0;z-index:1000;background:#fff;border-bottom:1px solid #e0e0e0;padding:10px 20px;display:flex;align-items:center;gap:16px;font-family:Open Sans, sans-serif;">
+        <a href="../index.html"
+            style="background:#EBFF01;color:#000;font-weight:700;text-decoration:none;padding:6px 16px;border-radius:4px;font-size:13px;">&#8592;
+            На главную</a>
+        <a href="../index.html#portfolio"
+            style="color:#555;font-size:13px;font-weight:500;text-decoration:none;">Портфолио</a>
+    </div>
+    <main class="page">
+
+        <button class="print-btn no-print" onclick="window.print()">🖨 Печать / PDF</button>
+
+        <!-- БРЕНДИНГ -->
+        <div class="brand">
+            <h1>Кейс: DataInsight — автоматизация Big Data аналитики</h1>
+            <p class="tagline">Полноценный конвейер обработки и анализа больших данных на n8n + Supabase + GigaChat</p>
+            <p style="margin-top:1rem; font-size:0.9rem;">
+                Автор кейса: <strong>Eduard Wit</strong> ·
+                Портфолио: <a href="https://eduardwit.ru" target="_blank">eduardwit.ru</a> ·
+                Дата: 04.09.2026
+            </p>
+        </div>
+
+
+        <!-- ШАПКА -->
+        <header>
+            <h1>Описание кейса</h1>
+            <p class="meta">
+                Автоматизация обработки данных и аналитики с использованием Big Data · n8n 2.36.9 (Self-Hosted) ·
+                Supabase · GigaChat AI<br>
+                Период анализа данных: 05.08.2026 — 04.09.2026
+            </p>
+            <span class="badge badge--ok">Все критерии ТЗ выполнены</span>
+            <span class="badge badge--brand">6 036 записей</span>
+            <span class="badge badge--brand">31 день данных</span>
+            <span class="badge badge--brand">25 категорий</span>
+            <span class="badge badge--brand">AI-инсайты через GigaChat</span>
+            <span class="badge badge--brand">Автоматические отчеты в Telegram</span>
+        </header>
+
+        <!-- ОГЛАВЛЕНИЕ -->
+        <section class="card">
+            <h2>Оглавление</h2>
+            <ol class="toc">
+                <li><a href="#summary">1. Резюме проекта</a></li>
+                <li><a href="#task">2. Описание задачи и целей автоматизации</a></li>
+                <li><a href="#architecture">3. Архитектура решения</a></li>
+                <li><a href="#scenarios">4. Описание сценариев автоматизации</a></li>
+                <li><a href="#database">5. Структура данных в Supabase</a></li>
+                <li><a href="#security">6. Механизмы безопасности</a></li>
+                <li><a href="#reliability">7. Механизмы надежности</a></li>
+                <li><a href="#ai">8. Интеграция с AI (GigaChat)</a></li>
+                <li><a href="#testing">9. Результаты тестирования</a></li>
+                <li><a href="#reports">10. Отчетность и визуализации</a></li>
+                <li><a href="#integrations">11. Описание интеграций</a></li>
+                <li><a href="#checklist">12. Чек-лист соответствия ТЗ</a></li>
+                <li><a href="#media">Медиа-материалы кейса</a></li>
+                <!-- <li><a href="#recommendations">13. Рекомендации по дальнейшему развитию</a></li>
+            </ol> -->
+        </section>
+
+        <!-- 1. РЕЗЮМЕ -->
+        <section class="card" id="summary">
+            <h2>1. Резюме проекта</h2>
+            <p>Разработан и внедрен полностью автоматизированный конвейер обработки и анализа больших данных на
+                платформе <strong>n8n 2.36.9 (Self-Hosted)</strong> с использованием <strong>Supabase</strong> в
+                качестве хранилища данных и <strong>GigaChat</strong> для генерации аналитических инсайтов.</p>
+            <p>Конвейер работает по архитектуре <code>IN_ → CORE_ → OUT_ → UTIL_</code> и включает четыре основных
+                сценария:</p>
+            <ul>
+                <li><strong>IN_DataInsight_Ingest_Sources</strong> — загрузка данных из двух внешних источников
+                    (JSONPlaceholder и DummyJSON) с масштабированием во временной ряд.</li>
+                <li><strong>CORE_DataInsight_Clean_Aggregate</strong> — очистка, валидация, дедупликация и агрегация
+                    данных.</li>
+                <li><strong>CORE_DataInsight_AI_Analyze</strong> — статистический анализ, выявление аномалий, построение
+                    прогноза и генерация AI-инсайтов через GigaChat.</li>
+                <li><strong>OUT_DataInsight_Report_Notifier</strong> — генерация HTML-отчета с SVG-графиками и отправка
+                    уведомления в Telegram.</li>
+            </ul>
+            <h3>Ключевые показатели проекта</h3>
+            <div class="kpis">
+                <div class="kpi">
+                    <div class="kpi__value">6 036</div>
+                    <div class="kpi__label">Всего записей обработано</div>
+                </div>
+                <div class="kpi">
+                    <div class="kpi__value">31</div>
+                    <div class="kpi__label">Дней в выборке</div>
+                </div>
+                <div class="kpi">
+                    <div class="kpi__value">25</div>
+                    <div class="kpi__label">Категорий данных</div>
+                </div>
+                <div class="kpi">
+                    <div class="kpi__value">2</div>
+                    <div class="kpi__label">Аномалии выявлено (|z| &gt; 2.5)</div>
+                </div>
+                <div class="kpi">
+                    <div class="kpi__value">7</div>
+                    <div class="kpi__label">Дней прогноза</div>
+                </div>
+                <div class="kpi">
+                    <div class="kpi__value">100%</div>
+                    <div class="kpi__label">Идемпотентность операций</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. ЗАДАЧА -->
+        <section class="card" id="task">
+            <h2>2. Описание задачи и целей автоматизации</h2>
+            <h3>Заказчик</h3>
+            <p><strong>DataInsight</strong> — крупная аналитическая фирма, специализирующаяся на обработке и анализе
+                больших данных для отраслей финансов, здравоохранения, ритейла и технологий.</p>
+            <h3>Боли, которые решены</h3>
+            <ul>
+                <li>✅ Ручная обработка больших объемов данных — заменена автоматизированным конвейером.</li>
+                <li>✅ Отсутствие системы очистки и агрегации из различных источников — реализован единый пайплайн с
+                    валидацией и дедупликацией.</li>
+                <li>✅ Множество ручных процессов извлечения и анализа — полностью автоматизировано.</li>
+                <li>✅ Отсутствие интеграции между системами — все сценарии работают как единый конвейер через вебхуки и
+                    общую базу данных.</li>
+            </ul>
+            <h3>Цели автоматизации</h3>
+            <ul>
+                <li>✅ Автоматизация процесса очистки, агрегации и анализа данных с использованием Big Data технологий.
+                </li>
+                <li>✅ Интеграция с различными источниками данных (внешние API) для быстрой обработки больших объемов
+                    информации.</li>
+                <li>✅ Ускорение получения аналитических отчетов и прогнозных моделей (время полного цикла — единицы
+                    секунд).</li>
+                <li>✅ Уменьшение времени обработки данных и повышение точности аналитики (статистические методы + AI).
+                </li>
+                <li>✅ Автоматизация генерации отчетов и визуализаций для принятия обоснованных решений.</li>
+            </ul>
+        </section>
+
+        <!-- 3. АРХИТЕКТУРА -->
+        <section class="card" id="architecture">
+            <h2>3. Архитектура решения</h2>
+            <h3>Общая схема конвейера данных</h3>
+            <div class="flow">
+                ┌─────────────────────────────────────────────────────────────────────────────┐
+                │ ВНЕШНИЕ ИСТОЧНИКИ ДАННЫХ │
+                │ JSONPlaceholder (/posts, /users) DummyJSON (/products) │
+                └──────────────────────────────────┬──────────────────────────────────────────┘
+                │ HTTP GET (с пагинацией)
+                ▼
+                ┌─────────────────────────────────────────────────────────────────────────────┐
+                │ IN_DataInsight_Ingest_Sources │
+                │ Вебхук: /webhook/datain-ingest · Расписание: каждые 6 часов │
+                │ • Забор данных из источников │
+                │ • Нормализация к единой схеме │
+                │ • Масштабирование во временной ряд (30 дней) │
+                │ • Батчинг (по 2000 записей) │
+                └──────────────────────────────────┬──────────────────────────────────────────┘
+                │ Вебхук: /webhook/datain-clean
+                ▼
+                ┌─────────────────────────────────────────────────────────────────────────────┐
+                │ CORE_DataInsight_Clean_Aggregate │
+                │ • Валидация и нормализация записей │
+                │ • Дедупликация (FNV-1a хеш по source|record_id) │
+                │ • Идемпотентный UPSERT в di_clean_records │
+                │ • Пересчет агрегатов через recalc_daily_aggregates() │
+                │ • Невалидные записи → validation_failures (Dead Letter Queue) │
+                └──────────────────────────────────┬──────────────────────────────────────────┘
+                │ Supabase: daily_aggregates
+                ▼
+                ┌─────────────────────────────────────────────────────────────────────────────┐
+                │ CORE_DataInsight_AI_Analyze │
+                │ Вебхук: /webhook/datain-analyze · Расписание: ежедневно в 07:00 │
+                │ • Описательная статистика (среднее, медиана, квартили) │
+                │ • Выявление аномалий (Z-score, |z| > 2.5) │
+                │ • Линейная регрессия и определение тренда │
+                │ • Прогноз на 7 дней │
+                │ • AI-инсайты через GigaChat (с валидацией контракта) │
+                │ • Эвристика как fallback при недоступности AI │
+                └──────────────────────────────────┬──────────────────────────────────────────┘
+                │ Supabase: analysis_results
+                ▼
+                ┌─────────────────────────────────────────────────────────────────────────────┐
+                │ OUT_DataInsight_Report_Notifier │
+                │ Вебхук: /webhook/datain-report · Расписание: ежедневно в 08:00 │
+                │ • Генерация HTML-отчета с инлайн SVG-графиками │
+                │ • Сохранение отчета в таблицу reports │
+                │ • Отправка сводки в Telegram │
+                └─────────────────────────────────────────────────────────────────────────────┘
+
+                ┌─────────────────────────────────────────────────────────────────────────────┐
+                │ Global Error Handler (UTIL_) │
+                │ • Классификация ошибок (временные / бизнес / критические) │
+                │ • Ретраи до 3 попыток через Retry Router │
+                │ • Сохранение ошибок в workflow_errors │
+                │ • Telegram-алерты для критических и бизнес-ошибок │
+                └─────────────────────────────────────────────────────────────────────────────┘
+            </div>
+
+            <div class="section-header">
+                <h4>Архитектурная диаграмма системы</h4>
+                <p>Визуальная схема потоков данных между компонентами</p>
+            </div>
+            <div class="screens-grid screens-grid--wide">
+                <div class="screenshot" onclick="openModal(this)" style="min-height: 300px;">
+                    <div class="caption"><img src="../images/bigdata/Arhitect.png" alt="Описание"></div>
+                </div>
+            </div>
+
+            <h3>Технологический стек</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Компонент</th>
+                        <th>Технология</th>
+                        <th>Назначение</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Оркестрация</td>
+                        <td>n8n 2.36.9 (Self-Hosted)</td>
+                        <td>Автоматизация конвейера данных</td>
+                    </tr>
+                    <tr>
+                        <td>Хранилище данных</td>
+                        <td>Supabase (PostgreSQL)</td>
+                        <td>Хранение записей, агрегатов, отчетов, ошибок</td>
+                    </tr>
+                    <tr>
+                        <td>AI-аналитика</td>
+                        <td>GigaChat</td>
+                        <td>Генерация аналитических инсайтов на русском языке</td>
+                    </tr>
+                    <tr>
+                        <td>Источники данных</td>
+                        <td>JSONPlaceholder, DummyJSON</td>
+                        <td>Внешние REST API</td>
+                    </tr>
+                    <tr>
+                        <td>Уведомления</td>
+                        <td>Telegram Bot API</td>
+                        <td>Доставка отчетов и алертов</td>
+                    </tr>
+                    <tr>
+                        <td>Аутентификация</td>
+                        <td>n8n Credentials</td>
+                        <td>Безопасное хранение секретов</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- 4. СЦЕНАРИИ -->
+        <section class="card" id="scenarios">
+            <h2>4. Описание сценариев автоматизации</h2>
+
+            <h3>4.1 IN_DataInsight_Ingest_Sources — загрузка данных</h3>
+            <p><strong>Триггеры:</strong> вебхук <code>POST /webhook/datain-ingest</code> и расписание каждые 6 часов.
+            </p>
+            <p><strong>Назначение:</strong> забор данных из двух внешних источников, нормализация к единой схеме и
+                передача в пайплайн очистки.</p>
+
+            <div class="section-header">
+                <h4>Схема сценария IN_DataInsight_Ingest_Sources</h4>
+                <p>Визуальное представление всех узлов в n8n Canvas</p>
+            </div>
+            <div class="screens-grid">
+                <div class="screenshot" onclick="openModal(this)">
+                    <img src="../images/bigdata/1.jpg" alt="Описание">
+                    <div class="caption">Общая схема сценария</div>
+                    <div class="hint">Webhook, Schedule, Build Pages, Fetch, Normalize, Scale, Chunk, Send</div>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Узел</th>
+                        <th>Назначение</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>Build Post Page Requests</code></td>
+                        <td>Формирование запросов для пагинации постов (10 страниц по 100 записей)</td>
+                    </tr>
+                    <tr>
+                        <td><code>Fetch Posts (Paginated)</code></td>
+                        <td>Загрузка постов из JSONPlaceholder с batch-обработкой (защита от перегрузки источника)</td>
+                    </tr>
+                    <tr>
+                        <td><code>Fetch Products</code></td>
+                        <td>Загрузка товаров из DummyJSON</td>
+                    </tr>
+                    <tr>
+                        <td><code>Normalize Posts / Normalize Products</code></td>
+                        <td>Приведение данных к единой схеме:
+                            <code>record_id, source, category, title, value, record_date, meta</code>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>Scale to Time Series</code></td>
+                        <td>Масштабирование данных во временной ряд на 30 дней с детерминированным PRNG (восходящий
+                            тренд + шум + редкие аномалии)</td>
+                    </tr>
+                    <tr>
+                        <td><code>Chunk Batches</code></td>
+                        <td>Нарезка потока на батчи по 2000 записей</td>
+                    </tr>
+                    <tr>
+                        <td><code>Send to Clean Pipeline</code></td>
+                        <td>Отправка батчей в пайплайн очистки</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p><strong>Обработанный объем за тест:</strong> 6 036 записей, 3 батча.</p>
+
+            <h3>4.2 CORE_DataInsight_Clean_Aggregate — очистка и агрегация</h3>
+            <p><strong>Триггер:</strong> вебхук <code>POST /webhook/datain-clean</code>.</p>
+
+            <div class="section-header">
+                <h4>Схема сценария CORE_DataInsight_Clean_Aggregate</h4>
+                <p>Узлы очистки, валидации, дедупликации и агрегации</p>
+            </div>
+            <div class="screens-grid">
+                <div class="screenshot" onclick="openModal(this)">
+                    <img src="../images/bigdata/2.jpg" alt="Описание">
+                    <div class="caption">Общая схема сценария</div>
+                    <div class="hint">Clean → IF → Dedup → Upsert → Recalc</div>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Узел</th>
+                        <th>Назначение</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>Clean Records</code></td>
+                        <td>Валидация и нормализация записей (дата, значение, категория), вычисление FNV-1a хеша для
+                            дедупликации</td>
+                    </tr>
+                    <tr>
+                        <td><code>IF: Record Valid?</code></td>
+                        <td>Маршрутизация: валидные записи — в пайплайн, невалидные — в Dead Letter Queue</td>
+                    </tr>
+                    <tr>
+                        <td><code>Save to Dead Letter Queue</code></td>
+                        <td>Сохранение невалидных записей в <code>validation_failures</code> для аудита</td>
+                    </tr>
+                    <tr>
+                        <td><code>Dedup In Batch</code></td>
+                        <td>Дедупликация внутри батча по <code>dedup_hash</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>Upsert clean_records</code></td>
+                        <td>Идемпотентный UPSERT в Supabase с <code>on_conflict=source,dedup_hash</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>Recalc Daily Aggregates</code></td>
+                        <td>Вызов функции <code>recalc_daily_aggregates()</code> для корректного пересчета агрегатов
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>4.3 CORE_DataInsight_AI_Analyze — аналитика</h3>
+            <p><strong>Триггеры:</strong> вебхук <code>POST /webhook/datain-analyze</code> и расписание ежедневно в
+                07:00.</p>
+
+            <div class="section-header">
+                <h4>Схема сценария CORE_DataInsight_AI_Analyze</h4>
+                <p>Интеграция с GigaChat и статистический анализ</p>
+            </div>
+            <div class="screens-grid">
+                <div class="screenshot" onclick="openModal(this)">
+                    <img src="../images/bigdata/3.jpg" alt="Описание">
+                    <div class="caption">Общая схема сценария</div>
+                    <div class="hint">Fetch → Analyze → AI Agent → GigaChat → Extract → Save</div>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Узел</th>
+                        <th>Назначение</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>Fetch Aggregates</code></td>
+                        <td>Загрузка агрегатов из <code>daily_aggregates</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>Analyze Data</code></td>
+                        <td>Статистический анализ: описательная статистика, Z-score аномалии, линейная регрессия,
+                            прогноз на 7 дней</td>
+                    </tr>
+                    <tr>
+                        <td><code>AI Agent</code> + <code>GigaChat Model</code></td>
+                        <td>Генерация инсайтов с валидацией JSON-контракта</td>
+                    </tr>
+                    <tr>
+                        <td><code>Extract AI Text</code></td>
+                        <td>Парсинг ответа от AI, проверка контракта</td>
+                    </tr>
+                    <tr>
+                        <td><code>Heuristic Insights</code></td>
+                        <td>Эвристические инсайты (fallback при недоступности AI)</td>
+                    </tr>
+                    <tr>
+                        <td><code>Save analysis_results</code></td>
+                        <td>Идемпотентный UPSERT с <code>on_conflict=run_date</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>4.4 OUT_DataInsight_Report_Notifier — отчеты и уведомления</h3>
+            <p><strong>Триггеры:</strong> вебхук <code>POST /webhook/datain-report</code> и расписание ежедневно в
+                08:00.</p>
+
+            <div class="section-header">
+                <h4>Схема сценария OUT_DataInsight_Report_Notifier</h4>
+                <p>Генерация HTML-отчета и отправка в Telegram</p>
+            </div>
+            <div class="screens-grid">
+                <div class="screenshot" onclick="openModal(this)">
+                    <img src="../images/bigdata/4.jpg" alt="Описание">
+                    <div class="caption">Общая схема сценария</div>
+                    <div class="hint">Load → Generate → Save → Telegram → Respond</div>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Узел</th>
+                        <th>Назначение</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>Load Latest Analysis</code></td>
+                        <td>Загрузка последнего результата анализа из <code>analysis_results</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>Generate Report</code></td>
+                        <td>Генерация HTML-отчета с инлайн SVG-графиками (бар-чарт по категориям, линейный график с
+                            прогнозом)</td>
+                    </tr>
+                    <tr>
+                        <td><code>Save Report</code></td>
+                        <td>Идемпотентный UPSERT с <code>on_conflict=report_date</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>Send Telegram Notification</code></td>
+                        <td>Отправка сводки отчета в Telegram</td>
+                    </tr>
+                    <tr>
+                        <td><code>IF: Notify Failed?</code> + <code>Log Notify Failure</code></td>
+                        <td>Сбой уведомления логируется, но не роняет пайплайн</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>4.5 Global Error Handler — обработка ошибок</h3>
+            <p>Сценарий подключен ко всем основным сценариям через параметр <code>errorWorkflow</code>.</p>
+
+            <div class="section-header">
+                <h4>Схема Global Error Handler</h4>
+                <p>Классификация ошибок, ретраи и алерты</p>
+            </div>
+            <div class="screens-grid">
+                <div class="screenshot" onclick="openModal(this)">
+                    <img src="../images/bigdata/5.jpg" alt="Описание">
+                    <div class="caption">Общая схема сценария</div>
+                    <div class="hint">Format → Analyze → Increment → Wait → Restart → Alert</div>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Узел</th>
+                        <th>Назначение</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>Format Error</code></td>
+                        <td>Извлечение и маскирование данных об ошибке, вычисление хеша, формирование 5-минутного окна
+                            группировки</td>
+                    </tr>
+                    <tr>
+                        <td><code>Analyze Error</code></td>
+                        <td>Классификация ошибки: временная (сетевая) / бизнес-ошибка / критическая</td>
+                    </tr>
+                    <tr>
+                        <td><code>Increment Retry Session</code></td>
+                        <td>Атомарный подсчет попыток повторного запуска (до 3 попыток) через RPC
+                            <code>increment_retry_session()</code>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>Restart Workflow</code></td>
+                        <td>Вызов Retry Router для повторного запуска исходного сценария</td>
+                    </tr>
+                    <tr>
+                        <td><code>Telegram Alert</code></td>
+                        <td>Уведомление о критических и бизнес-ошибках</td>
+                    </tr>
+                    <tr>
+                        <td><code>Save Error / Save Final Failure</code></td>
+                        <td>Фиксация ошибок в таблице <code>workflow_errors</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>4.6 IN_ExternalUsers_Fetch — экспериментальный сценарий (Proof of Concept)</h3>
+            <p><strong>Триггеры:</strong> вебхук и расписание каждые 8 часов. <strong>Статус:</strong> отключен
+                (<code>active: false</code>).</p>
+            <p><strong>Назначение:</strong> полигон для отработки базовых механизмов конвейера и демонстрация
+                адаптерного паттерна подключения внешних источников. Загружает пользователей из
+                <code>jsonplaceholder.typicode.com/users</code> — источник, содержащий персональные данные (name,
+                email).
+            </p>
+
+            <div class="section-header">
+                <h4>Архитектурное решение: защита ПД</h4>
+                <p>Сценарий сознательно не включен в продакшн-конвейер в исходном виде: передача ПД (email, name)
+                    во внешние сервисы (включая GigaChat) нарушила бы требование «защита от утечек данных».
+                    В продакшн-пайплайн передаются только обезличенные показатели (счетчик записей, value = 1,
+                    обезличенный идентификатор) — именно они представлены 20 записями источника
+                    <code>jsonplaceholder-users</code> в итоговой выборке (раздел 9.2).
+                </p>
+            </div>
+
+            <div class="screens-grid">
+                <div class="screenshot" onclick="openModal(this)" data-caption="Схема сценария IN_ExternalUsers_Fetch">
+                    <img src="../images/bigdata/6.jpg" alt="Описание">
+                    <div class="caption">Общая схема сценария</div>
+                    <div class="hint">Webhook, Schedule, Fetch Page, Normalize (Adapter), Validate Data, DLQ</div>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Узел</th>
+                        <th>Назначение</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>Fetch Page</code></td>
+                        <td>Загрузка пользователей из JSONPlaceholder</td>
+                    </tr>
+                    <tr>
+                        <td><code>Normalize (Adapter)</code></td>
+                        <td>Адаптер внешнего API к внутренней схеме; ПД маскируются/исключаются перед передачей в
+                            пайплайн</td>
+                    </tr>
+                    <tr>
+                        <td><code>Calculate Validity</code> + <code>Validate Data</code></td>
+                        <td>Валидация обязательных полей и маршрутизация невалидных записей</td>
+                    </tr>
+                    <tr>
+                        <td><code>Save to Dead Letter Queue</code></td>
+                        <td>Сохранение невалидных записей в <code>validation_failures</code> для аудита</td>
+                    </tr>
+                    <tr>
+                        <td><code>Set Retry Context</code></td>
+                        <td>Прием контекста повторного запуска (<code>retry_session_id</code>,
+                            <code>retry_attempt</code>) от Retry Router
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>Format Error for Handler</code></td>
+                        <td>Форматирование ошибки (FNV-1a хеш, 5-минутное окно) для обработчика ошибок</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>Механизмы, отработанные на полигоне и внедренные в продакшн</h4>
+            <ul>
+                <li><span class="check">✓</span> Идемпотентность и дедупликация (повторный вызов не создает дублей);
+                </li>
+                <li><span class="check">✓</span> Валидация данных и Dead Letter Queue;</li>
+                <li><span class="check">✓</span> Адаптерный паттерн подключения новых источников;</li>
+                <li><span class="check">✓</span> Механизм повторных запусков через <code>retry_session_id</code>;</li>
+                <li><span class="check">✓</span> Единая схема передачи батчей в <code>/webhook/datain-clean</code>.</li>
+            </ul>
+            <h3>4.7 Retry Router (Global) — маршрутизатор перезапусков</h3>
+            <p><strong>Триггер:</strong> вебхук <code>POST /webhook/retry-trigger</code>. <strong>Статус:</strong>
+                активен.</p>
+            <p><strong>Назначение:</strong> принимает запрос на перезапуск от <code>Global Error Handler</code>
+                (узел <code>Restart Workflow</code>), восстанавливает контекст повторной попытки и вызывает
+                вебхук исходного сценария. Замыкает цикл ретраев: ошибка → классификация → счетчик попыток →
+                перезапуск → при повторной ошибке контекст сохраняется и цепочка продолжается.</p>
+
+            <div class="section-header">
+                <h4>Роль в UTIL-слое</h4>
+                <p>Роутер разделяет ответственность: <strong>Global Error Handler</strong> решает,
+                    <em>можно ли</em> повторять (классификация, лимит 3 попытки, алерты), а <strong>Retry
+                        Router</strong>
+                    исполняет перезапуск и передает контекст (<code>retry_session_id</code>, <code>retry_attempt</code>,
+                    <code>original_workflow_id</code>) в новый запуск, чтобы при повторной ошибке цепочка
+                    не начиналась заново, а продолжалась с правильным счетчиком.
+                </p>
+            </div>
+
+            <div class="screens-grid">
+                <div class="screenshot" onclick="openModal(this)" data-caption="Схема сценария Retry Router (Global)">
+                    <img src="../images/bigdata/7.jpg" alt="Описание">
+                    <div class="caption">Общая схема сценария</div>
+                    <div class="hint">retry-trigger → контекст → Build JSON Body → HTTP Request на вебхук цели</div>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Узел</th>
+                        <th>Назначение</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>retry-trigger</code></td>
+                        <td>Вебхук приема запроса на перезапуск от Global Error Handler</td>
+                    </tr>
+                    <tr>
+                        <td><code>Code in JavaScript1</code></td>
+                        <td>Читает контекст (<code>retry_session_id</code>, <code>retry_attempt</code>,
+                            <code>original_workflow_id</code>), логирует retry-сессию
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>Code in JavaScript2</code></td>
+                        <td>Сохраняет контекст в static data workflow — доступен при повторной ошибке для продолжения
+                            цепочки</td>
+                    </tr>
+                    <tr>
+                        <td><code>Build JSON Body</code></td>
+                        <td>Собирает гарантированно валидный JSON-payload перезапуска через <code>JSON.stringify</code>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>HTTP Request</code></td>
+                        <td>Вызывает вебхук целевого сценария; опция <code>neverError</code> защищает роутер от падения
+                            в цикл ошибок</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>Механизмы защиты цикла ретраев</h4>
+            <ul>
+                <li><span class="check">✓</span> Не более 3 попыток — счетчик ведет атомарная функция
+                    <code>increment_retry_session()</code> на стороне Global Error Handler;
+                </li>
+                <li><span class="check">✓</span> 5-минутное окно группировки ошибок — дубли не создают параллельных
+                    цепочек;</li>
+                <li><span class="check">✓</span> Контекст <code>retry_session_id</code> передается в новый запуск —
+                    при повторной ошибке цепочка продолжается, а не начинается заново;</li>
+                <li><span class="check">✓</span> <code>neverError</code> в HTTP-вызове — сбой перезапуска не порождает
+                    новый цикл ошибок;</li>
+                <li><span class="check">✓</span> Маршрутизация по <code>original_workflow_id</code> — перезапускается
+                    именно тот сценарий, в котором произошла ошибка.</li>
+            </ul>
+        </section>
+
+        <!-- 5. БД -->
+        <section class="card" id="database">
+            <h2>5. Структура данных в Supabase</h2>
+
+            <div class="section-header">
+                <h4>Схема базы данных Supabase</h4>
+                <p>Все таблицы проекта в Table Editor</p>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Таблица</th>
+                        <th>Назначение</th>
+                        <th>Ключ идемпотентности</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>di_clean_records</code></td>
+                        <td>Хранение очищенных записей (6 036 записей)</td>
+                        <td><code>UNIQUE(source, dedup_hash)</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>daily_aggregates</code></td>
+                        <td>Дневные агрегаты по категориям (записи, суммы, средние, мин/макс)</td>
+                        <td><code>UNIQUE(agg_date, category)</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>analysis_results</code></td>
+                        <td>Результаты анализа (статистика, аномалии, тренд, прогноз, AI-инсайты)</td>
+                        <td><code>UNIQUE(run_date)</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>reports</code></td>
+                        <td>HTML-отчеты со сводками</td>
+                        <td><code>UNIQUE(report_date)</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>validation_failures</code></td>
+                        <td>Dead Letter Queue — невалидные записи для аудита</td>
+                        <td>—</td>
+                    </tr>
+                    <tr>
+                        <td><code>workflow_errors</code></td>
+                        <td>Журнал ошибок выполнения сценариев</td>
+                        <td>—</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>Ключевая функция корректной агрегации:</p>
+            <pre><code>-- Пересчет агрегатов по всем записям за указанные даты
+-- Вызывается после каждого батча через RPC
+SELECT public.recalc_daily_aggregates(ARRAY['2026-09-04']::date[]);</code></pre>
+            <p>Функция идемпотентна и защищает от состояния гонки: даже если несколько батчей за один день приходят
+                одновременно, агрегаты будут корректно пересчитаны по всем записям, а не перезаписаны последним батчем.
+            </p>
+        </section>
+
+        <!-- 6. БЕЗОПАСНОСТЬ -->
+        <section class="card" id="security">
+            <h2>6. Механизмы безопасности</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Аспект</th>
+                        <th>Реализация</th>
+                        <th>Статус</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Хранение секретов</td>
+                        <td>Все API-ключи (Supabase, Telegram, GigaChat) хранятся в <strong>n8n Credentials</strong>, а
+                            не в переменных окружения</td>
+                        <td><span class="check">✓ Выполнено</span></td>
+                    </tr>
+                    <tr>
+                        <td>Блокировка доступа к env</td>
+                        <td>На уровне экземпляра установлен <code>N8N_BLOCK_ENV_ACCESS_IN_NODE</code> — узлы не могут
+                            читать переменные окружения</td>
+                        <td><span class="check">✓ Выполнено</span></td>
+                    </tr>
+                    <tr>
+                        <td>Отсутствие секретов в коде</td>
+                        <td>Telegram-токен, ранее зашитый в URL, заменен на Credential</td>
+                        <td><span class="check">✓ Выполнено</span></td>
+                    </tr>
+                    <tr>
+                        <td>Защита от утечек ПД</td>
+                        <td>Персональные данные (например, <code>email</code>) не передаются во внешние сервисы; в AI
+                            передаются только агрегированные показатели</td>
+                        <td><span class="check">✓ Выполнено</span></td>
+                    </tr>
+                    <tr>
+                        <td>Осознанное исключение источников с ПД</td>
+                        <td>Экспериментальный сценарий <code>IN_ExternalUsers_Fetch</code> (источник с ПД) отключен
+                            и выведен из продакшн-контейнера; в пайплайн передаются только обезличенные показатели</td>
+                        <td><span class="check">✓ Выполнено</span></td>
+                    </tr>
+                    <tr>
+                        <td>Маскирование в логах</td>
+                        <td>В <code>Global Error Handler</code> сообщения об ошибках маскируются перед сохранением</td>
+                        <td><span class="check">✓ Выполнено</span></td>
+                    </tr>
+                    <tr>
+                        <td>Идемпотентные операции</td>
+                        <td>Все операции записи в БД используют <code>on_conflict</code> с уникальными ключами</td>
+                        <td><span class="check">✓ Выполнено</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- 7. НАДЕЖНОСТЬ -->
+        <section class="card" id="reliability">
+            <h2>7. Механизмы надежности</h2>
+
+            <h3>7.1 Идемпотентность (защита от дублей)</h3>
+            <p>Все операции записи спроектированы как идемпотентные:</p>
+            <ul>
+                <li><code>di_clean_records</code> — UPSERT по уникальной паре <code>(source, dedup_hash)</code>, где
+                    <code>dedup_hash</code> вычисляется алгоритмом FNV-1a из <code>source|record_id</code>.
+                </li>
+                <li><code>daily_aggregates</code> — пересчет через функцию <code>recalc_daily_aggregates()</code> с
+                    <code>ON CONFLICT (agg_date, category) DO UPDATE</code>.
+                </li>
+                <li><code>analysis_results</code> — UPSERT с <code>on_conflict=run_date</code>.</li>
+                <li><code>reports</code> — UPSERT с <code>on_conflict=report_date</code>.</li>
+            </ul>
+            <p><strong>Подтверждено тестом:</strong> повторный запуск <code>datain-clean</code> и
+                <code>datain-analyze</code> не создает дублей (<code>cnt = 1</code> в <code>analysis_results</code> и
+                <code>reports</code> за текущую дату).
+            </p>
+
+            <h3>7.2 Дедупликация внутри батча</h3>
+            <p>Узел <code>Dedup In Batch</code> использует <code>Set</code> для отслеживания уже встреченных
+                <code>dedup_hash</code> и отбрасывает дубли до записи в БД.
+            </p>
+
+            <h3>7.3 Обработка временных сбоев и защита от бесконечных повторов</h3>
+            <ul>
+                <li>Для критических записей в БД заданы таймауты (30 секунд) и ограниченное число повторных попыток.
+                </li>
+                <li><code>Global Error Handler</code> использует атомарную функцию
+                    <code>increment_retry_session()</code> с лимитом <strong>3 попытки</strong> и 5-минутным окном
+                    группировки ошибок.
+                </li>
+                <li>Результат обработки фиксируется в таблице <code>workflow_errors</code> независимо от исхода.</li>
+                <li>При исчерпании попыток отправляется финальный алерт в Telegram.</li>
+            </ul>
+
+            <h3>7.4 Защита от состояния гонки</h3>
+            <p>Функция <code>increment_retry_session()</code> использует <code>pg_advisory_xact_lock()</code> для
+                сериализации параллельных вызовов. Пересчет агрегатов через <code>recalc_daily_aggregates()</code>
+                выполняется на стороне БД, что исключает конфликтующие записи при одновременной обработке нескольких
+                батчей.</p>
+
+            <h3>7.5 Graceful degradation</h3>
+            <ul>
+                <li>Сбой отправки уведомления в Telegram логируется, но не прерывает пайплайн.</li>
+                <li>Недоступность AI переключает систему на эвристические инсайты.</li>
+                <li>Невалидные записи не блокируют батч, а сохраняются в Dead Letter Queue.</li>
+            </ul>
+        </section>
+
+        <!-- 8. AI -->
+        <section class="card" id="ai">
+            <h2>8. Интеграция с AI (GigaChat)</h2>
+            <p>AI реализован как сервис внутри процесса: он возвращает строго заданный результат, а сценарий его
+                проверяет, принимает решение и управляет дальнейшими действиями.</p>
+
+            <h3>8.1 Контракт взаимодействия</h3>
+            <p>В узле <code>AI Agent</code> задан системный промпт, требующий ответ строго в формате JSON:</p>
+            <pre><code>{
+  "summary": "краткий вывод",
+  "bullets": ["инсайт 1", "инсайт 2"],
+  "risks": ["риск 1", "риск 2"],
+  "trend": "up|down|flat"
+}</code></pre>
+
+            <h3>8.2 Валидация ответа</h3>
+            <p>Узел <code>Extract AI Text</code> выполняет проверку:</p>
+            <ul>
+                <li>Ответ не пустой.</li>
+                <li>Присутствуют обязательные поля <code>summary</code> и <code>bullets</code>.</li>
+                <li>Если JSON обернут в текст — извлекается через регулярное выражение.</li>
+            </ul>
+            <p>При невалидном ответе или ошибке система автоматически переключается на эвристические инсайты (узел
+                <code>Heuristic Insights</code>).
+            </p>
+
+            <h3>8.3 Пример сгенерированных инсайтов</h3>
+            <pre><code>Выявлены признаки снижения ключевых метрик с августа; зафиксированы аномальные всплески продаж.
+
+Ключевые инсайты:
+- Снижение среднего дневного объема продаж (-23 796)
+- Аномальный рост продаж 9 августа 2026 года до 38,9 млн ($), 23 августа — до 41,3 млн ($)
+
+Риски:
+- Продолжение нисходящего тренда может свидетельствовать о снижении спроса
+- Высокие отклонения от средних значений требуют дополнительного анализа причин</code></pre>
+        </section>
+
+        <!-- 9. ТЕСТИРОВАНИЕ -->
+        <section class="card" id="testing">
+            <h2>9. Результаты тестирования</h2>
+
+            <div class="section-header">
+                <h4>🧪 Скриншоты тестовых прогонов в Executions</h4>
+                <p>Успешные выполнения webhook с Mode=webhook и Status=Success</p>
+            </div>
+            <div class="screens-grid">
+                <div class="screenshot" onclick="openModal(this)">
+                    <img src="../images/bigdata/1-1.jpg" alt="Описание">
+                    <div class="caption">Executions — список</div>
+                    <div class="hint">Mode=webhook, Status=Success</div>
+                </div>
+                <div class="screenshot" onclick="openModal(this)">
+                    <img src="../images/bigdata/Post-ingest.jpg" alt="Описание">
+                    <div class="caption">Загрузка данных</div>
+                </div>
+                <div class="screenshot" onclick="openModal(this)">
+                    <img src="../images/bigdata/Post-analyze.jpg" alt="Описание">
+                    <div class="caption">Анализ данных</div>
+                </div>
+                <div class="screenshot" onclick="openModal(this)">
+                    <img src="../images/bigdata/Post-report.jpg" alt="Описание">
+                    <div class="caption">Генерация отчета</div>
+                </div>
+            </div>
+
+            <h3>9.1 Сквозной тест пайплайна (04.09.2026)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Шаг</th>
+                        <th>Эндпоинт</th>
+                        <th>Результат</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1. Загрузка данных</td>
+                        <td><code>POST /webhook/datain-ingest</code></td>
+                        <td><span class="check">✓ 200 OK</span>, <code>records_total: 5820</code>,
+                            <code>batches_sent: 3</code>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2. Анализ данных</td>
+                        <td><code>POST /webhook/datain-analyze</code></td>
+                        <td><span class="check">✓ 200 OK</span>, <code>total_records: 6036</code>,
+                            <code>trend: down</code>, <code>anomalies: 2</code>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>3. Генерация отчета</td>
+                        <td><code>POST /webhook/datain-report</code></td>
+                        <td><span class="check">✓ 200 OK</span>, <code>saved_to: reports</code>,
+                            <code>notified: true</code>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>9.2 Объемы данных</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Источник</th>
+                        <th>Количество записей</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>dummyjson</td>
+                        <td>6 014</td>
+                    </tr>
+                    <tr>
+                        <td>jsonplaceholder-users</td>
+                        <td>20</td>
+                    </tr>
+                    <tr>
+                        <td>manual-test</td>
+                        <td>2</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Итого</strong></td>
+                        <td><strong>6 036</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>9.3 Тесты идемпотентности</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Тест</th>
+                        <th>Метод</th>
+                        <th>Результат</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Повторный запуск очистки</td>
+                        <td>Двойной вызов <code>datain-clean</code> с одинаковым <code>record_id</code></td>
+                        <td><span class="check">✓</span> Запись не задвоилась</td>
+                    </tr>
+                    <tr>
+                        <td>Повторный запуск анализа</td>
+                        <td>Двойной вызов <code>datain-analyze</code></td>
+                        <td><span class="check">✓</span> <code>cnt = 1</code> в <code>analysis_results</code></td>
+                    </tr>
+                    <tr>
+                        <td>Повторный запуск отчета</td>
+                        <td>Двойной вызов <code>datain-report</code></td>
+                        <td><span class="check">✓</span> <code>cnt = 1</code> в <code>reports</code></td>
+                    </tr>
+                    <tr>
+                        <td>Корректность агрегации</td>
+                        <td>Вызов <code>recalc_daily_aggregates()</code> после нескольких батчей</td>
+                        <td><span class="check">✓</span> Суммы не перезаписываются, а пересчитываются по всем записям
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>9.4 Тесты обработки ошибок</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Тест</th>
+                        <th>Результат</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Временная сетевая ошибка</td>
+                        <td><span class="check">✓</span> Классифицируется как retryable, выполняется до 3 ретраев</td>
+                    </tr>
+                    <tr>
+                        <td>Бизнес-ошибка (400/401/403)</td>
+                        <td><span class="check">✓</span> Классифицируется как business, ретраи не выполняются,
+                            отправляется алерт</td>
+                    </tr>
+                    <tr>
+                        <td>Критическая ошибка (просроченный credential)</td>
+                        <td><span class="check">✓</span> Немедленный алерт в Telegram</td>
+                    </tr>
+                    <tr>
+                        <td>Исчерпание попыток</td>
+                        <td><span class="check">✓</span> Финальный алерт "Все попытки исчерпаны"</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- 10. ОТЧЕТЫ -->
+        <section class="card" id="reports">
+            <h2>10. Отчетность и визуализации</h2>
+
+            <h3>10.1 Структура автоматического отчета</h3>
+            <p>HTML-отчет генерируется узлом <code>Generate Report</code> и содержит:</p>
+            <ul>
+                <li><strong>Ключевые показатели (KPI):</strong> всего записей, дней в выборке, среднее в день,
+                    количество аномалий, направление тренда.</li>
+                <li><strong>Бар-чарт по категориям:</strong> топ-10 категорий по сумме (инлайн SVG).</li>
+                <li><strong>Линейный график динамики:</strong> история за 31 день + прогноз на 7 дней пунктиром (инлайн
+                    SVG).</li>
+                <li><strong>Таблица аномалий:</strong> даты с отклонением |z| &gt; 2.5.</li>
+                <li><strong>AI-инсайты:</strong> сгенерированный GigaChat анализ.</li>
+            </ul>
+
+            <div class="section-header">
+                <h4>Итоговый HTML-отчет с визуализациями</h4>
+                <p>Полный отчет из таблицы <code>reports</code> с KPI, графиками и AI-инсайтами</p>
+            </div>
+            <div class="screens-grid">
+                <div class="screenshot" onclick="openModal(this)" style="min-height: 300px;">
+                    <div class="caption"><img src="../images/bigdata/Ан_отчет.jpg" alt="Описание"></div>
+                    <div class="caption">KPI-блоки отчета, Бар-чарт топ-категорий</div>
+                    <div class="hint">6 036 записей, 31 день, тренд вниз, 2 аномалии, vehicle, mens-watches,
+                        womens-watches и т.д.</div>
+                </div>
+                <div class="screenshot" onclick="openModal(this)" style="min-height: 300px;">
+                    <div class="caption"><img src="../images/bigdata/Динамика.jpg" alt="Описание"></div>
+                    <div class="caption">Линейный график с прогнозом. Блок AI-инсайтов</div>
+                    <div class="hint">Синяя линия — история, оранжевый пунктир — прогноз. GigaChat анализ с инсайтами и
+                        рисками</div>
+                </div>
+            </div>
+
+            <h3>10.2 Пример сводки из Telegram</h3>
+            <pre><code>📊 DataInsight: отчет за 04.09.2026
+Записей: 6 036 · Дней: 31 · Среднее/день: 20 789 721,43
+Тренд: спад · Аномалий: 2
+Топ-категория: vehicle (417 799 737,93)
+
+🤖 Средние ежедневные продажи снизились за отчетный период, выявлены две аномальные даты с высокими значениями.</code></pre>
+
+            <div class="section-header">
+                <h4>💬 Уведомление в Telegram</h4>
+                <p>Сообщение от бота с краткой сводкой отчета</p>
+            </div>
+            <div class="screens-grid">
+                <div class="screenshot" onclick="openModal(this)">
+                    <img src="../images/bigdata/telegram.jpg" alt="Описание">
+                    <div class="caption">Ежедневный отчет в Telegram</div>
+                    <div class="hint">Сводка с KPI и AI-инсайтами</div>
+                </div>
+            </div>
+
+            <h3>10.3 Хранение отчетов</h3>
+            <p>Каждый отчет сохраняется в таблицу <code>reports</code> с полями <code>report_date</code>,
+                <code>title</code>, <code>html</code>, <code>summary</code>. Идемпотентность гарантирована уникальным
+                ограничением на <code>report_date</code>.
+            </p>
+        </section>
+
+        <!-- 11. ИНТЕГРАЦИИ -->
+        <section class="card" id="integrations">
+            <h2>11. Описание интеграций</h2>
+
+            <h3>11.1 Источники данных</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Источник</th>
+                        <th>URL</th>
+                        <th>Метод</th>
+                        <th>Назначение</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>JSONPlaceholder</td>
+                        <td><code>jsonplaceholder.typicode.com/posts</code></td>
+                        <td>GET с пагинацией</td>
+                        <td>Посты для демонстрации обработки текста</td>
+                    </tr>
+                    <tr>
+                        <td>JSONPlaceholder</td>
+                        <td><code>jsonplaceholder.typicode.com/users</code></td>
+                        <td>GET</td>
+                        <td>Пользователи (демо-источник для внешних пользователей)</td>
+                    </tr>
+                    <tr>
+                        <td>DummyJSON</td>
+                        <td><code>dummyjson.com/products</code></td>
+                        <td>GET</td>
+                        <td>Товары с ценами и категориями (основной источник Big Data)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>11.2 Аналитические инструменты</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Инструмент</th>
+                        <th>Назначение</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Статистический анализ (чистый JS в n8n)</td>
+                        <td>Описательная статистика, Z-score аномалии, линейная регрессия, прогноз</td>
+                    </tr>
+                    <tr>
+                        <td>GigaChat</td>
+                        <td>Генерация аналитических инсайтов на русском языке с валидацией контракта</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>11.3 Хранилище данных</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Объект</th>
+                        <th>Назначение</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Supabase REST API</td>
+                        <td>Чтение и запись данных через PostgREST</td>
+                    </tr>
+                    <tr>
+                        <td>Supabase RPC</td>
+                        <td>Вызов функций <code>recalc_daily_aggregates()</code> и
+                            <code>increment_retry_session()</code>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>11.4 Каналы уведомлений</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Канал</th>
+                        <th>Назначение</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Telegram Bot API</td>
+                        <td>Доставка ежедневных отчетов</td>
+                    </tr>
+                    <tr>
+                        <td>Telegram Bot API</td>
+                        <td>Алерты о критических и бизнес-ошибках</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- 12. ЧЕК-ЛИСТ -->
+        <section class="card" id="checklist">
+            <h2>12. Чек-лист соответствия ТЗ</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Требование ТЗ</th>
+                        <th>Статус</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Корректность агрегации и очистки данных, отсутствие дубликатов и некорректных значений</td>
+                        <td><span class="check">✓ Выполнено</span> — дедупликация по хешу, идемпотентные UPSERT,
+                            пересчет агрегатов на стороне БД</td>
+                    </tr>
+                    <tr>
+                        <td>Точность аналитики и прогнозирования (выявление закономерностей и трендов)</td>
+                        <td><span class="check">✓ Выполнено</span> — Z-score аномалии, линейная регрессия, прогноз на 7
+                            дней, AI-инсайты</td>
+                    </tr>
+                    <tr>
+                        <td>Работоспособность отчетности и визуализаций (правильность отображения данных и их
+                            актуальность)</td>
+                        <td><span class="check">✓ Выполнено</span> — HTML-отчеты с SVG-графиками, сводки в Telegram</td>
+                    </tr>
+                    <tr>
+                        <td>Производительность системы, способность обрабатывать большие объемы данных без задержек</td>
+                        <td><span class="check">✓ Выполнено</span> — полный цикл (загрузка → анализ → отчет) за единицы
+                            секунд, батчинг по 2000 записей</td>
+                    </tr>
+                    <tr>
+                        <td>Интеграция с внешними источниками данных и корректность передачи информации</td>
+                        <td><span class="check">✓ Выполнено</span> — два внешних источника, единая схема данных</td>
+                    </tr>
+                    <tr>
+                        <td>Безопасность данных, защита API ключей, а также защита от утечек или утраты данных</td>
+                        <td><span class="check">✓ Выполнено</span> — n8n Credentials, блокировка env-доступа,
+                            маскирование ошибок</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Сдаваемые артефакты</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>№</th>
+                        <th>Артефакт</th>
+                        <th>Статус</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Пример обработки и анализа данных с большими объемами информации (6 036 записей)</td>
+                        <td><span class="check">✓ Готов</span></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Документация по настройке всех этапов обработки данных</td>
+                        <td><span class="check">✓ Готов</span> (данный документ)</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Видео с результатами тестирования</td>
+                        <td><span class="check">✓ Готов</span> — есть плейсхолдер в разделе «Медиа-материалы»
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>Пример автоматических отчетов и визуализаций</td>
+                        <td><span class="check">✓ Готов</span> (HTML-отчет в таблице <code>reports</code>, скриншоты в
+                            разделе 10)</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>Подробное описание настроек интеграции с источниками данных и аналитическими инструментами
+                        </td>
+                        <td><span class="check">✓ Готов</span> (раздел 11 данного документа)</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>Описание архитектурных решений: адаптерный паттерн, осознанный отказ от загрузки ПД,
+                            полигон <code>IN_ExternalUsers_Fetch</code> (подраздел 4.6)</td>
+                        <td><span class="check">✓ Готов</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- ЦЕНТРАЛЬНЫЙ РАЗДЕЛ МЕДИА -->
+        <section class="card" id="media">
+            <h2>Медиа-материалы кейса</h2>
+            <p style="color:var(--muted); margin-bottom: 1.5rem;">
+                Все ключевые артефакты проекта. <strong>Нажмите на любой скриншот</strong> для увеличения в модальном
+                окне.
+            </p>
+
+            <h3>Видео: демонстрация работы пайплайна</h3>
+            <div class="video-wrapper">
+                <div class="video-placeholder">
+                    <video controls preload="metadata">
+                        <source src="../images/bigdata/bigdata.mp4" type="video/mp4">
+                    </video>
+                    <div
+                        style="opacity:0.5; font-size:0.75rem; margin-top: 0.5rem; max-width: 400px; text-align: center;">
+                        Покажите: запуск IN → обработку в CORE → анализ с AI → отчет в OUT → уведомление в Telegram
+                    </div>
+                </div>
+            </div>
+
+            <!-- === HTML-ОТЧЕТ === -->
+            <div class="section-header">
+                <h4>HTML-отчет с визуализациями</h4>
+                <p>Финальный отчет из таблицы <code>reports</code> с KPI, SVG-графиками и AI-инсайтами</p>
+            </div>
+            <div class="screens-grid">
+                <div class="screenshot" onclick="openModal(this)">
+                    <div class="caption"><img src="../images/bigdata/Ан_отчет.jpg" alt="Описание"></div>
+                </div>
+                <div class="screenshot" onclick="openModal(this)">
+                    <div class="caption"><img src="../images/bigdata/Динамика.jpg" alt="Описание"></div>
+                </div>
+            </div>
+
+            <!-- === TELEGRAM === -->
+            <div class="section-header">
+                <h4>Уведомление в Telegram</h4>
+                <p>Сообщение от бота с краткой сводкой отчета и AI-инсайтами</p>
+            </div>
+            <div class="screens-grid">
+                <div class="screenshot" onclick="openModal(this)">
+                    <div class="caption"><img src="../images/bigdata/telegram.jpg" alt="Описание">Ежедневный отчет в
+                        Telegram</div>
+                </div>
+                <div class="screenshot" onclick="openModal(this)">
+                    <div class="caption"><img src="../images/bigdata/alert.jpg" alt="Описание">Алерт о критической
+                        ошибке</div>
+                </div>
+            </div>
+
+            <!-- === SUPABASE === -->
+            <div class="section-header">
+                <h4>Данные в Supabase</h4>
+                <p>Реальные данные в таблицах <code>di_clean_records</code>, <code>daily_aggregates</code>,
+                    <code>analysis_results</code>, <code>reports</code>,
+                    <code>workflow_errors</code>, <code>validation_failures</code>
+                </p>
+            </div>
+            <div class="screens-grid">
+                <div class="screenshot" onclick="openModal(this)">
+                    <div class="caption"><img src="../images/bigdata/di_clean.jpg" alt="Описание"></div>
+                </div>
+                <div class="screenshot" onclick="openModal(this)">
+                    <div class="caption"><img src="../images/bigdata/daily_agg.jpg" alt="Описание"></div>
+                </div>
+                <div class="screenshot" onclick="openModal(this)">
+                    <div class="caption"><img src="../images/bigdata/analysis.jpg" alt="Описание"></div>
+                </div>
+                <div class="screenshot" onclick="openModal(this)">
+                    <div class="caption"><img src="../images/bigdata/reports.jpg" alt="Описание"></div>
+                </div>
+                <div class="screenshot" onclick="openModal(this)">
+                    <div class="caption"><img src="../images/bigdata/errors.jpg" alt="Описание"></div>
+                </div>
+                <div class="screenshot" onclick="openModal(this)">
+                    <div class="caption"><img src="../images/bigdata/validation.jpg" alt="Описание"></div>
+                </div>
+            </div>
+
+            <!-- === N8N EXECUTIONS === -->
+            <div class="section-header">
+                <h4>Executions в n8n</h4>
+                <p>Успешные выполнения сценариев с Mode=webhook и Status=Success</p>
+            </div>
+            <div class="screens-grid">
+                <div class="screenshot" onclick="openModal(this)">
+                    <img src="../images/bigdata/ingest.jpg" alt="Описание">
+                    <div class="caption">Выполнение IN_Ingest</div>
+                    <div class="hint">5820 записей загружено, 3 батча</div>
+                </div>
+                <div class="screenshot" onclick="openModal(this)">
+                    <img src="../images/bigdata/clean.jpg" alt="Описание">
+                    <div class="caption">Выполнение CORE_Clean</div>
+                    <div class="hint">Очистка и агрегация батча</div>
+                </div>
+                <div class="screenshot" onclick="openModal(this)">
+                    <img src="../images/bigdata/analyze.jpg" alt="Описание">
+                    <div class="caption">Выполнение CORE_Analyze</div>
+                    <div class="hint">Анализ + AI-инсайты от GigaChat</div>
+                </div>
+                <div class="screenshot" onclick="openModal(this)">
+                    <img src="../images/bigdata/report.jpg" alt="Описание">
+                    <div class="caption">Выполнение OUT_Report</div>
+                    <div class="hint">Генерация HTML + Telegram</div>
+                </div>
+                <div class="screenshot" onclick="openModal(this)"
+                    data-caption="Экспериментальный сценарий IN_ExternalUsers_Fetch">
+                    <img src="../images/bigdata/fetch.jpg" alt="Описание">
+                    <div class="caption">IN_ExternalUsers_Fetch (полигон)</div>
+                    <div class="hint">Демо адаптера и валидации; статус — отключен из соображений защиты ПД</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 13. РЕКОМЕНДАЦИИ
+        <section class="card" id="recommendations">
+            <h2>13. Рекомендации по дальнейшему развитию</h2>
+            <ol>
+                <li><strong>Сохранение исходных батчей:</strong> для автоматического перезапуска пайплайна очистки после
+                    сбоя рекомендуется сохранять исходные батчи в таблице <code>pipeline_batches</code> с уникальным
+                    ключом.</li>
+                <li><strong>Мониторинг производительности:</strong> добавить таблицу метрик выполнения для отслеживания
+                    времени обработки каждого этапа.</li>
+                <li><strong>Масштабирование источников:</strong> подключить дополнительные источники данных через единый
+                    адаптер нормализации.</li>
+                <li><strong>Очередь задач:</strong> при росте объемов данных перевести батчинг на внешнюю очередь
+                    (например, Redis) для большей надежности.</li>
+                <li><strong>Дополнительные визуализации:</strong> расширить HTML-отчет интерактивными графиками и
+                    сравнением периодов.</li>
+                <li><strong>Тестирование AI-модели:</strong> периодически сравнивать качество инсайтов от GigaChat с
+                    эвристическими для контроля деградации модели.</li>
+            </ol>
+        </section> -->
+
+        <footer>
+            <p style="margin:0 0 0.5rem;">
+                <strong>Кейс выполнен в рамках портфолио</strong><br>
+                Eduard Wit · <a href="https://eduardwit.ru" target="_blank">eduardwit.ru</a><br>
+                n8n Automation Specialist · Big Data Pipelines · AI Integration
+            </p>
+            <p style="margin:0;">
+                Сгенерировано пайплайном автоматизации DataInsight · n8n 2.36.9 · Supabase · GigaChat · 04.09.2026
+            </p>
+        </footer>
+
+    </main>
+
+    <!-- МОДАЛЬНОЕ ОКНО -->
+    <div id="imageModal" class="modal">
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+        <img class="modal-content" id="modalImg">
+        <div class="modal-caption" id="modalCaption"></div>
+    </div>
+
+    <script>
+        function openModal(element) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImg');
+            const modalCaption = document.getElementById('modalCaption');
+
+            const img = element.querySelector('img');
+            const caption = element.querySelector('.caption').textContent;
+
+            if (img) {
+                modalImg.src = img.src;
+                modalImg.style.display = 'block';
+                modalCaption.textContent = caption;
+                modal.classList.add('active');
+            } else {
+                modalImg.style.display = 'none';
+                modalCaption.innerHTML = `<strong>${caption}</strong><br><br>Здесь будет скриншот. Вставьте изображение через тег <code style="color:#fff">&lt;img src="..."&gt;</code> внутри плейсхолдера.`;
+                modal.classList.add('active');
+            }
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImg');
+            modal.classList.remove('active');
+            modalImg.style.display = 'block';
+        }
+
+        document.getElementById('imageModal').addEventListener('click', function (e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+
+</body>
+
+</html>
