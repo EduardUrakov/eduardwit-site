@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../css/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="../css/fonts.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/case.css">
+    <title>Кейс: Автоконтент под ключ — многоагентная система на CrewAI | EduardWIT</title>
+    <meta name="description"
+        content="Многоагентная система производства контента на CrewAI + GigaChat: тренд → статья → фактчек → SEO-пакет. Готовый к публикации материал за минуты.">
+
+    <script src="../js/analytics.js" defer></script>
+</head>
+
+<body>
+    <div style="position:fixed;top:0;left:0;right:0;z-index:1000;background:#fff;border-bottom:1px solid #e0e0e0;padding:10px 20px;display:flex;align-items:center;gap:16px;font-family:Open Sans, sans-serif;">
+        <a href="../index.html" style="background:#EBFF01;color:#000;font-weight:700;text-decoration:none;padding:6px 16px;border-radius:4px;font-size:13px;">&#8592; На главную</a>
+        <a href="../index.html#portfolio" style="color:#555;font-size:13px;font-weight:500;text-decoration:none;">Портфолио</a>
+    </div>
+    <header class="header">
+        <div class="container">
+            <h1>Автоконтент под ключ</h1>
+            <div class="meta">
+                <span>🤖 CrewAI (многоагентная система)</span>
+                <span>🧠 GigaChat</span>
+                <span>🐍 Python</span>
+                <span>⚙️ n8n</span>
+                <span>🐳 Docker</span>
+            </div>
+            <p class="subtitle">
+                Команда из четырёх ИИ-агентов производит контент-пакет для блога: находит тренд, пишет статью,
+                проверяет факты и готовит SEO-упаковку. На выходе — материал, готовый к публикации.
+            </p>
+            <a href="#demo" class="demo-link">Попробовать демо прямо на этой странице</a>
+        </div>
+    </header>
+
+    <main class="container">
+        <div style="margin-bottom:30px;background:#f9fafb;border:1px solid #e0e0e0;border-radius:12px;padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+            <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Задача</strong><span style="color:#4b5563;font-size:14px;">Блог есть — времени на него нет. Тему выбрать, статью написать, проверить и упаковать для SEO — часы ручной работы на каждый пост.</span></div>
+            <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Моя работа</strong><span style="color:#4b5563;font-size:14px;">Собрал многоагентную систему на CrewAI: 4 агента-роли, конвейер из 5 задач с передачей результатов, GigaChat как «мозг» каждого агента.</span></div>
+            <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Технологии</strong><span style="color:#4b5563;font-size:14px;">CrewAI, GigaChat API (litellm), Python, n8n, Docker</span></div>
+            <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Результат</strong><span style="color:#4b5563;font-size:14px;">Готовый контент-пакет за ~3 минуты вместо нескольких часов. 5 задач конвейера, 4 роли, ноль ручных правок в процессе.</span></div>
+        </div>
+
+        <section class="section">
+            <h2>Бизнес-проблема</h2>
+            <p>Контент-маркетинг — самый дешёвый источник трафика, но самый дорогой по времени. Типичный цикл одного поста:</p>
+            <ul>
+                <li><strong>Выбор темы:</strong> что сейчас в тренде, по чему есть спрос — анализ занимает час</li>
+                <li><strong>Написание:</strong> черновик статьи — 2–4 часа работы копирайтера</li>
+                <li><strong>Проверка:</strong> фактчек и редактура — ещё час</li>
+                <li><strong>Упаковка:</strong> title, description, ключевые слова, посты для соцсетей — час</li>
+            </ul>
+            <p>Итого 4–6 часов на один пост. При графике «2 поста в неделю» это полноценная рабочая ставка. Малому бизнесу такой бюджет не потянуть — и блог умирает на третьей неделе.</p>
+        </section>
+
+        <section class="section">
+            <h2>Цель решения</h2>
+            <p>Создать систему, которая по одной команде «напиши про X» выдаёт готовый к публикации пакет:</p>
+            <ul>
+                <li>Сама находит перспективную тему в заданной нише</li>
+                <li>Пишет структурную статью с подзаголовками (~600 слов)</li>
+                <li>Проверяет себя: спорные утверждения, слабые места, правки</li>
+                <li>Готовит SEO-пакет: title, meta description, ключевые фразы, превью для Telegram, пост для соцсетей</li>
+                <li>Работает на российской модели GigaChat — данные не уходят за рубеж</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>Архитектура</h2>
+            <div class="architecture">[Запрос: ниша / тема] → CrewAI (Process.sequential)
+    ↓
+    Агент 1: Разведчик трендов ── выбирает тему
+    ↓ context
+    Агент 2: Автор статей ────── пишет черновик
+    ↓ context
+    Агент 3: Редактор-фактчекер ─ правки, финальная версия
+    ↓ context
+    Агент 4: SEO-специалист ───── SEO-пакет + итоговый отчёт
+    ↓
+    [Контент-пакет: статья + title + description + ключи + посты]</div>
+            <p><strong>Инфраструктура:</strong> Python + CrewAI, GigaChat API через litellm-провайдер (OAuth по client_id/secret), n8n для расписания и вебхуков, Docker для развёртывания.</p>
+        </section>
+
+        <section class="section">
+            <h2>Как это работает</h2>
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <div class="num">1</div>
+                    <div class="desc"><strong>Постановка задачи</strong> — клиент задаёт нишу или конкретную тему: «n8n для малого бизнеса», «ИИ-инструменты для маркетинга». Это единственный шаг с участием человека.</div>
+                </div>
+                <div class="flow-step">
+                    <div class="num">2</div>
+                    <div class="desc"><strong>Разведка трендов</strong> — первый агент анализирует нишу, предлагает 3 темы и выбирает лучшую с обоснованием: аудитория, конкуренция, потенциал трафика.</div>
+                </div>
+                <div class="flow-step">
+                    <div class="num">3</div>
+                    <div class="desc"><strong>Написание черновика</strong> — автор получает выбранную тему и пишет статью: цепляющий заход, 3–4 раздела с подзаголовками, практические советы, вывод.</div>
+                </div>
+                <div class="flow-step">
+                    <div class="num">4</div>
+                    <div class="desc"><strong>Фактчек и редактура</strong> — редактор ищет спорные утверждения и слабые места, возвращает финальную версию со списком внесённых правок.</div>
+                </div>
+                <div class="flow-step">
+                    <div class="num">5</div>
+                    <div class="desc"><strong>SEO-упаковка</strong> — специалист готовит title (до 60 симв.), meta description (до 160 симв.), 5 ключевых фраз, превью для Telegram и пост для соцсетей. Собирает итоговый отчёт.</div>
+                </div>
+                <div class="flow-step">
+                    <div class="num">6</div>
+                    <div class="desc"><strong>Доставка</strong> — готовый пакет уходит клиенту: в Telegram, Google Docs или прямо в CMS. В продакшене — по расписанию через n8n: например, каждый вторник в 10:00.</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="demo">
+            <h2>Демо: получите контент-пакет прямо сейчас</h2>
+            <p>Введите нишу или тему — команда агентов подготовит для вас контент-пакет. Это то же демо, которое получит ваш клиент.</p>
+            <div style="background:#f9fafb;border:1px solid #e0e0e0;border-radius:12px;padding:24px;margin:20px 0;">
+                <form id="demo-form" style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start;">
+                    <div style="flex:1;min-width:240px;">
+                        <label for="demo-topic" style="display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:#000;margin-bottom:6px;">Ниша или тема *</label>
+                        <input type="text" id="demo-topic" name="topic"
+                            placeholder="Например: автоматизация для малого бизнеса"
+                            style="width:100%;padding:12px 16px;border:1px solid #e0e0e0;border-radius:8px;font-size:15px;font-family:inherit;box-sizing:border-box;">
+                        <div id="demo-topic-error" style="color:#ef4444;font-size:13px;margin-top:4px;"></div>
+                    </div>
+                    <button type="submit" id="demo-submit"
+                        style="background:#EBFF01;color:#000;border:none;padding:12px 28px;border-radius:8px;font-weight:700;font-size:15px;cursor:pointer;margin-top:24px;font-family:inherit;">Сгенерировать</button>
+                </form>
+                <p style="color:#9ca3af;font-size:13px;margin:12px 0 0;">
+                    Генерация занимает 2–4 минуты. Данные используются только для формирования ответа.
+                </p>
+            </div>
+
+            <div id="demo-status" style="display:none;background:#fffbe6;border:1px solid #f59e0b;border-radius:10px;padding:18px;margin:16px 0;">
+                <strong style="color:#000;">⏳ Команда агентов работает...</strong>
+                <div id="demo-status-steps" style="color:#4b5563;font-size:14px;margin-top:8px;"></div>
+            </div>
+
+            <div id="demo-error" style="display:none;background:#fef2f2;border:1px solid #ef4444;border-radius:10px;padding:18px;margin:16px 0;">
+                <strong style="color:#000;">Не получилось отправить запрос</strong>
+                <div style="color:#4b5563;font-size:14px;margin-top:6px;">
+                    Напишите тему напрямую в <a href="https://t.me/EduardWIT_assistent_bot" style="color:#000;font-weight:700;">Telegram-боту</a> — он передаст её в конвейер.
+                </div>
+            </div>
+
+            <div id="demo-result" style="display:none;background:#f0fdf4;border:1px solid #10b981;border-radius:10px;padding:20px;margin:16px 0;">
+                <strong style="color:#000;display:block;margin-bottom:8px;">✅ Контент-пакет готов</strong>
+                <div id="demo-result-body" style="color:#4b5563;font-size:14px;white-space:pre-wrap;line-height:1.6;"></div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Детали реализации</h2>
+            <div class="data-grid">
+                <div class="data-card">
+                    <h4>4 агента, 5 задач</h4>
+                    <p style="color:#4b5563;margin:0;">Каждый агент — роль с целью и «характером» (backstory). Задачи связаны через context: результат предыдущей становится входом следующей.</p>
+                </div>
+                <div class="data-card">
+                    <h4>GigaChat без утечек</h4>
+                    <p style="color:#4b5563;margin:0;">Российская модель через litellm-провайдер. Ключи только в .env, в код и логи не попадают. Подходит компаниям с политикой локализации данных.</p>
+                </div>
+                <div class="data-card">
+                    <h4>Самопроверка</h4>
+                    <p style="color:#4b5563;margin:0;">Агент-фактчекер — отдельная роль со «скептичным» промптом. Он возвращает финальную версию и список правок: видно, что именно исправлено.</p>
+                </div>
+                <div class="data-card">
+                    <h4>Гибкая сборка</h4>
+                    <p style="color:#4b5563;margin:0;">Нужен пятый агент (например, «аналитик соцсетей») — добавляется за минуты. Модель меняется одной строкой: GigaChat-Max / Pro / Lite.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Результат</h2>
+            <div class="metrics">
+                <div class="metric">
+                    <div class="value">~3 мин</div>
+                    <div class="label">На полный контент-пакет</div>
+                </div>
+                <div class="metric">
+                    <div class="value">5 задач</div>
+                    <div class="label">Конвейер без участия человека</div>
+                </div>
+                <div class="metric">
+                    <div class="value">4–6 ч → 0</div>
+                    <div class="label">Экономия ручной работы на пост</div>
+                </div>
+                <div class="metric">
+                    <div class="value">100%</div>
+                    <div class="label">Данные в GigaChat (РФ)</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Ценность для бизнеса</h2>
+            <ul>
+                <li><strong>Регулярный блог без ставки контент-менеджера:</strong> система пишет по расписанию, вы только утверждаете</li>
+                <li><strong>SEO-трафик:</strong> каждый пост выходит с готовыми title, description и ключевыми фразами</li>
+                <li><strong>Соцсети из одного источника:</strong> превью для Telegram и посты генерируются вместе со статьёй</li>
+                <li><strong>Прозрачность:</strong> список правок фактчекера виден — вы знаете, что именно проверено</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>Где ещё применимо</h2>
+            <ul>
+                <li>Интернет-магазины — описания товаров и категорий партиями</li>
+                <li>EdTech — учебные материалы и анонсы курсов</li>
+                <li>Новости и медиа — черновики по заданным темам с фактчеком</li>
+                <li>B2B-сервисы — экспертные статьи для SEO и рассылок</li>
+                <li>Агентства — конвейер черновиков для клиентов с ручной финальной редактурой</li>
+            </ul>
+        </section>
+
+        <div class="cta">
+            <h3>Хочу такой конвейер для своего блога</h3>
+            <p style="color:#4b5563;margin:12px 0 0;">
+                Разверну систему под вашу нишу: агенты, расписание в n8n, доставка в Telegram или CMS.
+                Обсудим задачу — покажу демо на вашей теме.
+            </p>
+            <a href="#demo" class="button">Попробовать демо выше</a>
+            <a href="https://t.me/EduardWIT_bot" target="_blank" class="button" style="margin-left:12px;">Обсудить проект</a>
+        </div>
+    </main>
+
+    <footer>
+        <div style="max-width:1100px;margin:0 auto;">
+            <p>&copy; 2026 EduardWIT &bull; <a href="../index.html">На главную</a> &bull; <a href="../privacy-policy.html">Политика конфиденциальности</a></p>
+        </div>
+    </footer>
+
+    <script>
+        // Демо-форма: отправляет тему на n8n-webhook, показывает прогресс и результат.
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('demo-form');
+            if (!form) return;
+
+            const WEBHOOK_URL = 'https://n8n.eduardwit.ru/webhook/auto-content-demo';
+            const topicInput = document.getElementById('demo-topic');
+            const topicError = document.getElementById('demo-topic-error');
+            const submitBtn = document.getElementById('demo-submit');
+            const statusBox = document.getElementById('demo-status');
+            const statusSteps = document.getElementById('demo-status-steps');
+            const errorBox = document.getElementById('demo-error');
+            const resultBox = document.getElementById('demo-result');
+            const resultBody = document.getElementById('demo-result-body');
+
+            // Шаги конвейера — показываем по таймеру, чтобы клиент видел «живую» работу.
+            const STEPS = [
+                '🤖 Разведчик трендов анализирует нишу...',
+                '✍️ Автор статей пишет черновик...',
+                '🔍 Редактор-фактчекер проверяет утверждения...',
+                '📈 SEO-специалист готовит упаковку...',
+                '📦 Сборка итогового контент-пакета...'
+            ];
+
+            let stepTimer = null;
+
+            function showStep(i) {
+                if (i < STEPS.length) {
+                    statusSteps.textContent = STEPS[i];
+                    stepTimer = setTimeout(() => showStep(i + 1), 45000);
+                }
+            }
+
+            function cleanup() {
+                clearTimeout(stepTimer);
+            }
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const topic = (topicInput.value || '').trim();
+                topicError.textContent = '';
+                if (!topic) {
+                    topicError.textContent = 'Введите нишу или тему';
+                    return;
+                }
+
+                errorBox.style.display = 'none';
+                resultBox.style.display = 'none';
+                statusBox.style.display = 'block';
+                statusSteps.textContent = STEPS[0];
+                showStep(1);
+
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Генерация...';
+
+                try {
+                    const response = await fetch(WEBHOOK_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            topic: topic,
+                            source: 'eduardwit.ru',
+                            type: 'auto_content_demo',
+                            timestamp: new Date().toISOString()
+                        })
+                    });
+
+                    if (!response.ok) throw new Error('HTTP ' + response.status);
+
+                    const data = await response.json().catch(() => null);
+                    cleanup();
+                    statusBox.style.display = 'none';
+                    resultBody.textContent = (data && (data.result || data.output || data.text)) || 'Контент-пакет сформирован.';
+                    resultBox.style.display = 'block';
+                } catch (err) {
+                    cleanup();
+                    statusBox.style.display = 'none';
+                    errorBox.style.display = 'block';
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Сгенерировать';
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
