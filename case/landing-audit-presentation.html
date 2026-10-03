@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Landing Audit Agent — кейс · EduardWIT</title>
+<meta name="description" content="Кейс: автономный AI-агент структурного аудита лендингов. CLI, REST API, веб-интерфейс, SSRF-защита, PII-redaction, резервный GigaChat.">
+<style>
+/* ============ tokens ============ */
+:root{
+  --bg:#f6f7fb; --grad-a:#eef2ff; --grad-b:#fdf4ff;
+  --surface:#ffffff; --surface-2:#f1f3fa; --border:#e3e6f0;
+  --text:#0f172a; --text-muted:#46536b;
+  --accent:#4f46e5; --accent-2:#7c3aed; --accent-soft:#eef0ff;
+  --ok:#15803d; --ok-soft:#ecfdf3; --warn:#b45309; --warn-soft:#fffbeb;
+  --code-bg:#111827; --code-text:#e5e7eb;
+  --shadow:0 18px 45px -18px rgba(15,23,42,.25);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0b1020; --grad-a:#171338; --grad-b:#2a0a4a;
+    --surface:#151b30; --surface-2:#1b2240; --border:#2b3355;
+    --text:#eef1f8; --text-muted:#aab4d0;
+    --accent:#8b8ff8; --accent-2:#b06cf7; --accent-soft:#232a52;
+    --ok:#4ade80; --ok-soft:#0c2b1e; --warn:#fbbf24; --warn-soft:#33260a;
+    --code-bg:#0d1326; --code-text:#dbe2f5;
+  }
+}
+/* ============ base ============ */
+*{box-sizing:border-box}
+html{color-scheme:light dark;scroll-behavior:smooth}
+body{
+  margin:0;background-color:var(--bg);
+  background-image:radial-gradient(60rem 42rem at 85% -10%,var(--grad-b),transparent 60%),
+    radial-gradient(50rem 36rem at -10% 20%,var(--grad-a),transparent 55%);
+  color:var(--text);font:16px/1.6 "Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3{line-height:1.2;letter-spacing:-.02em;margin:0}
+a{color:var(--accent)}
+code{font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:.9em}
+
+/* ============ layout ============ */
+.case{max-width:72rem;margin:0 auto;padding:0 1.25rem}
+.case__section{padding:4rem 0}
+.case__section--alt{background:var(--surface);border-block:1px solid var(--border)}
+.case__section-title{font-size:clamp(1.5rem,3vw,2rem);font-weight:800}
+.case__section-sub{color:var(--text-muted);max-width:44rem;margin-top:.6rem}
+.case__grid{display:grid;gap:1.25rem;margin-top:2rem}
+.case__grid--3{grid-template-columns:repeat(3,1fr)}
+.case__grid--2{grid-template-columns:repeat(2,1fr)}
+@media (max-width:56rem){.case__grid--3{grid-template-columns:1fr 1fr}}
+@media (max-width:40rem){.case__grid--3,.case__grid--2{grid-template-columns:1fr}}
+
+/* ============ card ============ */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:1.1rem;box-shadow:var(--shadow)}
+.card__body{padding:1.4rem}
+.card__icon{width:2.6rem;height:2.6rem;border-radius:.75rem;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);margin-bottom:.9rem}
+.card__title{font-size:1.05rem;font-weight:700;color:var(--text)}
+.card__text{color:var(--text-muted);font-size:.92rem;margin-top:.4rem}
+
+/* ============ hero ============ */
+.hero{padding:5.5rem 0 3.5rem;text-align:center}
+.hero__badge{display:inline-flex;align-items:center;gap:.5rem;background:var(--accent-soft);color:var(--accent);border:1px solid transparent;border-radius:999px;padding:.4rem 1rem;font-size:.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.hero__title{font-size:clamp(2.2rem,6vw,3.8rem);font-weight:900;margin-top:1.2rem;background:linear-gradient(92deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero__lead{color:var(--text-muted);font-size:clamp(1rem,2vw,1.2rem);max-width:46rem;margin:1.1rem auto 0}
+.hero__actions{display:flex;gap:.9rem;justify-content:center;flex-wrap:wrap;margin-top:2rem}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.8rem 1.5rem;border-radius:.8rem;font-weight:700;font-size:.95rem;text-decoration:none;border:1px solid var(--border);background:var(--surface);color:var(--text);transition:transform .15s ease,box-shadow .15s ease}
+.btn:hover{transform:translateY(-2px)}
+.btn--primary{background:linear-gradient(92deg,var(--accent),var(--accent-2));border:none;color:#ffffff}
+.btn--primary:hover{box-shadow:0 14px 28px -12px rgba(79,70,229,.6)}
+.hero__meta{display:flex;justify-content:center;gap:1.6rem;flex-wrap:wrap;margin-top:2.6rem;color:var(--text-muted);font-size:.85rem}
+.hero__meta b{color:var(--text);font-size:1.25rem;display:block}
+
+/* ============ pipeline ============ */
+.pipe{display:grid;grid-template-columns:repeat(6,1fr);gap:.7rem;margin-top:2rem}
+@media (max-width:56rem){.pipe{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:40rem){.pipe{grid-template-columns:1fr}}
+.pipe__step{background:var(--surface);border:1px solid var(--border);border-radius:.9rem;padding:1rem;min-width:0}
+.pipe__num{color:var(--accent);font-weight:800;font-size:.8rem;letter-spacing:.06em}
+.pipe__name{font-size:.87rem;font-weight:600;margin-top:.35rem;color:var(--text)}
+
+/* ============ code block ============ */
+.code{background:var(--code-bg);color:var(--code-text);border-radius:.9rem;padding:1.2rem 1.3rem;overflow-x:auto;font-size:.84rem;line-height:1.55}
+.code__line{white-space:pre}
+.code__comment{color:#8b93ad}
+.code__cmd{color:#9be8ff}
+
+/* ============ pill / labels ============ */
+.pill{display:inline-block;background:var(--surface-2);border:1px solid var(--border);color:var(--text);border-radius:999px;padding:.3rem .85rem;font-size:.8rem;font-weight:600;margin:.2rem .2rem 0 0}
+
+/* ============ metrics ============ */
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem;margin-top:2rem}
+@media (max-width:56rem){.metrics{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:40rem){.metrics{grid-template-columns:1fr 1fr}}
+.metric{text-align:center;background:var(--surface);border:1px solid var(--border);border-radius:1rem;padding:1.3rem}
+.metric__value{font-size:clamp(1.6rem,4vw,2.3rem);font-weight:900;color:var(--accent)}
+.metric__label{color:var(--text-muted);font-size:.82rem;margin-top:.3rem}
+
+/* ============ list ============ */
+.checklist{list-style:none;padding:0;margin:1rem 0 0}
+.checklist li{position:relative;padding-left:1.6rem;color:var(--text);font-size:.92rem;margin-bottom:.55rem}
+.checklist li::before{content:"✓";position:absolute;left:0;color:var(--ok);font-weight:800}
+
+/* ============ footer ============ */
+.footer{border-top:1px solid var(--border);padding:2rem 0 3rem;text-align:center;color:var(--text-muted);font-size:.85rem}
+.footer b{color:var(--text)}
+
+/* ============ a11y ============ */
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+</style>
+</head>
+<body>
+<main class="case">
+
+  <!-- ================= hero ================= -->
+  <header class="hero">
+    <span class="hero__badge">Автономный AI-агент</span>
+    <h1 class="hero__title">AI Landing Audit Agent</h1>
+    <p class="hero__lead">
+      По URL публичного лендинга агент сам скачивает страницу, извлекает оффер,
+      CTA, формы и сигналы доверия, удаляет персональные данные и возвращает
+      <strong>ровно 5 приоритетных рекомендаций</strong> по структуре и конверсии.
+    </p>
+    <div class="hero__actions">
+      <a class="btn btn--primary" href="https://audit.eduardwit.ru" target="_blank" rel="noopener">Открыть живое демо →</a>
+      <a class="btn" href="#solution">Как устроен агент</a>
+    </div>
+    <div class="hero__meta">
+      <div><b>3</b> LLM-шага анализа</div>
+      <div><b>5</b> рекомендаций в ответе</div>
+      <div><b>97</b> автоматических тестов</div>
+      <div><b>96%</b> покрытие кода</div>
+    </div>
+  </header>
+
+  <!-- ================= problem ================= -->
+  <section class="case__section" id="problem" aria-labelledby="problem-title">
+    <h2 class="case__section-title" id="problem-title">Проблема</h2>
+    <p class="case__section-sub">
+      Владелец лендинга не понимает, почему страница не конвертирует: оффер размытый,
+      CTA без конкретики, нет сигналов доверия, форма слишком длинная. Классический
+      аудит стоит денег и занимает дни. Агент даёт первый структурный разбор за минуту.
+    </p>
+    <div class="case__grid case__grid--3">
+      <article class="card">
+        <div class="card__body">
+          <div class="card__icon" aria-hidden="true">◍</div>
+          <h3 class="card__title">Быстрый первый шаг</h3>
+          <p class="card__text">Оценка страницы до разговора с экспертом — бесплатный диагностический аудит.</p>
+        </div>
+      </article>
+      <article class="card">
+        <div class="card__body">
+          <div class="card__icon" aria-hidden="true">⚡</div>
+          <h3 class="card__title">Lead magnet для услуг</h3>
+          <p class="card__text">Клиент вводит ссылку → получает ценность → следующий шаг — платный редизайн.</p>
+        </div>
+      </article>
+      <article class="card">
+        <div class="card__body">
+          <div class="card__icon" aria-hidden="true">✦</div>
+          <h3 class="card__title">Число вместо ощущений</h3>
+          <p class="card__text">Каждая рекомендация подкреплена доказательством, найденным на самой странице.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ================= solution ================= -->
+  <section class="case__section case__section--alt" id="solution" aria-labelledby="solution-title">
+    <h2 class="case__section-title" id="solution-title">Как устроен автономный агент</h2>
+    <p class="case__section-sub">
+      Один URL — и цепочка из шести шагов выполняется без участия человека:
+      от валидации и безопасной загрузки до финальных рекомендаций.
+    </p>
+    <div class="pipe">
+      <div class="pipe__step"><div class="pipe__num">1 / 6</div><div class="pipe__name">Валидация URL</div></div>
+      <div class="pipe__step"><div class="pipe__num">2 / 6</div><div class="pipe__name">Безопасный загруз HTML</div></div>
+      <div class="pipe__step"><div class="pipe__num">3 / 6</div><div class="pipe__name">Парсинг структуры</div></div>
+      <div class="pipe__step"><div class="pipe__num">4 / 6</div><div class="pipe__name">Redaction персональных данных</div></div>
+      <div class="pipe__step"><div class="pipe__num">5 / 6</div><div class="pipe__name">LLM-профиль и UX-аудит</div></div>
+      <div class="pipe__step"><div class="pipe__num">6 / 6</div><div class="pipe__name">5 приоритетных рекомендаций</div></div>
+    </div>
+    <div class="case__grid case__grid--2">
+      <article class="card">
+        <div class="card__body">
+          <h3 class="card__title">Что даёт отчёт</h3>
+          <ul class="checklist">
+            <li>Сводка оффера и предположение об аудитории</li>
+            <li>Сильные и слабые стороны страницы</li>
+            <li>Топ-5 конкретных действий с доказательствами</li>
+            <li>Приоритетная матрица (high / medium / low)</li>
+            <li>Варианты hero-копирайтинга</li>
+          </ul>
+        </div>
+      </article>
+      <article class="card">
+        <div class="card__body">
+          <h3 class="card__title">Три точки входа</h3>
+          <ul class="checklist">
+            <li><strong>CLI:</strong> <code>python agent.py &lt;url&gt;</code> → 5 строк в stdout</li>
+            <li><strong>REST API:</strong> <code>POST /api/audit</code> — JSON-отчёт</li>
+            <li><strong>Web UI:</strong> поле URL → лоадер → карточки рекомендаций</li>
+          </ul>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ================= resilience ================= -->
+  <section class="case__section" aria-labelledby="fallback-title">
+    <h2 class="case__section-title" id="fallback-title">Устойчивость к сбоям</h2>
+    <p class="case__section-sub">
+      Агент спроектирован так, чтобы не молчать даже при нестабильном внешнем сервисе.
+    </p>
+    <div class="case__grid case__grid--3">
+      <article class="card">
+        <div class="card__body">
+          <div class="card__icon" aria-hidden="true">↻</div>
+          <h3 class="card__title">Резервный провайдер GigaChat</h3>
+          <p class="card__text">Если OpenAI / Proxy API недоступен или исчерпан лимит — запросы автоматически уходят в GigaChat Max (работает в РФ).</p>
+        </div>
+      </article>
+      <article class="card">
+        <div class="card__body">
+          <div class="card__icon" aria-hidden="true">🛡</div>
+          <h3 class="card__title">Детерминированный fallback</h3>
+          <p class="card__text">При невалидном ответе LLM агент выдаёт 5 рекомендаций по HTML-сигналам и помечает отчёт как degraded.</p>
+        </div>
+      </article>
+      <article class="card">
+        <div class="card__body">
+          <div class="card__icon" aria-hidden="true">⏱</div>
+          <h3 class="card__title">Повторы и коррекции</h3>
+          <p class="card__text">Сетевые ошибки повторяются до 3 раз с экспоненциальной задержкой; невалидный JSON исправляется уточняющим промптом.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ================= security ================= -->
+  <section class="case__section case__section--alt" aria-labelledby="security-title">
+    <h2 class="case__section-title" id="security-title">Безопасность и приватность</h2>
+    <p class="case__section-sub">
+      Внешний URL и HTML считаются недоверенными данными — на этом построена вся защита.
+    </p>
+    <div class="case__grid case__grid--3">
+      <article class="card">
+        <div class="card__body">
+          <h3 class="card__title">SSRF-защита</h3>
+          <p class="card__text">Блокируются localhost, приватные и metadata-адреса (IPv4+IPv6), редиректы валидируются повторно.</p>
+        </div>
+      </article>
+      <article class="card">
+        <div class="card__body">
+          <h3 class="card__title">PII-redaction</h3>
+          <p class="card__text">Email, телефоны, паспорта, карты и токены заменяются на плейсхолдеры до отправки в LLM. Значения форм не извлекаются.</p>
+        </div>
+      </article>
+      <article class="card">
+        <div class="card__body">
+          <h3 class="card__title">Защита от prompt injection</h3>
+          <p class="card__text">Контент страницы помечается как недоверенный; системные промпты запрещают выполнять инструкции страницы.</p>
+        </div>
+      </article>
+      <article class="card">
+        <div class="card__body">
+          <h3 class="card__title">Секреты не утекают</h3>
+          <p class="card__text">Ключи только в .env backend, frontend их не видит; логи пишутся в stderr с маской секретов.</p>
+        </div>
+      </article>
+      <article class="card">
+        <div class="card__body">
+          <h3 class="card__title">Лимиты и auth</h3>
+          <p class="card__text">Rate limit по IP, опциональный X-Audit-Token (constant-time сравнение), CORS только для разрешённых origins.</p>
+        </div>
+      </article>
+      <article class="card">
+        <div class="card__body">
+          <h3 class="card__title">Ничего не сохраняется</h3>
+          <p class="card__text">HTML, промпты и отчёты живут только в памяти во время запроса — нет логов страниц и персональных данных.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ================= quality ================= -->
+  <section class="case__section" aria-labelledby="quality-title">
+    <h2 class="case__section-title" id="quality-title">Качество, которое можно проверить</h2>
+    <p class="case__section-sub">
+      Код проходит строгие автоматические проверки — без «моков ради галочки», тесты
+      не требуют интернета и API-ключей.
+    </p>
+    <div class="metrics">
+      <div class="metric"><div class="metric__value">97</div><div class="metric__label">тестов</div></div>
+      <div class="metric"><div class="metric__value">96%</div><div class="metric__label">покрытие кода</div></div>
+      <div class="metric"><div class="metric__value">mypy</div><div class="metric__label">строгая типизация</div></div>
+      <div class="metric"><div class="metric__value">bandit</div><div class="metric__label">безопасность без замечаний</div></div>
+    </div>
+    <div class="case__grid case__grid--2">
+      <div>
+        <h3 style="font-size:1.05rem;margin-top:1.6rem">Пример работы CLI</h3>
+        <div class="code" style="margin-top:.8rem" role="img" aria-label="Пример вывода CLI агента: пять рекомендаций">
+          <div class="code__line"><span class="code__cmd">$ python agent.py https://site.ru</span></div>
+          <div class="code__line">Проблема: главный заголовок не объясняет результат.</div>
+          <div class="code__line">Доказательство: H1 описывает процесс, а не бизнес-эффект.</div>
+          <div class="code__line">Действие: переписать H1 по формуле «кто + что + результат».</div>
+          <div class="code__line">Ожидаемый эффект: посетитель за 3 секунды поймёт ценность.</div>
+          <div class="code__line"><span class="code__comment"># …и ещё 4 рекомендации — ровно 5 строк в stdout</span></div>
+        </div>
+      </div>
+      <div>
+        <h3 style="font-size:1.05rem;margin-top:1.6rem">Стек</h3>
+        <div style="margin-top:.8rem">
+          <span class="pill">Python 3.12</span>
+          <span class="pill">FastAPI</span>
+          <span class="pill">OpenAI SDK</span>
+          <span class="pill">GigaChat</span>
+          <span class="pill">BeautifulSoup / lxml</span>
+          <span class="pill">Pydantic v2</span>
+          <span class="pill">tenacity</span>
+          <span class="pill">React 18</span>
+          <span class="pill">TypeScript</span>
+          <span class="pill">Vite</span>
+          <span class="pill">Tailwind</span>
+          <span class="pill">Docker Compose</span>
+          <span class="pill">Traefik</span>
+          <span class="pill">Dokploy</span>
+        </div>
+        <p style="color:var(--text-muted);font-size:.92rem;margin-top:1.2rem">
+          Проверки: <code>ruff</code> (формат и линт), <code>mypy</code> (строгие типы),
+          <code>pytest --cov</code>, <code>bandit</code>, <code>npm audit</code> — всё зелёное.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= cta ================= -->
+  <section class="case__section case__section--alt" aria-labelledby="cta-title">
+    <div style="text-align:center">
+      <h2 class="case__section-title" id="cta-title" style="font-size:clamp(1.6rem,3.5vw,2.4rem)">
+        Вставьте ссылку — получите аудит за минуту
+      </h2>
+      <p class="case__section-sub" style="margin-inline:auto">
+        Живой сервис: <a href="https://audit.eduardwit.ru" target="_blank" rel="noopener">audit.eduardwit.ru</a>
+      </p>
+      <div class="hero__actions" style="justify-content:center">
+        <a class="btn btn--primary" href="https://audit.eduardwit.ru" target="_blank" rel="noopener">Проанализировать лендинг →</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p><b>Кейс: AI Landing Audit Agent</b> · автор — <b>EduardWIT</b></p>
+  <p style="margin-top:.4rem">Автоматизация бизнеса и веб-продукты под ключ · eduardwit.ru</p>
+</footer>
+</body>
+</html>

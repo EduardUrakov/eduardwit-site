@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../css/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="../css/fonts.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/case.css">
+    <title>Кейс: Landing Audit Agent — AI-аудит лендингов | EduardWIT</title>
+    <meta name="description"
+        content="Автономный AI-агент структурного аудита лендингов: по URL возвращает 5 приоритетных рекомендаций. SSRF-защита, PII-redaction, fallback GigaChat.">
+
+    <script src="../js/analytics.js" defer></script>
+</head>
+
+<body>
+    <div style="position:fixed;top:0;left:0;right:0;z-index:1000;background:#fff;border-bottom:1px solid #e0e0e0;padding:10px 20px;display:flex;align-items:center;gap:16px;font-family:Open Sans, sans-serif;">
+        <a href="../index.html" style="background:#EBFF01;color:#000;font-weight:700;text-decoration:none;padding:6px 16px;border-radius:4px;font-size:13px;">&#8592; На главную</a>
+        <a href="../index.html#portfolio" style="color:#555;font-size:13px;font-weight:500;text-decoration:none;">Портфолио</a>
+    </div>
+    <header class="header">
+        <div class="container">
+            <h1>Landing Audit Agent</h1>
+            <div class="meta">
+                <span>🐍 Python 3.12 + FastAPI</span>
+                <span>⚛️ React + TypeScript</span>
+                <span>🧠 OpenAI + GigaChat fallback</span>
+                <span>🐳 Docker / Traefik</span>
+                <span>🛡 SSRF + PII-redaction</span>
+            </div>
+            <p class="subtitle">
+                Автономный AI-агент структурного аудита лендингов: по публичному URL безопасно скачивает страницу,
+                извлекает оффер, CTA, формы и сигналы доверия, удаляет персональные данные и возвращает ровно
+                5 приоритетных рекомендаций по структуре и конверсии.
+            </p>
+            <a href="https://audit.eduardwit.ru" target="_blank" class="demo-link">Попробовать сервис →</a>
+        </div>
+    </header>
+
+    <main class="container">
+        <div style="margin-bottom:30px;background:#f9fafb;border:1px solid #e0e0e0;border-radius:12px;padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+            <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Задача</strong><span style="color:#4b5563;font-size:14px;">Провести первый структурный аудит лендинга за минуту: без эксперта, без чтения HTML, без утечки персональных данных.</span></div>
+            <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Моя работа</strong><span style="color:#4b5563;font-size:14px;">Спроектировал автономного агента: безопасный загруз и парсинг, redaction PII, цепочка LLM-запросов и гарантия ровно 5 рекомендаций. Backend, React-интерфейс, CLI и Docker-деплой.</span></div>
+            <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Технологии</strong><span style="color:#4b5563;font-size:14px;">Python 3.12, FastAPI, Pydantic v2, OpenAI SDK, GigaChat, BeautifulSoup/lxml, React 18, TypeScript, Vite, Tailwind, Docker Compose</span></div>
+            <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Результат</strong><span style="color:#4b5563;font-size:14px;">Живой сервис audit.eduardwit.ru: 5 рекомендаций за минуту, 112+ тестов, 97% покрытие, fallback GigaChat и устойчивость к нестабильной LLM.</span></div>
+        </div>
+
+        <section class="section">
+            <h2>Бизнес-проблема</h2>
+            <p>Владелец лендинга не понимает, почему страница не конвертирует: оффер размытый, CTA слабые, нет доверия,
+                формы слишком длинные. Классический аудит требует эксперта и времени.</p>
+            <ul>
+                <li><strong>Долго:</strong> аудит лендинга вручную занимает часы и стоит денег</li>
+                <li><strong>Непрозрачно:</strong> клиенту неочевидно, что именно чинить</li>
+                <li><strong>Риск утечек:</strong> при отправке страницы в нейросеть могут утечь персональные данные</li>
+                <li><strong>Нет первого шага:</strong> услугу «редизайн под ключ» тяжело продать «вхолодную»</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>Что делает агент</h2>
+            <p>Один URL — и цепочка из шести шагов выполняется без участия человека:</p>
+            <ul>
+                <li>Валидация URL и защита от SSRF (блок приватных и metadata-адресов)</li>
+                <li>Безопасный загруз HTML с ограничением размера и повторной проверкой редиректов</li>
+                <li>Парсинг структуры: title, H1/H2/H3, CTA, формы, сигналы доверия и контактов</li>
+                <li>Redaction персональных данных: email, телефон, паспорт, карты → плейсхолдеры</li>
+                <li>LLM-профиль оффера и UX/conversion-аудит (OpenAI + резерв GigaChat)</li>
+                <li>Финальные 5 приоритетных рекомендаций с доказательствами со страницы</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>Архитектура</h2>
+            <div class="architecture">[1/6] URL → SSRF-проверка
+    ↓
+[2/6] Безопасный fetch (лимиты, редиректы, content-type)
+    ↓
+[3/6] Парсинг: заголовки, CTA, формы, сигналы
+    ↓
+[4/6] PII-redaction → <untrusted_page_data>
+    ↓
+[5/6] LLM: профиль → UX/конверсия (OpenAI / GigaChat)
+    ↓
+[6/6] Ровно 5 рекомендаций (коррекция + fallback)
+                ↓
+         AuditReport (Pydantic v2)</div>
+            <p style="margin-top:14px;color:#4b5563;font-size:14px;">
+                Если LLM нестабильна — включается детерминированный fallback по сигналам страницы,
+                отчёт помечается как degraded, сервис не падает.
+            </p>
+        </section>
+
+        <section class="section">
+            <h2>Безопасность и приватность</h2>
+            <ul>
+                <li><strong>SSRF-защита:</strong> блокируются localhost, приватные и metadata-IP (IPv4+IPv6), редиректы валидируются повторно</li>
+                <li><strong>PII-redaction:</strong> email, телефоны, паспорта, карты и токены не уходят в LLM; значения форм не извлекаются</li>
+                <li><strong>Prompt injection defense:</strong> контент страницы помечается как недоверенный</li>
+                <li><strong>Секреты не утекают:</strong> ключи только в .env backend; логи без HTML и PII</li>
+                <li><strong>Ничего не сохраняется:</strong> HTML, промпты и отчёты живут только в памяти запроса</li>
+                <li><strong>Лимиты:</strong> rate limit по IP, CORS по allowlist, docs выключены в продакшене</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>Результаты</h2>
+            <div class="metrics">
+                <div class="metric">
+                    <div class="value">5</div>
+                    <div class="label">Рекомендаций за минуту</div>
+                </div>
+                <div class="metric">
+                    <div class="value">112+</div>
+                    <div class="label">Автоматических тестов</div>
+                </div>
+                <div class="metric">
+                    <div class="value">97%</div>
+                    <div class="label">Покрытие кода</div>
+                </div>
+                <div class="metric">
+                    <div class="value">2</div>
+                    <div class="label">LLM-провайдера (OpenAI + GigaChat)</div>
+                </div>
+            </div>
+        </section>
+
+        <div class="cta">
+            <h3>Попробовать в деле</h3>
+            <p style="color:#4b5563;margin:12px 0 0;">
+                Вставьте ссылку на публичный лендинг — агент вернёт 5 приоритетных рекомендаций по структуре,
+                офферу и конверсии. Работает 24/7.
+            </p>
+            <p style="color:#4b5563;margin:12px 0 0;font-size:13px;">
+                Презентация-кейс: <a href="landing-audit-presentation.html" target="_blank" style="color:#000;font-weight:600;">Открыть презентацию</a>
+            </p>
+            <a href="https://audit.eduardwit.ru" target="_blank" class="button">Открыть сервис</a>
+        </div>
+    </main>
+
+    <footer>
+        <div style="max-width:1100px;margin:0 auto;">
+            <p>&copy; 2026 EduardWIT &bull; <a href="../index.html">На главную</a> &bull; <a href="../privacy-policy.html">Политика конфиденциальности</a></p>
+        </div>
+    </footer>
+</body>
