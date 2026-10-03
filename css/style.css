@@ -1798,15 +1798,24 @@ li {
 
 .audit-widget__form {
     margin-top: 30px;
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    flex-wrap: wrap;
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
 }
 
 .audit-widget__input {
-    flex: 1 1 300px;
-    max-width: 420px;
+    width: 100%;
+}
+
+.audit-widget .contact-form__buttons {
+    margin-top: 12px;
+    justify-content: center;
+}
+
+.audit-widget .contact-form__button {
+    flex: 0 0 auto;
+    min-width: 220px;
 }
 
 .audit-widget__note {
@@ -1850,14 +1859,8 @@ li {
 }
 
 @media (max-width: 640px) {
-    .audit-widget__form {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .audit-widget__input {
-        min-width: 0;
+    .audit-widget__buttons .contact-form__button {
         width: 100%;
-        max-width: 100%;
+        min-width: 0;
     }
 }

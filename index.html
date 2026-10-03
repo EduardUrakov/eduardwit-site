@@ -695,7 +695,9 @@
             <p class="audit-widget__text">Вставьте ссылку на публичный лендинг — агент проанализирует оффер, CTA, формы и вернёт 5 приоритетных рекомендаций.</p>
             <form class="audit-widget__form" id="audit-form">
                 <input class="contact-form__input audit-widget__input" id="audit-url" type="url" required placeholder="https://ваш-лендинг.ру" autocomplete="off">
-                <button class="btn" type="submit">Проанализировать</button>
+                <div class="contact-form__buttons audit-widget__buttons">
+                    <button type="submit" class="contact-form__button submit">Проанализировать</button>
+                </div>
             </form>
             <p class="audit-widget__note">Анализируются только публичные страницы. Не вводите приватные и staging-ссылки.</p>
             <div class="audit-widget__status" id="audit-status" role="status" aria-live="polite"></div>
