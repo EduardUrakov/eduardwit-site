@@ -102,23 +102,7 @@
             <div class="promo__btns">
                 <a href="#portfolio" class="promo__link btn">Портфолио</a>
                 <a href="#contacts" class="promo__link">Связаться</a>
-                <a href="https://audit.eduardwit.ru" target="_blank" rel="noopener" class="audit-widget__btn" style="text-decoration:none;">Бесплатный AI-аудит лендинга</a>
             </div>
-        </div>
-    </section>
-
-    <section class="audit-widget" id="audit">
-        <div class="container">
-            <h2 class="audit-widget__title">Бесплатный AI-аудит лендинга</h2>
-            <p class="audit-widget__sub">Вставьте ссылку — агент проанализирует оффер, CTA, формы и вернёт 5 приоритетных рекомендаций.</p>
-            <form class="audit-widget__form" id="audit-form">
-                <input class="audit-widget__input" id="audit-url" type="url" required placeholder="https://ваш-лендинг.ру" autocomplete="off">
-                <button class="audit-widget__btn" type="submit">Проанализировать</button>
-            </form>
-            <p class="audit-widget__note">Анализируются только публичные страницы. Не вводите приватные и staging-ссылки.</p>
-            <div class="audit-widget__status" id="audit-status" role="status" aria-live="polite"></div>
-            <ol class="audit-widget__list" id="audit-list"></ol>
-            <a class="audit-widget__full" id="audit-full" href="https://audit.eduardwit.ru" target="_blank" rel="noopener">Открыть полный отчёт →</a>
         </div>
     </section>
 
@@ -457,6 +441,24 @@
                 </div>
                 <div class="projects__card">
                     <div class="projects__header">
+                        <div class="projects__title">Landing Audit Agent — автономный AI-аудит лендингов</div>
+                        <div class="projects__description">По публичному URL агент безопасно скачивает страницу,
+                            извлекает оффер, CTA, формы и сигналы доверия, удаляет персональные данные и возвращает
+                            ровно 5 приоритетных рекомендаций. SSRF-защита, PII-redaction, fallback GigaChat.</div>
+                        <div class="projects__tags">
+                            <span class="projects__tag">Python / FastAPI</span>
+                            <span class="projects__tag">React + TypeScript</span>
+                            <span class="projects__tag">OpenAI + GigaChat</span>
+                            <span class="projects__tag">Docker / Traefik</span>
+                        </div>
+                    </div>
+                    <div class="projects__links">
+                        <a href="case/landing-audit-agent.html" class="projects__link">Читать кейс</a>
+                        <a href="https://audit.eduardwit.ru" target="_blank" class="projects__link">Открыть сервис</a>
+                    </div>
+                </div>
+                <div class="projects__card">
+                    <div class="projects__header">
                         <div class="projects__title">DataInsight: Big Data аналитика на n8n</div>
                         <div class="projects__description">Полный конвейер обработки больших данных: загрузка из внешних
                             API, очистка и агрегация, AI-анализ с выявлением аномалий и прогнозом, HTML-отчёты в
@@ -681,25 +683,24 @@
                         <a href="https://eduardurakov.github.io/cars/" target="_blank" class="projects__link">Cars</a>
                     </div>
                 </div>
-                <div class="projects__card">
-                    <div class="projects__header">
-                        <div class="projects__title">Landing Audit Agent — автономный AI-аудит лендингов</div>
-                        <div class="projects__description">По публичному URL агент безопасно скачивает страницу,
-                            извлекает оффер, CTA, формы и сигналы доверия, удаляет персональные данные и возвращает
-                            ровно 5 приоритетных рекомендаций. SSRF-защита, PII-redaction, fallback GigaChat.</div>
-                        <div class="projects__tags">
-                            <span class="projects__tag">Python / FastAPI</span>
-                            <span class="projects__tag">React + TypeScript</span>
-                            <span class="projects__tag">OpenAI + GigaChat</span>
-                            <span class="projects__tag">Docker / Traefik</span>
-                        </div>
-                    </div>
-                    <div class="projects__links">
-                        <a href="case/landing-audit-agent.html" class="projects__link">Читать кейс</a>
-                        <a href="https://audit.eduardwit.ru" target="_blank" class="projects__link">Открыть сервис</a>
-                    </div>
-                </div>
             </div>
+        </div>
+    </section>
+
+    <section class="audit-widget" id="audit">
+        <div class="container">
+            <h2 class="title title_fz16 title__section-title">Бесплатный инструмент</h2>
+            <div class="title title__section-subtitle audit-widget__heading">AI-аудит лендинга за минуту</div>
+            <div class="divider"></div>
+            <p class="audit-widget__text">Вставьте ссылку на публичный лендинг — агент проанализирует оффер, CTA, формы и вернёт 5 приоритетных рекомендаций.</p>
+            <form class="audit-widget__form" id="audit-form">
+                <input class="contact-form__input audit-widget__input" id="audit-url" type="url" required placeholder="https://ваш-лендинг.ру" autocomplete="off">
+                <button class="btn" type="submit">Проанализировать</button>
+            </form>
+            <p class="audit-widget__note">Анализируются только публичные страницы. Не вводите приватные и staging-ссылки.</p>
+            <div class="audit-widget__status" id="audit-status" role="status" aria-live="polite"></div>
+            <ol class="audit-widget__list" id="audit-list"></ol>
+            <a class="audit-widget__full" id="audit-full" href="https://audit.eduardwit.ru" target="_blank" rel="noopener">Открыть полный отчёт →</a>
         </div>
     </section>
 

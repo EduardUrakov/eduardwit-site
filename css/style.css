@@ -1774,101 +1774,65 @@ li {
     font-weight: 600;
 }
 
-/* ============ Widget: бесплатный AI-аудит лендинга ============ */
+/* ============ Widget: бесплатный AI-аудит лендинга (стиль главной) ============ */
 .audit-widget {
-    background: #f4f6fb;
-    border-top: 1px solid #e3e7ef;
-    border-bottom: 1px solid #e3e7ef;
-    padding: 44px 0;
+    padding: 120px 0 90px 0;
     text-align: center;
 }
 
 .audit-widget .container {
-    max-width: 760px;
+    max-width: 820px;
 }
 
-.audit-widget__title {
-    font-size: 24px;
-    font-weight: 700;
-    color: #111111;
-    margin: 0 0 8px;
+.audit-widget__heading {
+    margin-bottom: 10px;
 }
 
-.audit-widget__sub {
-    color: #444444;
-    margin: 0 0 18px;
+.audit-widget__text {
+    max-width: 640px;
+    margin: 20px auto 0;
+    color: #000;
     font-size: 16px;
-    line-height: 1.5;
+    line-height: 1.6;
 }
 
 .audit-widget__form {
+    margin-top: 30px;
     display: flex;
-    gap: 10px;
+    gap: 12px;
     justify-content: center;
     flex-wrap: wrap;
 }
 
 .audit-widget__input {
-    flex: 1 1 340px;
-    min-width: 260px;
-    max-width: 520px;
-    padding: 12px 14px;
-    font-size: 15px;
-    color: #111111;
-    background: #ffffff;
-    border: 1px solid #b9c0cf;
-    border-radius: 6px;
-}
-
-.audit-widget__input:focus {
-    outline: 2px solid #5373e7;
-    border-color: #5373e7;
-}
-
-.audit-widget__input::placeholder {
-    color: #777777;
-}
-
-.audit-widget__btn {
-    display: inline-block;
-    padding: 12px 20px;
-    font-size: 15px;
-    font-weight: 600;
-    color: #ffffff;
-    background: #2f4b9e;
-    border: 0;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-.audit-widget__btn:hover {
-    background: #1f3a80;
+    flex: 1 1 300px;
+    max-width: 420px;
 }
 
 .audit-widget__note {
-    color: #666666;
+    color: #555;
     font-size: 13px;
-    margin: 12px 0 0;
+    margin-top: 12px;
 }
 
 .audit-widget__status {
-    color: #333333;
+    color: #000;
     font-size: 15px;
-    margin-top: 12px;
+    margin-top: 14px;
     min-height: 22px;
 }
 
 .audit-widget__list {
     list-style: none;
-    margin: 14px auto 0;
+    margin: 16px auto 0;
     padding: 0;
-    max-width: 760px;
+    max-width: 720px;
     text-align: left;
-    color: #111111;
+    color: #000;
 }
 
 .audit-widget__list li {
-    background: #ffffff;
+    background: #fff;
     border: 1px solid #e0e4ee;
     border-radius: 8px;
     padding: 12px 14px;
@@ -1879,9 +1843,10 @@ li {
 
 .audit-widget__full {
     display: none;
-    margin-top: 14px;
-    color: #234bc0;
+    margin-top: 16px;
+    color: #333;
     font-weight: 600;
+    text-decoration: underline;
 }
 
 @media (max-width: 640px) {
@@ -1893,5 +1858,6 @@ li {
     .audit-widget__input {
         min-width: 0;
         width: 100%;
+        max-width: 100%;
     }
 }
