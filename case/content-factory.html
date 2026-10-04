@@ -11,10 +11,9 @@
   --surface:#ffffff; --surface-2:#f1f3fa; --border:#e3e6f0;
   --text:#0f172a; --text-muted:#46536b;
   --accent:#4f46e5; --accent-2:#7c3aed; --accent-soft:#eef0ff;
-  --ok:#15803d; --ok-soft:#ecfdf3; --warn:#b45309; --warn-soft:#fffbeb;
+  --ok:#15803d; --ok-soft:#ecfdf3;
   --code-bg:#111827; --code-text:#e5e7eb;
   --shadow:0 18px 45px -18px rgba(15,23,42,.25);
-  --tag-n8n:#ea580c; --tag-supabase:#3ecf8e; --tag-ai:#8b5cf6;
 }
 @media (prefers-color-scheme: dark){
   :root{
@@ -22,7 +21,7 @@
     --surface:#151b30; --surface-2:#1b2240; --border:#2b3355;
     --text:#eef1f8; --text-muted:#aab4d0;
     --accent:#8b8ff8; --accent-2:#b06cf7; --accent-soft:#232a52;
-    --ok:#4ade80; --ok-soft:#0c2b1e; --warn:#fbbf24; --warn-soft:#33260a;
+    --ok:#4ade80; --ok-soft:#0c2b1e;
     --code-bg:#0d1326; --code-text:#dbe2f5;
   }
 }
@@ -37,7 +36,6 @@ body{
 }
 h1,h2,h3{line-height:1.2;letter-spacing:-.02em;margin:0}
 a{color:var(--accent)}
-code{font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:.9em}
 
 .case{max-width:72rem;margin:0 auto;padding:0 1.25rem}
 .case__section{padding:4rem 0}
@@ -52,11 +50,10 @@ code{font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:.9em
 
 .card{background:var(--surface);border:1px solid var(--border);border-radius:1.1rem;box-shadow:var(--shadow)}
 .card__body{padding:1.4rem}
-.card__icon{width:2.6rem;height:2.6rem;border-radius:.75rem;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);font-size:1.2rem;margin-bottom:.9rem}
 .card__title{font-size:1.05rem;font-weight:700;color:var(--text)}
 .card__text{color:var(--text-muted);font-size:.92rem;margin-top:.4rem}
-.card--ok{border-color:var(--ok);background:var(--ok-soft)}
-.card--warn{border-color:var(--warn);background:var(--warn-soft)}
+.card__value{font-size:2rem;font-weight:900;color:var(--accent);margin-bottom:.3rem}
+.card--accent{border-color:var(--accent-2);background:var(--accent-soft)}
 
 .hero{padding:5.5rem 0 3.5rem;text-align:center}
 .hero__badge{display:inline-flex;align-items:center;gap:.5rem;background:var(--accent-soft);color:var(--accent);border:1px solid transparent;border-radius:999px;padding:.4rem 1rem;font-size:.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
@@ -65,27 +62,41 @@ code{font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:.9em
 .hero__meta{display:flex;justify-content:center;gap:1.6rem;flex-wrap:wrap;margin-top:2.6rem;color:var(--text-muted);font-size:.85rem}
 .hero__meta b{color:var(--text);font-size:1.25rem;display:block}
 
-.pipe{display:grid;grid-template-columns:repeat(6,1fr);gap:.7rem;margin-top:2rem}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem;margin-top:2rem}
+@media (max-width:56rem){.metrics{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:40rem){.metrics{grid-template-columns:1fr 1fr}}
+.metric{text-align:center;background:var(--surface);border:1px solid var(--border);border-radius:1rem;padding:1.3rem}
+.metric__value{font-size:clamp(1.6rem,4vw,2.3rem);font-weight:900;color:var(--accent)}
+.metric__label{color:var(--text-muted);font-size:.82rem;margin-top:.3rem}
+
+.pipe{display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem;margin-top:2rem}
 @media (max-width:56rem){.pipe{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:40rem){.pipe{grid-template-columns:1fr}}
-.pipe__step{background:var(--surface);border:1px solid var(--border);border-radius:.9rem;padding:1rem;min-width:0}
+.pipe__step{background:var(--surface);border:1px solid var(--border);border-radius:.9rem;padding:1rem}
 .pipe__num{color:var(--accent);font-weight:800;font-size:.8rem;letter-spacing:.06em}
 .pipe__name{font-size:.87rem;font-weight:600;margin-top:.35rem;color:var(--text)}
 .pipe__desc{font-size:.78rem;color:var(--text-muted);margin-top:.25rem}
 
-.pill{display:inline-block;background:var(--surface-2);border:1px solid var(--border);color:var(--text);border-radius:999px;padding:.3rem .85rem;font-size:.8rem;font-weight:600;margin:.2rem .2rem 0 0}
-
-.table-wrap{overflow-x:auto;margin-top:2rem}
+.table-wrap{overflow-x:auto;margin-top:1.5rem}
 table{width:100%;border-collapse:collapse;font-size:.9rem}
 th,td{text-align:left;padding:.75rem .9rem;border-bottom:1px solid var(--border)}
 th{color:var(--text-muted);font-weight:600;font-size:.8rem;letter-spacing:.04em;text-transform:uppercase}
 td{color:var(--text)}
 tr:last-child td{border-bottom:none}
 
+.tag{display:inline-block;padding:.15rem .55rem;border-radius:.35rem;font-size:.75rem;font-weight:700;letter-spacing:.04em}
+.tag--n8n{background:#fff7ed;color:#c2410c}
+.tag--supabase{background:#ecfdf5;color:#065f46}
+.tag--ai{background:#f5f3ff;color:#6d28d9}
+.tag--ok{background:var(--ok-soft);color:var(--ok)}
+.tag--road{background:var(--accent-soft);color:var(--accent)}
+
+.code{background:var(--code-bg);color:var(--code-text);border-radius:.9rem;padding:1.2rem 1.3rem;overflow-x:auto;font-size:.84rem;line-height:1.55}
+.code__line{white-space:pre}
+
 .checklist{list-style:none;padding:0;margin:1rem 0 0}
 .checklist li{position:relative;padding-left:1.6rem;color:var(--text);font-size:.92rem;margin-bottom:.55rem}
 .checklist li::before{content:"✓";position:absolute;left:0;color:var(--ok);font-weight:800}
-.checklist--warn li::before{content:"⚠";color:var(--warn)}
 
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
 @media (max-width:40rem){.two-col{grid-template-columns:1fr}}
@@ -93,14 +104,6 @@ tr:last-child td{border-bottom:none}
 .footer{border-top:1px solid var(--border);padding:2rem 0 3rem;text-align:center;color:var(--text-muted);font-size:.85rem}
 .footer b{color:var(--text)}
 :focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-
-.tag{display:inline-block;padding:.15rem .55rem;border-radius:.35rem;font-size:.75rem;font-weight:700;letter-spacing:.04em}
-.tag--n8n{background:#fff7ed;color:#c2410c}
-.tag--supabase{background:#ecfdf5;color:#065f46}
-.tag--ai{background:#f5f3ff;color:#6d28d9}
-.tag--ok{background:var(--ok-soft);color:var(--ok)}
-.tag--warn{background:var(--warn-soft);color:var(--warn)}
-.tag--new{background:var(--accent-soft);color:var(--accent)}
 </style>
 </head>
 <body>
@@ -108,224 +111,188 @@ tr:last-child td{border-bottom:none}
 
   <!-- ================= hero ================= -->
   <header class="hero">
-    <span class="hero__badge">n8n + AI Pipeline</span>
+    <span class="hero__badge">Автоматизация контента</span>
     <h1 class="hero__title">Content Factory</h1>
     <p class="hero__lead">
-      Автоматизированная контент-фабрика для управления персонажами, сценариями
-      и публикациями. Принимает сырые данные через webhook, обогащает через
-      <strong>GigaChat AI</strong> и публикует на внешние платформы.
+      Превращает сырые данные о персонажах, сценариях и публикациях
+      в готовый структурированный контент с помощью
+      <strong>OpenAI GPT-6</strong> и <strong>GigaChat</strong>.
+      Без ручного труда, без ошибок, 24/7.
     </p>
     <div class="hero__meta">
-      <div><b>3</b> воркфлоу</div>
-      <div><b>21</b> нода n8n</div>
-      <div><b>4</b> таблицы Supabase</div>
-      <div><b>2</b> AI-модели</div>
+      <div><b>30 сек</b> от заявки до AI-анализа</div>
+      <div><b>3</b> типа контента</div>
+      <div><b>4</b> хранилища данных</div>
+      <div><b>0</b> потерянных заявок</div>
     </div>
   </header>
 
-  <!-- ================= what ================= -->
-  <section class="case__section case__section--alt" id="what">
-    <h2 class="case__section-title">Для чего создан</h2>
+  <!-- ================= problem ================= -->
+  <section class="case__section case__section--alt" id="problem">
+    <h2 class="case__section-title">Какую проблему решает</h2>
     <p class="case__section-sub">
-      ContentFactory — стартап по автоматизации производства контента.
-      Ручное управление персонажами, сценариями и публикациями отнимало часы,
-      а ошибки из-за человеческого фактора приводили к срыву сроков.
+      Контент-команды тратят часы на ручное описание персонажей, сценариев и публикаций.
+      Каждый новый проект — заново. Ошибки, повторы, потеря данных, срыв сроков.
     </p>
     <div class="case__grid case__grid--3">
       <div class="card">
         <div class="card__body">
-          <div class="card__title">Автоприём контента</div>
-          <div class="card__text">Webhook принимает персонажей, сценарии и публикации от CRM и внешних систем. PII-редакция, валидация, защита от дублей.</div>
+          <div class="card__title">Ручная рутина</div>
+          <div class="card__text">Редактор часами пишет характеристики персонажа, аннотацию сценария, карточку публикации. Однотипная работа вместо творчества.</div>
         </div>
       </div>
       <div class="card">
         <div class="card__body">
-          <div class="card__title">AI-обогащение</div>
-          <div class="card__text">GigaChat анализирует сырые данные и возвращает структурированный JSON: черты характера, мотивацию, арку развития, жанр, целевую аудиторию.</div>
+          <div class="card__title">Человеческий фактор</div>
+          <div class="card__text">Разные редакторы — разный стиль. Пропущенные поля, опечатки, несогласованные форматы. Контент идёт в публикацию с ошибками.</div>
         </div>
       </div>
       <div class="card">
         <div class="card__body">
-          <div class="card__title">Автопубликация</div>
-          <div class="card__text">Готовый контент уходит webhook'ом на внешние платформы. Каждая публикация логируется с полным трейсом ответа.</div>
+          <div class="card__title">Потеря данных</div>
+          <div class="card__text">Заявка потерялась в почте, забыли обновить статус, команда дублирует работу. Нет единой точки входа и истории обработки.</div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ================= architecture ================= -->
-  <section class="case__section" id="arch">
-    <h2 class="case__section-title">Архитектура</h2>
-    <p class="case__section-sub">Три независимых n8n-воркфлоу, связанных через очередь в Supabase.</p>
-
+  <!-- ================= solution ================= -->
+  <section class="case__section" id="solution">
+    <h2 class="case__section-title">Как работает фабрика</h2>
+    <p class="case__section-sub">Три независимых процесса, связанных через единую базу данных.</p>
     <div class="pipe">
       <div class="pipe__step">
-        <div class="pipe__num">ШАГ 1</div>
-        <div class="pipe__name">Webhook</div>
-        <div class="pipe__desc">POST /content-intake — приём сырых данных</div>
+        <div class="pipe__num">01</div>
+        <div class="pipe__name">Приём</div>
+        <div class="pipe__desc">Webhook принимает заявку от CRM, формы или API. Обезличивает персональные данные.</div>
       </div>
       <div class="pipe__step">
-        <div class="pipe__num">ШАГ 2</div>
-        <div class="pipe__name">Нормализация</div>
-        <div class="pipe__desc">PII-редакция, валидация, идемпотентность</div>
+        <div class="pipe__num">02</div>
+        <div class="pipe__name">AI-анализ</div>
+        <div class="pipe__desc">OpenAI GPT-6 или GigaChat превращают сырые данные в структурированный JSON с характеристиками.</div>
       </div>
       <div class="pipe__step">
-        <div class="pipe__num">ШАГ 3</div>
-        <div class="pipe__name">Очередь</div>
-        <div class="pipe__desc">cf_inbox с уникальным ключом (source, external_id)</div>
+        <div class="pipe__num">03</div>
+        <div class="pipe__name">Контроль качества</div>
+        <div class="pipe__desc">Автоматическая валидация и оценка качества. Только проверенный контент идёт дальше.</div>
       </div>
       <div class="pipe__step">
-        <div class="pipe__num">ШАГ 4</div>
-        <div class="pipe__name">AI</div>
-        <div class="pipe__desc">GigaChat-2: анализ и структурирование</div>
-      </div>
-      <div class="pipe__step">
-        <div class="pipe__num">ШАГ 5</div>
-        <div class="pipe__name">Quality Gate</div>
-        <div class="pipe__desc">Валидация JSON, оценка качества 0–1</div>
-      </div>
-      <div class="pipe__step">
-        <div class="pipe__num">ШАГ 6</div>
+        <div class="pipe__num">04</div>
         <div class="pipe__name">Публикация</div>
-        <div class="pipe__desc">Webhook → внешняя платформа → cf_publications</div>
+        <div class="pipe__desc">Готовый контент уходит webhook'ом в CMS, мессенджер или любую внешнюю систему.</div>
       </div>
     </div>
 
-    <h3 style="margin-top:2.5rem">Стек</h3>
+    <h3 style="margin-top:2.5rem">Пример: что происходит с данными</h3>
+    <div class="two-col">
+      <div>
+        <h4 style="font-size:.85rem;color:var(--text-muted);letter-spacing:.04em;text-transform:uppercase">На входе</h4>
+        <pre class="code"><span class="code__line">{</span><span class="code__line">  "name": "Bob",</span><span class="code__line">  "bio": "Supporting hero"</span><span class="code__line">}</span></pre>
+      </div>
+      <div>
+        <h4 style="font-size:.85rem;color:var(--text-muted);letter-spacing:.04em;text-transform:uppercase">AI-выход</h4>
+        <pre class="code"><span class="code__line">{</span><span class="code__line">  "имя": "Bob",</span><span class="code__line">  "роль": "supporting",</span><span class="code__line">  "черты": [</span><span class="code__line">    "Надёжный друг",</span><span class="code__line">    "Решительный",</span><span class="code__line">    "Оптимистичный"</span><span class="code__line">  ],</span><span class="code__line">  "мотивация": "Помогать близким…"</span><span class="code__line">}</span></pre>
+      </div>
+    </div>
+
+    <h3 style="margin-top:2.5rem">Что под капотом</h3>
     <p style="margin-top:.5rem">
       <span class="tag tag--n8n">n8n 2.36.9</span>
       <span class="tag tag--supabase">Supabase PostgreSQL</span>
-      <span class="tag tag--ai">GigaChat-2</span>
-      <span class="tag tag--ai">OpenAI gpt-6-luna</span>
-      <span class="tag tag--supabase">Dokploy + Traefik</span>
-      <span class="tag tag--n8n">VPS 89.22.229.121</span>
+      <span class="tag tag--ai">OpenAI GPT-6</span>
+      <span class="tag tag--ai">GigaChat</span>
+      <span class="tag tag--supabase">Docker / Dokploy</span>
+    </p>
+
+    <p style="color:var(--text-muted);margin-top:1rem;font-size:.9rem">
+      3 воркфлоу, 21 нода. Защита от дублей и параллельной обработки.
+      Полный журнал ошибок с контекстом каждого сбоя.
     </p>
   </section>
 
-  <!-- ================= tz ================= -->
-  <section class="case__section case__section--alt" id="tz">
-    <h2 class="case__section-title">ТЗ: что требовалось и что сделано</h2>
-    <p class="case__section-sub">Исходное ТЗ курса VIBE-CODING — и что было добавлено сверх него для продакшен-готовности.</p>
+  <!-- ================= business value ================= -->
+  <section class="case__section case__section--alt" id="value">
+    <h2 class="case__section-title">Что это даёт бизнесу</h2>
+    <div class="metrics">
+      <div class="metric">
+        <div class="metric__value">0</div>
+        <div class="metric__label">часов ручного описания</div>
+      </div>
+      <div class="metric">
+        <div class="metric__value">3</div>
+        <div class="metric__label">типа контента — один вход</div>
+      </div>
+      <div class="metric">
+        <div class="metric__value">24/7</div>
+        <div class="metric__label">работает без выходных</div>
+      </div>
+      <div class="metric">
+        <div class="metric__value">100%</div>
+        <div class="metric__label">аудит — каждая заявка записана</div>
+      </div>
+    </div>
+
+    <div class="case__grid case__grid--3" style="margin-top:2rem">
+      <div class="card card--accent">
+        <div class="card__body">
+          <div class="card__title">Скорость</div>
+          <div class="card__text">Заявка поступает через webhook и уже через 30 секунд AI выдаёт готовый структурированный ответ. Не нужно ждать редактора.</div>
+        </div>
+      </div>
+      <div class="card card--accent">
+        <div class="card__body">
+          <div class="card__title">Качество</div>
+          <div class="card__text">AI работает по единой схеме для каждого типа контента. Никаких пропущенных полей, никакой вкусовщины — только проверенный JSON.</div>
+        </div>
+      </div>
+      <div class="card card--accent">
+        <div class="card__body">
+          <div class="card__title">Контроль</div>
+          <div class="card__text">Каждая заявка проходит полный цикл: приём → обогащение → проверка → публикация. На каждом шаге — запись в лог. Ничто не теряется.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= roadmap ================= -->
+  <section class="case__section" id="roadmap">
+    <h2 class="case__section-title">Что ещё можно внедрить</h2>
+    <p class="case__section-sub">Текущая версия — полностью рабочий MVP. Дальше — масштабирование под конкретный бизнес.</p>
 
     <div class="table-wrap">
       <table>
-        <thead>
-          <tr><th>Пункт ТЗ</th><th>Статус</th><th>Комментарий</th></tr>
-        </thead>
+        <thead><tr><th>Возможность</th><th>Что даёт</th><th>Статус</th></tr></thead>
         <tbody>
-          <tr><td>Приём и обработка персонажей, сценариев, публикаций</td><td><span class="tag tag--ok">сделано</span></td><td>Webhook → cf_inbox с PII-редакцией и защитой от дублей</td></tr>
-          <tr><td>Интеграция с внешними сервисами</td><td><span class="tag tag--ok">сделано</span></td><td>Webhook-публикация на любую платформу + httpbin для тестов</td></tr>
-          <tr><td>AI-обогащение контента</td><td><span class="tag tag--ok">сделано</span></td><td>GigaChat + OpenAI fallback, структурированный JSON-ответ</td></tr>
-          <tr><td>Логика переходов: персонаж → сценарий → публикация</td><td><span class="tag tag--ok">сделано</span></td><td>Очередь cf_inbox → cf_items → cf_publications</td></tr>
-          <tr><td>Система мониторинга и отчётности</td><td><span class="tag tag--ok">сделано</span></td><td>cf_error_log + полный контекст ошибок</td></tr>
-          <tr><td>Уведомления для команды</td><td><span class="tag tag--warn">опционально</span></td><td>Можно добавить Telegram-ноду</td></tr>
-          <tr><td>Тестирование на разных типах контента</td><td><span class="tag tag--ok">сделано</span></td><td>Тестовые прогоны character/script/publication</td></tr>
-          <tr><td colspan="3" style="font-weight:700;color:var(--accent)">✨ Добавлено сверх ТЗ</td></tr>
-          <tr><td>Защита от дублей</td><td><span class="tag tag--new">добавлено</span></td><td>ON CONFLICT (source, external_id) + идемпотентный upsert</td></tr>
-          <tr><td>Параллельная обработка</td><td><span class="tag tag--new">добавлено</span></td><td>SELECT FOR UPDATE SKIP LOCKED — защита от гонок</td></tr>
-          <tr><td>PII-редакция</td><td><span class="tag tag--new">добавлено</span></td><td>Автоопределение и маскирование персональных данных</td></tr>
-          <tr><td>AI fallback</td><td><span class="tag tag--new">добавлено</span></td><td>OpenAI → GigaChat при отказе основного провайдера</td></tr>
-          <tr><td>Защита от холостых прогонов</td><td><span class="tag tag--new">добавлено</span></td><td>Guard-ноды: пустая очередь не плодит ошибки</td></tr>
-          <tr><td>Русскоязычные ключи</td><td><span class="tag tag--new">добавлено</span></td><td>AI возвращает JSON с русскими ключами (имя, роль, черты…)</td></tr>
-          <tr><td>Quality score</td><td><span class="tag tag--new">добавлено</span></td><td>Эвристическая оценка 0–1 для каждого обогащённого элемента</td></tr>
+          <tr>
+            <td>Дашборд контент-менеджера</td>
+            <td>Визуальное управление очередью: видеть все заявки, их статус, AI-результат. Принимать/отклонять одним кликом.</td>
+            <td><span class="tag tag--road">в плане</span></td>
+          </tr>
+          <tr>
+            <td>Telegram-уведомления</td>
+            <td>Команда получает алерт при новой заявке, ошибке AI или готовности контента к публикации. Не нужно заходить в систему.</td>
+            <td><span class="tag tag--road">в плане</span></td>
+          </tr>
+          <tr>
+            <td>Мультиплатформенная публикация</td>
+            <td>Одна заявка — автоматическая отправка в WordPress, Telegram-канал, соцсети. Разный формат под каждую платформу.</td>
+            <td><span class="tag tag--road">в плане</span></td>
+          </tr>
+          <tr>
+            <td>Кастомные AI-промпты под заказчика</td>
+            <td>Схема обогащения подстраивается под стиль и требования конкретного бизнеса. Свои поля, свой tone of voice.</td>
+            <td><span class="tag tag--road">в плане</span></td>
+          </tr>
+          <tr>
+            <td>RAG по внутренней базе знаний</td>
+            <td>AI использует документы компании (брифы, гайды, стильбук) при анализе контента. Ответы в стиле бренда.</td>
+            <td><span class="tag tag--road">в плане</span></td>
+          </tr>
         </tbody>
       </table>
     </div>
   </section>
 
-  <!-- ================= workflow details ================= -->
-  <section class="case__section" id="workflows">
-    <h2 class="case__section-title">Три воркфлоу</h2>
-
-    <div class="two-col">
-      <div class="card">
-        <div class="card__body">
-          <div class="card__title">Intake Workflow</div>
-          <div class="card__text">3 ноды</div>
-          <ul class="checklist" style="margin-top:.8rem">
-            <li>Webhook POST /content-intake</li>
-            <li>Нормализация + PII-редакция</li>
-            <li>Идемпотентный upsert в cf_inbox</li>
-          </ul>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card__body">
-          <div class="card__title">Worker Workflow</div>
-          <div class="card__text">9 нод</div>
-          <ul class="checklist" style="margin-top:.8rem">
-            <li>Schedule каждые 30 секунд</li>
-            <li>Claim: SELECT FOR UPDATE SKIP LOCKED</li>
-            <li>Guard: пустая очередь = молча стоп</li>
-            <li>BuildPrompt: schema по типу контента</li>
-            <li>OpenAI → GigaChat fallback</li>
-            <li>Parse + Quality Score → cf_items</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <div class="two-col" style="margin-top:1.25rem">
-      <div class="card">
-        <div class="card__body">
-          <div class="card__title">Publisher Workflow</div>
-          <div class="card__text">9 нод</div>
-          <ul class="checklist" style="margin-top:.8rem">
-            <li>Schedule каждую минуту</li>
-            <li>Claim: только approved без successful публикации</li>
-            <li>Guard: холостой прогон = стоп</li>
-            <li>BuildPayload: русские ключи в JSON</li>
-            <li>Webhook → httpbin (замена на свой URL)</li>
-            <li>cf_publications + cf_error_log</li>
-          </ul>
-        </div>
-      </div>
-      <div class="card card--warn">
-        <div class="card__body">
-          <div class="card__title">Что нужно для прода</div>
-          <div class="card__text" style="margin-top:.4rem">Что заменить/добавить для полной рабочей версии</div>
-          <ul class="checklist checklist--warn" style="margin-top:.8rem">
-            <li>Заменить httpbin.org на URL своей CMS</li>
-            <li>Добавить Telegram-уведомления</li>
-            <li>Настроить OpenAI-ключ (сейчас GigaChat)</li>
-            <li>Создать дашборд для cf_items/cf_publications</li>
-            <li>Прикрутить авторизацию на webhook</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= results ================= -->
-  <section class="case__section case__section--alt" id="results">
-    <h2 class="case__section-title">Пример работы</h2>
-    <p class="case__section-sub">Отправляем персонажа «Bob» через Intake webhook — и наблюдаем всю цепочку.</p>
-
-    <div class="two-col">
-      <div>
-        <h3>На входе (Intake)</h3>
-        <div class="code"><span class="code__line">{</span><span class="code__line">  "source": "test",</span><span class="code__line">  "external_id": "char-002",</span><span class="code__line">  "type": "character",</span><span class="code__line">  "payload": {</span><span class="code__line">    "name": "Bob",</span><span class="code__line">    "bio": "Supporting hero"</span><span class="code__line">  }</span><span class="code__line">}</span></div>
-      </div>
-      <div>
-        <h3>AI-выход (Worker → cf_items)</h3>
-        <div class="code"><span class="code__line">{</span><span class="code__line">  "имя": "Bob",</span><span class="code__line">  "роль": "supporting",</span><span class="code__line">  "черты": [</span><span class="code__line">    "Надёжный друг",</span><span class="code__line">    "Решительный",</span><span class="code__line">    "Оптимистичный"</span><span class="code__line">  ],</span><span class="code__line">  "мотивация": "Помогать близким…",</span><span class="code__line">  "арка": "Осознать важность…"</span><span class="code__line">}</span></div>
-      </div>
-    </div>
-
-    <h3 style="margin-top:2.5rem">Метрики тестового прогона</h3>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Таблица</th><th>Запись</th><th>Детали</th></tr></thead>
-        <tbody>
-          <tr><td>cf_inbox</td><td>id=16</td><td>status: processed</td></tr>
-          <tr><td>cf_items</td><td>id=3</td><td>quality_score: 1.0, ai_model: GigaChat-2, 309 токенов</td></tr>
-          <tr><td>cf_publications</td><td>id=62</td><td>status: success, httpbin 200</td></tr>
-          <tr><td>cf_error_log</td><td>—</td><td>Пусто (после фиксов)</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- ================= footer ================= -->
   <footer class="footer">
     <b>EduardWIT</b> · Автоматизация бизнес-процессов · 2026<br>
     <a href="https://eduardwit.ru">eduardwit.ru</a>
