@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Content Factory — Дашборд</title>
+<style>
+:root{
+  --bg:#f6f7fb; --surface:#ffffff; --surface2:#f1f3fa; --border:#e3e6f0;
+  --text:#0f172a; --text2:#46536b;
+  --accent:#4f46e5; --accent2:#7c3aed;
+  --ok:#15803d; --okbg:#ecfdf3;
+  --warn:#b45309; --warnbg:#fffbeb;
+  --err:#b91c1c; --errbg:#fef2f2;
+  --info:#1d4ed8; --infobg:#eff6ff;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0b1020; --surface:#151b30; --surface2:#1b2240; --border:#2b3355;
+    --text:#eef1f8; --text2:#aab4d0;
+    --accent:#8b8ff8; --accent2:#b06cf7;
+    --ok:#4ade80; --okbg:#0c2b1e;
+    --warn:#fbbf24; --warnbg:#33260a;
+    --err:#f87171; --errbg:#2d1414;
+    --info:#60a5fa; --infobg:#142644;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{color-scheme:light dark}
+body{
+  font:14px/1.5 "Inter",system-ui,sans-serif;
+  background:var(--bg); color:var(--text);
+  padding:clamp(1rem,3vw,2.5rem);
+  max-width:88rem; margin:0 auto;
+}
+h2{font-size:1.15rem;font-weight:700;margin-bottom:1rem}
+h3{font-size:.95rem;font-weight:600}
+
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin-bottom:2rem}
+@media(max-width:48rem){.metrics{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:28rem){.metrics{grid-template-columns:1fr}}
+.metric{background:var(--surface);border:1px solid var(--border);border-radius:.8rem;padding:1rem;text-align:center}
+.metric__val{font-size:1.6rem;font-weight:800;color:var(--accent)}
+.metric__lbl{font-size:.78rem;color:var(--text2);margin-top:.2rem}
+.metric--ok .metric__val{color:var(--ok)}
+.metric--warn .metric__val{color:var(--warn)}
+.metric--err .metric__val{color:var(--err)}
+
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:.8rem;margin-bottom:1.2rem;overflow:hidden}
+.panel__head{display:flex;justify-content:space-between;align-items:center;padding:.9rem 1rem;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:.5rem}
+.panel__title{font-weight:700;font-size:.95rem}
+.panel__count{font-size:.78rem;color:var(--text2)}
+.panel__body{padding:.5rem 0}
+
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:.55rem .9rem;border-bottom:1px solid var(--border);font-size:.82rem}
+th{color:var(--text2);font-weight:600;font-size:.75rem;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
+td{color:var(--text);max-width:18rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+tr:last-child td{border-bottom:none}
+
+.badge{display:inline-block;padding:.15rem .5rem;border-radius:.3rem;font-size:.72rem;font-weight:700}
+.badge--ok{background:var(--okbg);color:var(--ok)}
+.badge--warn{background:var(--warnbg);color:var(--warn)}
+.badge--err{background:var(--errbg);color:var(--err)}
+.badge--info{background:var(--infobg);color:var(--info)}
+
+.score{display:inline-block;width:2.4rem;height:2.4rem;border-radius:50%;text-align:center;line-height:2.4rem;font-weight:800;font-size:.82rem}
+.score--hi{background:var(--okbg);color:var(--ok)}
+.score--mid{background:var(--warnbg);color:var(--warn)}
+.score--lo{background:var(--errbg);color:var(--err)}
+
+.footer{text-align:center;color:var(--text2);font-size:.75rem;padding:1.5rem 0}
+.spin{animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<div class="metrics" id="metrics">
+  <div class="metric"><div class="metric__val" id="m-new">...</div><div class="metric__lbl">В очереди</div></div>
+  <div class="metric"><div class="metric__val" id="m-proc">...</div><div class="metric__lbl">В обработке</div></div>
+  <div class="metric metric--ok"><div class="metric__val" id="m-ok">...</div><div class="metric__lbl">Обработано</div></div>
+  <div class="metric metric--err"><div class="metric__val" id="m-err">...</div><div class="metric__lbl">Ошибок</div></div>
+</div>
+
+<div class="panel">
+  <div class="panel__head"><span class="panel__title">Очередь (cf_inbox)</span><span class="panel__count" id="inbox-count">—</span></div>
+  <div class="panel__body" style="overflow-x:auto"><table><thead><tr><th>ID</th><th>Источник</th><th>Тип</th><th>Статус</th><th>Когда</th></tr></thead><tbody id="inbox-body"><tr><td colspan="5" style="text-align:center;color:var(--text2)">Загрузка...</td></tr></tbody></table></div>
+</div>
+
+<div class="panel">
+  <div class="panel__head"><span class="panel__title">Контент (cf_items)</span><span class="panel__count" id="items-count">—</span></div>
+  <div class="panel__body" style="overflow-x:auto"><table><thead><tr><th>ID</th><th>Тип</th><th>Качество</th><th>AI</th><th>Название</th><th>Статус</th></tr></thead><tbody id="items-body"><tr><td colspan="6" style="text-align:center;color:var(--text2)">Загрузка...</td></tr></tbody></table></div>
+</div>
+
+<div class="panel">
+  <div class="panel__head"><span class="panel__title">Публикации (cf_publications)</span><span class="panel__count" id="pubs-count">—</span></div>
+  <div class="panel__body" style="overflow-x:auto"><table><thead><tr><th>ID</th><th>Платформа</th><th>Статус</th><th>Когда</th></tr></thead><tbody id="pubs-body"><tr><td colspan="4" style="text-align:center;color:var(--text2)">Загрузка...</td></tr></tbody></table></div>
+</div>
+
+<footer class="footer">Content Factory Dashboard · Auto-refresh 30s · <span id="clock">—</span></footer>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+const SUPABASE_URL = 'https://supabase.eduardwit.ru';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlzcyI6InN1cGFiYXNlIiwiaWF0IjoxNzc5MDQ0NDAwLCJleHAiOjE5MzY4MTA4MDB9.xgdflSp9w0s94W2ts6GKgnQv8THTNaoQe0yI3TttZjQ';
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+function badge(status) {
+  const map = {
+    'new':'info','processing':'warn','processed':'ok','failed_terminal':'err',
+    'draft':'warn','approved':'ok','rejected':'err',
+    'success':'ok','failed':'err','pending':'info'
+  };
+  return `<span class="badge badge--${map[status]||'info'}">${status}</span>`;
+}
+
+function scoreBadge(v) {
+  const s = parseFloat(v)||0;
+  const cls = s>=0.8?'hi':s>=0.4?'mid':'lo';
+  return `<span class="score score--${cls}">${s.toFixed(1)}</span>`;
+}
+
+async function load() {
+  const now = new Date().toLocaleTimeString('ru');
+  document.getElementById('clock').textContent = now;
+
+  try {
+    const [r1, r2, r3, r4] = await Promise.all([
+      supabase.from('cf_inbox').select('*').order('received_at',{ascending:false}).limit(20),
+      supabase.from('cf_items').select('*').order('created_at',{ascending:false}).limit(20),
+      supabase.from('cf_publications').select('*').order('created_at',{ascending:false}).limit(20),
+      supabase.from('cf_error_log').select('*').order('created_at',{ascending:false}).limit(1)
+    ]);
+
+    const inbox = r1.data||[], items = r2.data||[], pubs = r3.data||[];
+    const errors = r4.data||[];
+
+    // Metrics
+    document.getElementById('m-new').textContent = inbox.filter(i=>i.status==='new').length;
+    document.getElementById('m-proc').textContent = inbox.filter(i=>i.status==='processing').length;
+    document.getElementById('m-ok').textContent = inbox.filter(i=>i.status==='processed').length;
+    document.getElementById('m-err').textContent = inbox.filter(i=>i.status==='failed_terminal').length + errors.length;
+
+    // Inbox
+    document.getElementById('inbox-count').textContent = inbox.length + ' записей';
+    document.getElementById('inbox-body').innerHTML = inbox.length
+      ? inbox.map(i=>`<tr><td>${i.id}</td><td>${i.source||'—'}</td><td>${i.item_type}</td><td>${badge(i.status)}</td><td>${new Date(i.received_at).toLocaleString('ru')}</td></tr>`).join('')
+      : '<tr><td colspan="5" style="text-align:center;color:var(--text2)">Пусто</td></tr>';
+
+    // Items
+    document.getElementById('items-count').textContent = items.length + ' записей';
+    document.getElementById('items-body').innerHTML = items.length
+      ? items.map(i=>`<tr><td>${i.id}</td><td>${i.item_type}</td><td>${scoreBadge(i.quality_score)}</td><td>${i.ai_model||'—'}</td><td>${(i.content?.имя||i.content?.название||i.content?.заголовок||'—')}</td><td>${badge(i.status)}</td></tr>`).join('')
+      : '<tr><td colspan="6" style="text-align:center;color:var(--text2)">Пусто</td></tr>';
+
+    // Publications
+    document.getElementById('pubs-count').textContent = pubs.length + ' записей';
+    document.getElementById('pubs-body').innerHTML = pubs.length
+      ? pubs.map(p=>`<tr><td>${p.id}</td><td>${p.platform||'—'}</td><td>${badge(p.status)}</td><td>${new Date(p.created_at).toLocaleString('ru')}</td></tr>`).join('')
+      : '<tr><td colspan="4" style="text-align:center;color:var(--text2)">Пусто</td></tr>';
+
+  } catch(e) {
+    console.error(e);
+    document.getElementById('inbox-body').innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--err)">Ошибка загрузки</td></tr>';
+  }
+}
+
+load();
+setInterval(load, 30000);
+</script>
+</body>
+</html>
