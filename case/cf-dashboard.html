@@ -1,104 +1,186 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Content Factory — Дашборд</title>
 <style>
 :root{
-  --bg:#f6f7fb; --surface:#ffffff; --surface2:#f1f3fa; --border:#e3e6f0;
-  --text:#0f172a; --text2:#46536b;
-  --accent:#4f46e5; --accent2:#7c3aed;
+  /* Feature Stack / dark-first палитра (Inspo: Frame, GitHub, Dovetail) */
+  --bg:#0a0e1a; --bg2:#0d1326;
+  --surface:#111827; --surface2:#151b30; --border:#232b45; --border2:#2b3355;
+  --text:#eef1f8; --text2:#9aa4c2; --text3:#6b7696;
+  --accent:#6760fb; --accent2:#584ab6; --accent-soft:#1c1f4d;
+  --warm:#de582a; --warm-soft:#3a1e14;
+  --ok:#4ade80; --okbg:#0c2b1e;
+  --warn:#fbbf24; --warnbg:#33260a;
+  --err:#f87171; --errbg:#2d1414;
+  --info:#60a5fa; --infobg:#142644;
+  color-scheme: dark;
+}
+[data-theme="light"]{
+  --bg:#f6f7fb; --bg2:#eef0f7;
+  --surface:#ffffff; --surface2:#f4f5fb; --border:#e3e6f0; --border2:#d3d8e8;
+  --text:#0f172a; --text2:#46536b; --text3:#7a86a5;
+  --accent:#4f46e5; --accent2:#7c3aed; --accent-soft:#eef0ff;
+  --warm:#c2410c; --warm-soft:#fff7ed;
   --ok:#15803d; --okbg:#ecfdf3;
   --warn:#b45309; --warnbg:#fffbeb;
   --err:#b91c1c; --errbg:#fef2f2;
   --info:#1d4ed8; --infobg:#eff6ff;
-}
-@media (prefers-color-scheme: dark){
-  :root{
-    --bg:#0b1020; --surface:#151b30; --surface2:#1b2240; --border:#2b3355;
-    --text:#eef1f8; --text2:#aab4d0;
-    --accent:#8b8ff8; --accent2:#b06cf7;
-    --ok:#4ade80; --okbg:#0c2b1e;
-    --warn:#fbbf24; --warnbg:#33260a;
-    --err:#f87171; --errbg:#2d1414;
-    --info:#60a5fa; --infobg:#142644;
-  }
+  color-scheme: light;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{color-scheme:light dark}
+html{scroll-behavior:smooth}
 body{
-  font:14px/1.5 "Inter",system-ui,sans-serif;
-  background:var(--bg); color:var(--text);
-  padding:clamp(1rem,3vw,2.5rem);
-  max-width:88rem; margin:0 auto;
+  font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  font-size:14px;line-height:1.55;
+  background:var(--bg);color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  transition:background .3s ease,color .3s ease;
 }
-h2{font-size:1.15rem;font-weight:700;margin-bottom:1rem}
-h3{font-size:.95rem;font-weight:600}
-
-.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin-bottom:2rem}
-@media(max-width:48rem){.metrics{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:28rem){.metrics{grid-template-columns:1fr}}
-.metric{background:var(--surface);border:1px solid var(--border);border-radius:.8rem;padding:1rem;text-align:center}
-.metric__val{font-size:1.6rem;font-weight:800;color:var(--accent)}
-.metric__lbl{font-size:.78rem;color:var(--text2);margin-top:.2rem}
+/* Центрированная колонка с симметричным padding (spacingGuidance) */
+.wrap{max-width:86rem;margin:0 auto;padding:0 clamp(1.25rem,3vw,2.5rem)}
+/* ===== Topbar ===== */
+.topbar{display:flex;align-items:center;gap:1rem;padding:1.4rem 0;border-bottom:1px solid var(--border)}
+.topbar__title{font-size:1.05rem;font-weight:700;letter-spacing:-.01em}
+.topbar__sub{color:var(--text3);font-size:.78rem}
+.topbar__spacer{flex:1}
+.dot{width:.5rem;height:.5rem;border-radius:50%;background:var(--ok);box-shadow:0 0 0 4px var(--okbg);animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+.theme-toggle{
+  appearance:none;border:1px solid var(--border);background:var(--surface);color:var(--text);
+  border-radius:.5rem;padding:.4rem .8rem;font-size:.8rem;font-weight:600;cursor:pointer;transition:border-color .2s
+}
+.theme-toggle:hover{border-color:var(--accent2)}
+/* ===== Hero (первый viewport — heroGuidance) ===== */
+.hero{padding:clamp(2.5rem,6vw,4.5rem) 0 clamp(1.8rem,4vw,3rem)}
+.hero__kicker{color:var(--accent);font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.hero__title{font-size:clamp(1.6rem,4vw,2.6rem);font-weight:800;letter-spacing:-.03em;margin-top:.5rem}
+.hero__lead{color:var(--text2);font-size:clamp(.95rem,2vw,1.05rem);max-width:34rem;margin-top:.75rem}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:2.2rem}
+@media(max-width:56rem){.metrics{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:32rem){.metrics{grid-template-columns:1fr 1fr}}
+.metric{
+  background:var(--surface);border:1px solid var(--border);border-radius:.9rem;
+  padding:1.15rem 1.25rem;position:relative;overflow:hidden;
+  transition:border-color .2s,transform .2s
+}
+.metric:hover{border-color:var(--border2)}
+.metric__val{font-size:clamp(1.7rem,4vw,2.3rem);font-weight:800;letter-spacing:-.02em;color:var(--text)}
+.metric__lbl{color:var(--text3);font-size:.78rem;margin-top:.25rem;font-weight:500}
+.metric__bar{position:absolute;inset:auto 0 0 0;height:3px;background:var(--accent);opacity:.8}
+.metric--ok .metric__bar{background:var(--ok)}
+.metric--err .metric__bar{background:var(--err)}
+.metric--warn .metric__bar{background:var(--warn)}
 .metric--ok .metric__val{color:var(--ok)}
-.metric--warn .metric__val{color:var(--warn)}
 .metric--err .metric__val{color:var(--err)}
-
-.panel{background:var(--surface);border:1px solid var(--border);border-radius:.8rem;margin-bottom:1.2rem;overflow:hidden}
-.panel__head{display:flex;justify-content:space-between;align-items:center;padding:.9rem 1rem;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:.5rem}
-.panel__title{font-weight:700;font-size:.95rem}
-.panel__count{font-size:.78rem;color:var(--text2)}
-.panel__body{padding:.5rem 0}
-
-table{width:100%;border-collapse:collapse}
-th,td{text-align:left;padding:.55rem .9rem;border-bottom:1px solid var(--border);font-size:.82rem}
-th{color:var(--text2);font-weight:600;font-size:.75rem;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
-td{color:var(--text);max-width:18rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-tr:last-child td{border-bottom:none}
-
-.badge{display:inline-block;padding:.15rem .5rem;border-radius:.3rem;font-size:.72rem;font-weight:700}
+/* ===== Sections — ~96px между секциями (spacingGuidance) ===== */
+.section{padding:clamp(2.5rem,5vw,4rem) 0}
+.section + .section{border-top:1px solid var(--border)}
+.section__head{display:flex;align-items:baseline;gap:.8rem;flex-wrap:wrap;margin-bottom:1.3rem}
+.section__title{font-size:1.1rem;font-weight:700;letter-spacing:-.01em}
+.section__count{color:var(--text3);font-size:.78rem;font-weight:500}
+.section__count b{color:var(--text2);font-weight:600}
+/* ===== Tables — тонкие правила, без зебры, hover-подъём (Inspo) ===== */
+.table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:.9rem;background:var(--surface)}
+table{width:100%;border-collapse:collapse;min-width:42rem}
+th,td{text-align:left;padding:.7rem 1rem;border-bottom:1px solid var(--border);font-size:.82rem;vertical-align:middle}
+th{
+  color:var(--text3);font-weight:600;font-size:.7rem;letter-spacing:.05em;text-transform:uppercase;
+  background:var(--surface2);position:sticky;top:0
+}
+td{color:var(--text);white-space:nowrap;max-width:20rem;overflow:hidden;text-overflow:ellipsis}
+tbody tr{transition:background .15s,transform .15s,box-shadow .15s}
+tbody tr:hover{background:var(--surface2);box-shadow:0 4px 14px -6px rgba(0,0,0,.5);transform:translateY(-1px)}
+tbody tr:last-child td{border-bottom:none}
+td.td-muted{color:var(--text3)}
+td.td-strong{font-weight:600;color:var(--text)}
+/* ===== Badges ===== */
+.badge{display:inline-flex;align-items:center;gap:.35rem;padding:.18rem .55rem;border-radius:.35rem;font-size:.72rem;font-weight:700;line-height:1.3}
+.badge::before{content:"";width:.35rem;height:.35rem;border-radius:50%;background:currentColor}
 .badge--ok{background:var(--okbg);color:var(--ok)}
 .badge--warn{background:var(--warnbg);color:var(--warn)}
 .badge--err{background:var(--errbg);color:var(--err)}
 .badge--info{background:var(--infobg);color:var(--info)}
-
-.score{display:inline-block;width:2.4rem;height:2.4rem;border-radius:50%;text-align:center;line-height:2.4rem;font-weight:800;font-size:.82rem}
-.score--hi{background:var(--okbg);color:var(--ok)}
-.score--mid{background:var(--warnbg);color:var(--warn)}
-.score--lo{background:var(--errbg);color:var(--err)}
-
-.footer{text-align:center;color:var(--text2);font-size:.75rem;padding:1.5rem 0}
-.spin{animation:spin 1s linear infinite}
+/* ===== Quality score ===== */
+.score{
+  display:inline-grid;place-items:center;width:2.1rem;height:2.1rem;border-radius:50%;
+  font-size:.75rem;font-weight:800;background:var(--surface2);border:2px solid var(--border2)
+}
+.score--hi{border-color:var(--ok);color:var(--ok)}
+.score--mid{border-color:var(--warn);color:var(--warn)}
+.score--lo{border-color:var(--err);color:var(--err)}
+/* ===== Pill ===== */
+.pill{display:inline-flex;align-items:center;gap:.35rem;padding:.15rem .5rem;border-radius:.3rem;font-size:.72rem;font-weight:600;background:var(--accent-soft);color:var(--accent)}
+/* ===== States ===== */
+.state-note{text-align:center;color:var(--text3);padding:1.6rem 1rem;font-size:.82rem}
+.state-loading{display:flex;align-items:center;justify-content:center;gap:.6rem;padding:1.6rem;color:var(--text3);font-size:.82rem}
+.spinner{width:1.1rem;height:1.1rem;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .9s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
+/* ===== Footer ===== */
+.footer{border-top:1px solid var(--border);padding:1.8rem 0 2.6rem;text-align:center;color:var(--text3);font-size:.75rem}
+.footer b{color:var(--text2)}
+:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
 </style>
 </head>
-<body>
+<body data-theme="dark">
+<div class="wrap">
 
-<div class="metrics" id="metrics">
-  <div class="metric"><div class="metric__val" id="m-new">...</div><div class="metric__lbl">В очереди</div></div>
-  <div class="metric"><div class="metric__val" id="m-proc">...</div><div class="metric__lbl">В обработке</div></div>
-  <div class="metric metric--ok"><div class="metric__val" id="m-ok">...</div><div class="metric__lbl">Обработано</div></div>
-  <div class="metric metric--err"><div class="metric__val" id="m-err">...</div><div class="metric__lbl">Ошибок</div></div>
+  <header class="topbar">
+    <div class="dot" title="Подключено"></div>
+    <div>
+      <div class="topbar__title">Content Factory</div>
+      <div class="topbar__sub">Панель контент-фабрики</div>
+    </div>
+    <div class="topbar__spacer"></div>
+    <button class="theme-toggle" id="theme-btn" aria-label="Переключить тему">Тема</button>
+  </header>
+
+  <section class="hero">
+    <div class="hero__kicker">Панель управления</div>
+    <h1 class="hero__title">Контент-конвейер в одном экране</h1>
+    <p class="hero__lead">Очередь заявок, AI-обогащение и публикации — живые данные из Supabase, обновление каждые 30 секунд.</p>
+    <div class="metrics">
+      <div class="metric"><div class="metric__val" id="m-new">…</div><div class="metric__lbl">В очереди</div><div class="metric__bar"></div></div>
+      <div class="metric metric--warn"><div class="metric__val" id="m-proc">…</div><div class="metric__lbl">В обработке</div><div class="metric__bar"></div></div>
+      <div class="metric metric--ok"><div class="metric__val" id="m-ok">…</div><div class="metric__lbl">Обработано</div><div class="metric__bar"></div></div>
+      <div class="metric metric--err"><div class="metric__val" id="m-err">…</div><div class="metric__lbl">Ошибок</div><div class="metric__bar"></div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section__head"><h2 class="section__title">Очередь</h2><span class="section__count" id="inbox-count">—</span></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ID</th><th>Источник</th><th>Тип</th><th>Статус</th><th>Получено</th></tr></thead>
+        <tbody id="inbox-body"><tr><td colspan="5" class="state-loading"><span class="spinner"></span>Загрузка…</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section__head"><h2 class="section__title">Контент</h2><span class="section__count" id="items-count">—</span></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ID</th><th>Тип</th><th>Качество</th><th>AI</th><th>Название</th><th>Статус</th></tr></thead>
+        <tbody id="items-body"><tr><td colspan="6" class="state-loading"><span class="spinner"></span>Загрузка…</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section__head"><h2 class="section__title">Публикации</h2><span class="section__count" id="pubs-count">—</span></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ID</th><th>Платформа</th><th>Статус</th><th>Когда</th></tr></thead>
+        <tbody id="pubs-body"><tr><td colspan="4" class="state-loading"><span class="spinner"></span>Загрузка…</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer class="footer"><b>Content Factory</b> · обновление каждые 30 сек · <span id="clock">—</span></footer>
 </div>
-
-<div class="panel">
-  <div class="panel__head"><span class="panel__title">Очередь (cf_inbox)</span><span class="panel__count" id="inbox-count">—</span></div>
-  <div class="panel__body" style="overflow-x:auto"><table><thead><tr><th>ID</th><th>Источник</th><th>Тип</th><th>Статус</th><th>Когда</th></tr></thead><tbody id="inbox-body"><tr><td colspan="5" style="text-align:center;color:var(--text2)">Загрузка...</td></tr></tbody></table></div>
-</div>
-
-<div class="panel">
-  <div class="panel__head"><span class="panel__title">Контент (cf_items)</span><span class="panel__count" id="items-count">—</span></div>
-  <div class="panel__body" style="overflow-x:auto"><table><thead><tr><th>ID</th><th>Тип</th><th>Качество</th><th>AI</th><th>Название</th><th>Статус</th></tr></thead><tbody id="items-body"><tr><td colspan="6" style="text-align:center;color:var(--text2)">Загрузка...</td></tr></tbody></table></div>
-</div>
-
-<div class="panel">
-  <div class="panel__head"><span class="panel__title">Публикации (cf_publications)</span><span class="panel__count" id="pubs-count">—</span></div>
-  <div class="panel__body" style="overflow-x:auto"><table><thead><tr><th>ID</th><th>Платформа</th><th>Статус</th><th>Когда</th></tr></thead><tbody id="pubs-body"><tr><td colspan="4" style="text-align:center;color:var(--text2)">Загрузка...</td></tr></tbody></table></div>
-</div>
-
-<footer class="footer">Content Factory Dashboard · Auto-refresh 30s · <span id="clock">—</span></footer>
 
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
@@ -107,68 +189,71 @@ const SUPABASE_URL = 'https://supabase.eduardwit.ru';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlzcyI6InN1cGFiYXNlIiwiaWF0IjoxNzc5MDQ0NDAwLCJleHAiOjE5MzY4MTA4MDB9.xgdflSp9w0s94W2ts6GKgnQv8THTNaoQe0yI3TttZjQ';
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-function badge(status) {
-  const map = {
-    'new':'info','processing':'warn','processed':'ok','failed_terminal':'err',
-    'draft':'warn','approved':'ok','rejected':'err',
-    'success':'ok','failed':'err','pending':'info'
-  };
-  return `<span class="badge badge--${map[status]||'info'}">${status}</span>`;
-}
+/* Тема */
+const root = document.documentElement;
+const saved = localStorage.getItem('cf-theme') || 'dark';
+root.setAttribute('data-theme', saved);
+document.getElementById('theme-btn').addEventListener('click', () => {
+  const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  root.setAttribute('data-theme', next);
+  localStorage.setItem('cf-theme', next);
+});
 
-function scoreBadge(v) {
+const STATUS = {
+  'new':'badge--info','processing':'badge--warn','processed':'badge--ok',
+  'failed_terminal':'badge--err','draft':'badge--warn','approved':'badge--ok',
+  'rejected':'badge--err','success':'badge--ok','failed':'badge--err','pending':'badge--info'
+};
+function badge(status){const cls = STATUS[status]||'badge--info';return `<span class="badge ${cls}">${status||'—'}</span>`}
+function scoreBadge(v){
   const s = parseFloat(v)||0;
-  const cls = s>=0.8?'hi':s>=0.4?'mid':'lo';
-  return `<span class="score score--${cls}">${s.toFixed(1)}</span>`;
+  const cls = s>=0.8?'score--hi':s>=0.4?'score--mid':'score--lo';
+  return `<span class="score ${cls}">${s.toFixed(1)}</span>`
 }
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function fmt(d){if(!d)return '—';return new Date(d).toLocaleString('ru',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'})}
 
-async function load() {
-  const now = new Date().toLocaleTimeString('ru');
-  document.getElementById('clock').textContent = now;
-
-  try {
-    const [r1, r2, r3, r4] = await Promise.all([
-      supabase.from('cf_inbox').select('*').order('received_at',{ascending:false}).limit(20),
-      supabase.from('cf_items').select('*').order('created_at',{ascending:false}).limit(20),
-      supabase.from('cf_publications').select('*').order('created_at',{ascending:false}).limit(20),
+async function load(){
+  const clock = document.getElementById('clock');
+  if(clock) clock.textContent = new Date().toLocaleTimeString('ru');
+  try{
+    const [r1,r2,r3,r4] = await Promise.all([
+      supabase.from('cf_inbox').select('*').order('received_at',{ascending:false}).limit(25),
+      supabase.from('cf_items').select('*').order('created_at',{ascending:false}).limit(25),
+      supabase.from('cf_publications').select('*').order('created_at',{ascending:false}).limit(25),
       supabase.from('cf_error_log').select('*').order('created_at',{ascending:false}).limit(1)
     ]);
+    const inbox = r1.data||[], items = r2.data||[], pubs = r3.data||[], errors = r4.data||[];
 
-    const inbox = r1.data||[], items = r2.data||[], pubs = r3.data||[];
-    const errors = r4.data||[];
-
-    // Metrics
     document.getElementById('m-new').textContent = inbox.filter(i=>i.status==='new').length;
     document.getElementById('m-proc').textContent = inbox.filter(i=>i.status==='processing').length;
     document.getElementById('m-ok').textContent = inbox.filter(i=>i.status==='processed').length;
     document.getElementById('m-err').textContent = inbox.filter(i=>i.status==='failed_terminal').length + errors.length;
 
-    // Inbox
-    document.getElementById('inbox-count').textContent = inbox.length + ' записей';
+    document.getElementById('inbox-count').innerHTML = inbox.length ? `<b>${inbox.length}</b> строк` : '<b>0</b> строк';
     document.getElementById('inbox-body').innerHTML = inbox.length
-      ? inbox.map(i=>`<tr><td>${i.id}</td><td>${i.source||'—'}</td><td>${i.item_type}</td><td>${badge(i.status)}</td><td>${new Date(i.received_at).toLocaleString('ru')}</td></tr>`).join('')
-      : '<tr><td colspan="5" style="text-align:center;color:var(--text2)">Пусто</td></tr>';
+      ? inbox.map(i=>`<tr><td class="td-muted">#${i.id}</td><td>${esc(i.source)}</td><td><span class="pill">${esc(i.item_type)}</span></td><td>${badge(i.status)}</td><td class="td-muted">${fmt(i.received_at)}</td></tr>`).join('')
+      : `<tr><td colspan="5" class="state-note">Очередь пуста</td></tr>`;
 
-    // Items
-    document.getElementById('items-count').textContent = items.length + ' записей';
+    document.getElementById('items-count').innerHTML = items.length ? `<b>${items.length}</b> строк` : '<b>0</b> строк';
     document.getElementById('items-body').innerHTML = items.length
-      ? items.map(i=>`<tr><td>${i.id}</td><td>${i.item_type}</td><td>${scoreBadge(i.quality_score)}</td><td>${i.ai_model||'—'}</td><td>${(i.content?.имя||i.content?.название||i.content?.заголовок||'—')}</td><td>${badge(i.status)}</td></tr>`).join('')
-      : '<tr><td colspan="6" style="text-align:center;color:var(--text2)">Пусто</td></tr>';
+      ? items.map(i=>{
+          const name = i.content?.имя || i.content?.название || i.content?.заголовок || i.content?.name || '—';
+          return `<tr><td class="td-muted">#${i.id}</td><td><span class="pill">${esc(i.item_type)}</span></td><td>${scoreBadge(i.quality_score)}</td><td class="td-strong">${esc(i.ai_model||'—')}</td><td class="td-strong">${esc(name)}</td><td>${badge(i.status)}</td></tr>`
+        }).join('')
+      : `<tr><td colspan="6" class="state-note">Контента ещё нет</td></tr>`;
 
-    // Publications
-    document.getElementById('pubs-count').textContent = pubs.length + ' записей';
+    document.getElementById('pubs-count').innerHTML = pubs.length ? `<b>${pubs.length}</b> строк` : '<b>0</b> строк';
     document.getElementById('pubs-body').innerHTML = pubs.length
-      ? pubs.map(p=>`<tr><td>${p.id}</td><td>${p.platform||'—'}</td><td>${badge(p.status)}</td><td>${new Date(p.created_at).toLocaleString('ru')}</td></tr>`).join('')
-      : '<tr><td colspan="4" style="text-align:center;color:var(--text2)">Пусто</td></tr>';
-
-  } catch(e) {
+      ? pubs.map(p=>`<tr><td class="td-muted">#${p.id}</td><td><span class="pill">${esc(p.platform||'webhook')}</span></td><td>${badge(p.status)}</td><td class="td-muted">${fmt(p.created_at)}</td></tr>`).join('')
+      : `<tr><td colspan="4" class="state-note">Публикаций пока нет</td></tr>`;
+  }catch(e){
     console.error(e);
-    document.getElementById('inbox-body').innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--err)">Ошибка загрузки</td></tr>';
+    document.getElementById('inbox-body').innerHTML = `<tr><td colspan="5" class="state-note" style="color:var(--err)">Не удалось загрузить данные</td></tr>`;
   }
 }
-
 load();
-setInterval(load, 30000);
+setInterval(load,30000);
 </script>
 </body>
 </html>
