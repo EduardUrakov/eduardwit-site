@@ -93,3 +93,126 @@ document.addEventListener('keydown', e => {
         }
     });
 })();
+
+/* ============ Виджет: Content Factory демо ============ */
+(function () {
+    const form = document.getElementById('cf-form');
+    if (!form) return;
+    const inputEl = document.getElementById('cf-input');
+    const statusEl = document.getElementById('cf-status');
+    const resultEl = document.getElementById('cf-result');
+    const WEBHOOK = 'https://n8n.eduardwit.ru/webhook/content-intake';
+    const TOKEN = 'cf-demo-2026';
+    const SUPABASE_URL = 'https://supabase.eduardwit.ru';
+    const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlzcyI6InN1cGFiYXNlIiwiaWF0IjoxNzc5MDQ0NDAwLCJleHAiOjE5MzY4MTA4MDB9.xgdflSp9w0s94W2ts6GKgnQv8THTNaoQe0yI3TttZjQ';
+    let timer = null;
+    let externalId = null;
+
+    function renderSteps(stepIndex) {
+        const steps = [
+            'Заявка принята',
+            'AI анализирует персонажа',
+            'Контент готов',
+            'Опубликовано'
+        ];
+        const html = steps.map(function (s, i) {
+            const done = i < stepIndex ? 'done' : '';
+            const mark = i < stepIndex ? '&#10003;' : '';
+            return '<div class="cf-widget__step ' + done + '"><span class="mark">' + mark + '</span>' + s + '</div>';
+        }).join('');
+        return '<div class="cf-widget__result-steps">' + html + '</div>';
+    }
+
+    function renderCard(item) {
+        const c = item.content || {};
+        const traits = Array.isArray(c.черты) ? c.черты : [];
+        const traitsHtml = traits.map(function (t) {
+            return '<span class="cf-widget__trait">' + t + '</span>';
+        }).join('');
+        return '<div class="cf-widget__result-card">' +
+            '<div class="cf-widget__result-name">' + (c.имя || 'Персонаж') + '</div>' +
+            '<span class="cf-widget__result-role">' + (c.роль || '') + '</span>' +
+            (traitsHtml ? '<div class="cf-widget__result-block"><b>Черты</b><div class="cf-widget__result-traits">' + traitsHtml + '</div></div>' : '') +
+            (c.мотивация ? '<div class="cf-widget__result-block"><b>Мотивация</b><p>' + c.мотивация + '</p></div>' : '') +
+            (c.предыстория ? '<div class="cf-widget__result-block"><b>Предыстория</b><p>' + c.предыстория + '</p></div>' : '') +
+            '</div>';
+    }
+
+    async function poll() {
+        try {
+            const headers = {
+                apikey: ANON_KEY,
+                Authorization: 'Bearer ' + ANON_KEY
+            };
+            const rIn = await fetch(SUPABASE_URL + '/rest/v1/cf_inbox?select=status&external_id=eq.' + externalId + '&limit=1', { headers });
+            const inbox = await rIn.json();
+            const status = (inbox[0] || {}).status;
+
+            const rItem = await fetch(SUPABASE_URL + '/rest/v1/cf_items?select=content,id&external_id=eq.' + externalId + '&limit=1', { headers });
+            const items = await rItem.json();
+
+            let stepIndex = 0;
+            if (status && status !== 'new') stepIndex = 1;
+            if (items.length) stepIndex = 2;
+
+            const itemId = items.length ? items[0].id : null;
+            let pubs = [];
+            if (itemId) {
+                const rPubs = await fetch(SUPABASE_URL + '/rest/v1/cf_publications?select=platform,status&item_id=eq.' + itemId + '&status=eq.success&limit=5', { headers });
+                pubs = await rPubs.json();
+            }
+            if (pubs.length) stepIndex = 3;
+
+            if (items.length) {
+                resultEl.innerHTML = renderCard(items[0]) + renderSteps(stepIndex);
+            } else {
+                resultEl.innerHTML = renderSteps(stepIndex);
+            }
+
+            if (stepIndex >= 3) {
+                clearInterval(timer);
+                statusEl.textContent = 'Готово — персонаж опубликован.';
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const text = inputEl.value.trim();
+        if (!text) return;
+        statusEl.textContent = 'Отправляем заявку…';
+        resultEl.innerHTML = '';
+        const name = text.split(',')[0].trim();
+        const bio = text.indexOf(',') > -1 ? text.slice(text.indexOf(',') + 1).trim() : text;
+        externalId = 'demo-' + Date.now();
+        try {
+            const res = await fetch(WEBHOOK, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Ingest-Token': TOKEN
+                },
+                body: JSON.stringify({
+                    source: 'demo',
+                    external_id: externalId,
+                    type: 'character',
+                    payload: { name: name, bio: bio }
+                })
+            });
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            statusEl.textContent = 'Заявка принята — AI работает…';
+            await poll();
+            timer = setInterval(poll, 4000);
+            setTimeout(function () {
+                clearInterval(timer);
+                if (statusEl.textContent.indexOf('Готово') === -1) {
+                    statusEl.textContent = 'Время ожидания вышло — конвейер может быть занят. Попробуйте ещё раз.';
+                }
+            }, 90000);
+        } catch (err) {
+            statusEl.textContent = 'Не удалось отправить заявку: ' + (err.message || '');
+        }
+    });
+})();

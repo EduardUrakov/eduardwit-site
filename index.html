@@ -719,12 +719,17 @@
             <ol class="audit-widget__list" id="audit-list"></ol>
             <a class="audit-widget__full" id="audit-full" href="https://audit.eduardwit.ru" target="_blank" rel="noopener">Открыть полный отчёт →</a>
 
-            <div class="free-tools">
-                <div class="free-tools__card">
-                    <div class="free-tools__title">Дашборд контент-фабрики</div>
-                    <div class="free-tools__text">Живая панель контент-конвейера: очередь заявок, AI-обогащение, публикации — в одном экране на Supabase.</div>
-                    <a class="free-tools__link" href="case/cf-dashboard.html" target="_blank" rel="noopener">Открыть дашборд →</a>
-                </div>
+            <div class="cf-widget">
+                <div class="title title__section-subtitle audit-widget__heading cf-widget__heading">Content Factory: соберите персонажа за минуту</div>
+                <p class="audit-widget__text">Введите имя персонажа и короткое описание — AI-фабрика сама соберёт роль, черты, мотивацию и предысторию, проверит качество и опубликует результат.</p>
+                <form class="contact-form audit-widget__form cf-widget__form" id="cf-form">
+                    <input class="contact-form__input audit-widget__input" id="cf-input" type="text" required placeholder="Например: Мара, главная героиня антиутопии" autocomplete="off">
+                    <button type="submit" class="ai-assistant__button audit-widget__submit">Создать персонажа</button>
+                </form>
+                <p class="audit-widget__note">Демо-режим: заявка проходит реальный конвейер — приём, AI, база знаний, публикация.</p>
+                <div class="cf-widget__status" id="cf-status" role="status" aria-live="polite"></div>
+                <div class="cf-widget__result" id="cf-result"></div>
+                <a class="cf-widget__full" id="cf-full" href="case/cf-demo.html" target="_blank" rel="noopener">Открыть полное демо →</a>
             </div>
         </div>
     </section>
