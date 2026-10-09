@@ -125,6 +125,15 @@ document.addEventListener('keydown', e => {
         return '<div class="cf-widget__result-steps">' + html + '</div>';
     }
 
+    function roleRu(role) {
+        const map = {
+            'protagonist': 'Главный герой',
+            'supporting': 'Второстепенный',
+            'antagonist': 'Антагонист'
+        };
+        return map[role] || role || '';
+    }
+
     function renderCard(item) {
         const c = item.content || {};
         const traits = Array.isArray(c.черты) ? c.черты : [];
@@ -133,7 +142,7 @@ document.addEventListener('keydown', e => {
         }).join('');
         return '<div class="cf-widget__result-card">' +
             '<div class="cf-widget__result-name">' + (c.имя || 'Персонаж') + '</div>' +
-            '<span class="cf-widget__result-role">' + (c.роль || '') + '</span>' +
+            '<span class="cf-widget__result-role">' + roleRu(c.роль) + '</span>' +
             (traitsHtml ? '<div class="cf-widget__result-block"><b>Черты</b><div class="cf-widget__result-traits">' + traitsHtml + '</div></div>' : '') +
             (c.мотивация ? '<div class="cf-widget__result-block"><b>Мотивация</b><p>' + c.мотивация + '</p></div>' : '') +
             (c.предыстория ? '<div class="cf-widget__result-block"><b>Предыстория</b><p>' + c.предыстория + '</p></div>' : '') +
