@@ -99,6 +99,8 @@ document.addEventListener('keydown', e => {
     const form = document.getElementById('cf-form');
     if (!form) return;
     const inputEl = document.getElementById('cf-input');
+    const motivationEl = document.getElementById('cf-motivation');
+    const extraEl = document.getElementById('cf-extra');
     const statusEl = document.getElementById('cf-status');
     const resultEl = document.getElementById('cf-result');
     const WEBHOOK = 'https://n8n.eduardwit.ru/webhook/content-intake';
@@ -167,7 +169,7 @@ document.addEventListener('keydown', e => {
                 const rPubs = await fetch(SUPABASE_URL + '/rest/v1/cf_publications?select=platform,status&item_id=eq.' + itemId + '&status=eq.success&limit=5', { headers });
                 pubs = await rPubs.json();
             }
-            if (pubs.length) stepIndex = 3;
+            if (pubs.length) stepIndex = 4; // 4 = все шаги пройдены, включая «Опубликовано»
 
             if (items.length) {
                 resultEl.innerHTML = renderCard(items[0]) + renderSteps(stepIndex);
@@ -175,9 +177,10 @@ document.addEventListener('keydown', e => {
                 resultEl.innerHTML = renderSteps(stepIndex);
             }
 
-            if (stepIndex >= 3) {
+            if (stepIndex >= 4) {
                 clearInterval(timer);
-                statusEl.textContent = 'Готово — персонаж опубликован.';
+                const platforms = pubs.map(function (p) { return p.platform; });
+                statusEl.textContent = 'Готово — опубликовано: ' + (platforms.length ? platforms.join(', ') : 'готово');
             }
         } catch (e) {
             console.error(e);
@@ -192,6 +195,11 @@ document.addEventListener('keydown', e => {
         resultEl.innerHTML = '';
         const name = text.split(',')[0].trim();
         const bio = text.indexOf(',') > -1 ? text.slice(text.indexOf(',') + 1).trim() : text;
+        const motivation = motivationEl ? motivationEl.value.trim() : '';
+        const extra = extraEl ? extraEl.value.trim() : '';
+        const payload = { name: name, bio: bio };
+        if (motivation) payload.motivation = motivation;
+        if (extra) payload.extra = extra;
         externalId = 'demo-' + Date.now();
         try {
             const res = await fetch(WEBHOOK, {
@@ -204,7 +212,7 @@ document.addEventListener('keydown', e => {
                     source: 'demo',
                     external_id: externalId,
                     type: 'character',
-                    payload: { name: name, bio: bio }
+                    payload: payload
                 })
             });
             if (!res.ok) throw new Error('HTTP ' + res.status);

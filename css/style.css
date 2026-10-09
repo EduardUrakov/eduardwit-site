@@ -1864,6 +1864,10 @@ li {
     margin-bottom: 10px;
 }
 
+.cf-widget__aux {
+    margin-top: 8px;
+}
+
 .cf-widget__status {
     color: #000;
     font-size: 15px;
