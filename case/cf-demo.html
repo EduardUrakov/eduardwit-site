@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Content Factory — живое демо · EduardWIT</title>
+<style>
+:root{
+  --bg:#0a0e1a; --surface:#111827; --surface2:#151b30;
+  --border:#232b45; --border2:#2b3355;
+  --text:#eef1f8; --text2:#9aa4c2; --text3:#6b7696;
+  --accent:#6760fb; --accent2:#584ab6;
+  --ok:#4ade80; --warn:#fbbf24; --err:#f87171; --info:#60a5fa;
+  --okbg:#0c2b1e; --warnbg:#33260a; --errbg:#2d1414; --infobg:#142644;
+  color-scheme: dark;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font:15px/1.6 "Inter",system-ui,"Segoe UI",Roboto,sans-serif;
+  background:var(--bg);color:var(--text);min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:52rem;margin:0 auto;padding:2.5rem 1.25rem}
+.kicker{color:var(--accent);font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+h1{font-size:clamp(1.7rem,4vw,2.4rem);font-weight:800;letter-spacing:-.03em;margin-top:.4rem}
+.lead{color:var(--text2);margin-top:.7rem;max-width:38rem}
+
+.demo{margin-top:2.2rem;background:var(--surface);border:1px solid var(--border);border-radius:1rem;padding:1.6rem}
+.demo label{display:block;font-size:.85rem;font-weight:600;color:var(--text2);margin-bottom:.4rem}
+.demo input{
+  width:100%;padding:.75rem .9rem;border-radius:.6rem;border:1px solid var(--border2);
+  background:var(--surface2);color:var(--text);font-size:1rem;outline:none;transition:border-color .2s;
+}
+.demo input:focus{border-color:var(--accent)}
+.demo input::placeholder{color:var(--text3)}
+.demo .row{display:flex;gap:.6rem;flex-wrap:wrap}
+.demo button{
+  margin-top:.8rem;padding:.75rem 1.4rem;border-radius:.6rem;border:none;cursor:pointer;
+  background:linear-gradient(92deg,var(--accent),var(--accent2));color:#fff;font-weight:700;font-size:.95rem;
+  transition:transform .15s,opacity .15s;
+}
+.demo button:hover{transform:translateY(-1px)}
+.demo button:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+.feed{margin-top:2.2rem;display:none}
+.feed.on{display:block}
+.feed__head{font-size:1rem;font-weight:700;margin-bottom:.9rem}
+.step{
+  display:flex;gap:.8rem;align-items:flex-start;padding:.8rem 1rem;border-radius:.7rem;
+  background:var(--surface);border:1px solid var(--border);margin-bottom:.6rem;
+  opacity:.35;transition:opacity .3s;
+}
+.step.active{opacity:1;border-color:var(--border2)}
+.step.done{opacity:1}
+.step .dot{width:.6rem;height:.6rem;border-radius:50%;background:var(--text3);margin-top:.45rem;flex:none}
+.step.active .dot{background:var(--accent);box-shadow:0 0 0 4px var(--accent-soft, #1c1f4d)}
+.step.done .dot{background:var(--ok)}
+.step.done.err .dot{background:var(--err)}
+.step b{display:block;font-size:.92rem}
+.step span{color:var(--text3);font-size:.8rem}
+.step pre{white-space:pre-wrap;font-size:.78rem;color:var(--text2);margin-top:.3rem}
+
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;margin-top:1.4rem}
+@media(max-width:36rem){.metrics{grid-template-columns:1fr}}
+.metric{background:var(--surface);border:1px solid var(--border);border-radius:.7rem;padding:.8rem 1rem;text-align:center}
+.metric b{display:block;font-size:1.3rem;font-weight:800;color:var(--accent)}
+.metric span{color:var(--text3);font-size:.75rem}
+
+.errbox{display:none;margin-top:1rem;padding:.9rem 1rem;border-radius:.6rem;background:var(--errbg);color:var(--err);font-size:.85rem}
+.errbox.on{display:block}
+.footer{margin-top:2.8rem;color:var(--text3);font-size:.78rem;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kicker">Живое демо · Content Factory</div>
+  <h1>Проверьте фабрику сами</h1>
+  <p class="lead">Введите имя персонажа — и смотрите, как система за ~1 минуту проводит его через весь конвейер: приём → AI-обогащение → публикация. Триггер в реальном времени.</p>
+
+  <div class="demo">
+    <label for="name">Имя и краткое описание персонажа</label>
+    <div class="row">
+      <input id="name" placeholder="Например: Келл, наёмник из пустоши" autocomplete="off" style="flex:1;min-width:220px">
+      <button id="run">Запустить демо</button>
+    </div>
+  </div>
+
+  <div class="metrics" id="metrics" style="display:none">
+    <div class="metric"><b id="m-inbox">0</b><span>В очереди</span></div>
+    <div class="metric"><b id="m-items">0</b><span>Обогащено</span></div>
+    <div class="metric"><b id="m-pubs">0</b><span>Опубликовано</span></div>
+  </div>
+
+  <div class="errbox" id="errbox"></div>
+
+  <div class="feed" id="feed">
+    <div class="feed__head">Ход выполнения</div>
+    <div class="step" data-s="accepted"><span class="dot"></span><div><b>Принято системой</b><span>webhook получил заявку</span></div></div>
+    <div class="step" data-s="processing"><span class="dot"></span><div><b>AI анализирует</b><span>векторный поиск по базе знаний + обогащение</span></div></div>
+    <div class="step" data-s="enriched"><span class="dot"></span><div><b>Контент готов</b><span>структурированный JSON с характеристиками</span></div></div>
+    <div class="step" data-s="published"><span class="dot"></span><div><b>Опубликовано</b><span>Telegram + NocoDB + webhook</span></div></div>
+  </div>
+
+  <div class="footer"><b>EduardWIT</b> · Автоматизация бизнес-процессов · 2026</div>
+</div>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const SUPABASE_URL = 'https://supabase.eduardwit.ru';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlzcyI6InN1cGFiYXNlIiwiaWF0IjoxNzc5MDQ0NDAwLCJleHAiOjE5MzY4MTA4MDB9.xgdflSp9w0s94W2ts6GKgnQv8THTNaoQe0yI3TttZjQ';
+const WEBHOOK = 'https://n8n.eduardwit.ru/webhook/content-intake';
+const TOKEN = 'cf-demo-2026'; // demo-only ingest token
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const $ = (id) => document.getElementById(id);
+const feed = $('feed'), errbox = $('errbox'), runBtn = $('run'), metricsBox = $('metrics');
+let pollTimer = null, externalId = null;
+
+function setStep(name, state) {
+  const el = feed.querySelector(`[data-s="${name}"]`);
+  if (el) { el.classList.remove('active','done','err'); if (state) el.classList.add(state); }
+}
+function showErr(msg) { errbox.textContent = msg; errbox.classList.add('on'); }
+function hideErr() { errbox.classList.remove('on'); }
+
+async function poll() {
+  try {
+    // cf_items по external_id даёт id обогащённого элемента
+    const r2 = await supabase.from('cf_items').select('id,content').eq('external_id', externalId);
+    const items = r2.data || [];
+    const itemId = items[0]?.id || null;
+
+    const [r1, r3] = await Promise.all([
+      supabase.from('cf_inbox').select('status').eq('external_id', externalId),
+      itemId
+        ? supabase.from('cf_publications').select('platform,status').eq('item_id', itemId)
+        : Promise.resolve({ data: [] })
+    ]);
+    const inbox = r1.data || [];
+    const pubs = r3.data || [];
+
+    $('m-inbox').textContent = inbox.length ? 1 : 0;
+    $('m-items').textContent = items.length;
+    $('m-pubs').textContent = pubs.filter(p => p.status === 'success').length;
+
+    const status = inbox[0]?.status;
+    if (status) {
+      setStep('accepted', status !== 'new' ? 'done' : 'active');
+      setStep('processing', (status === 'processing') ? 'active' : (status === 'processed' ? 'done' : ''));
+    }
+    if (items.length) {
+      setStep('enriched', 'done');
+      setStep('processing', 'done');
+    }
+    if (pubs.length) {
+      setStep('published', pubs.some(p => p.status === 'success') ? 'done' : 'active');
+    }
+    // Стоп после публикации
+    if (pubs.some(p => p.status === 'success')) {
+      clearInterval(pollTimer);
+      runBtn.disabled = false;
+      runBtn.textContent = 'Запустить ещё раз';
+    }
+  } catch (e) { console.error(e); }
+}
+
+runBtn.addEventListener('click', async () => {
+  const text = $('name').value.trim();
+  if (!text) { showErr('Введите имя персонажа (например: Келл, наёмник из пустоши).'); return; }
+  hideErr();
+  runBtn.disabled = true;
+  runBtn.textContent = 'Обработка…';
+  metricsBox.style.display = 'grid';
+  feed.classList.add('on');
+  feed.querySelectorAll('.step').forEach(s => s.classList.remove('active','done','err'));
+  setStep('accepted', 'active');
+
+  externalId = 'demo-' + Date.now();
+  const payload = {
+    source: 'demo',
+    external_id: externalId,
+    type: 'character',
+    payload: { name: text.split(',')[0].trim(), bio: text.includes(',') ? text.slice(text.indexOf(',') + 1).trim() : text }
+  };
+  try {
+    const resp = await fetch(WEBHOOK, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Ingest-Token': TOKEN },
+      body: JSON.stringify(payload)
+    });
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    setStep('accepted', 'done');
+    setStep('processing', 'active');
+    pollTimer = setInterval(poll, 4000);
+    setTimeout(() => {
+      clearInterval(pollTimer);
+      runBtn.disabled = false;
+      runBtn.textContent = 'Запустить ещё раз';
+      if ($('m-pubs').textContent === '0') setStep('published', 'err');
+    }, 90000);
+  } catch (e) {
+    showErr('Не удалось отправить заявку: ' + e.message + '. Возможно, демо-токен не настроен.');
+    runBtn.disabled = false;
+    runBtn.textContent = 'Запустить демо';
+  }
+});
+</script>
+</body>
+</html>

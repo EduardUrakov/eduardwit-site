@@ -61,6 +61,11 @@ a{color:var(--accent)}
 .hero__lead{color:var(--text-muted);font-size:clamp(1rem,2vw,1.2rem);max-width:46rem;margin:1.1rem auto 0}
 .hero__meta{display:flex;justify-content:center;gap:1.6rem;flex-wrap:wrap;margin-top:2.6rem;color:var(--text-muted);font-size:.85rem}
 .hero__meta b{color:var(--text);font-size:1.25rem;display:block}
+.hero__actions{display:flex;gap:.9rem;justify-content:center;flex-wrap:wrap;margin-top:2rem}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.8rem 1.5rem;border-radius:.8rem;font-weight:700;font-size:.95rem;text-decoration:none;border:1px solid var(--border);background:var(--surface);color:var(--text);transition:transform .15s ease,box-shadow .15s ease}
+.btn:hover{transform:translateY(-2px)}
+.btn--primary{background:linear-gradient(92deg,var(--accent),var(--accent-2));border:none;color:#ffffff}
+.btn--primary:hover{box-shadow:0 14px 28px -12px rgba(79,70,229,.6)}
 
 .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem;margin-top:2rem}
 @media (max-width:56rem){.metrics{grid-template-columns:repeat(2,1fr)}}
@@ -124,6 +129,10 @@ tr:last-child td{border-bottom:none}
       <div><b>3</b> типа контента</div>
       <div><b>4</b> хранилища данных</div>
       <div><b>0</b> потерянных заявок</div>
+    </div>
+    <div class="hero__actions">
+      <a class="btn btn--primary" href="case/cf-demo.html" target="_blank" rel="noopener">Попробовать живое демо →</a>
+      <a class="btn" href="#problem">Как устроено</a>
     </div>
   </header>
 
