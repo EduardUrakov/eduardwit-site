@@ -125,19 +125,25 @@ function hideErr() { errbox.classList.remove('on'); }
 
 async function poll() {
   try {
-    // cf_items по external_id даёт id обогащённого элемента
-    const r2 = await supabase.from('cf_items').select('id,content').eq('external_id', externalId);
-    const items = r2.data || [];
-    const itemId = items[0]?.id || null;
-
-    const [r1, r3] = await Promise.all([
-      supabase.from('cf_inbox').select('status').eq('external_id', externalId),
-      itemId
-        ? supabase.from('cf_publications').select('platform,status').eq('item_id', itemId)
-        : Promise.resolve({ data: [] })
-    ]);
+    // 1. cf_inbox по external_id → id входящей заявки
+    const r1 = await supabase.from('cf_inbox').select('id,status').eq('external_id', externalId);
     const inbox = r1.data || [];
-    const pubs = r3.data || [];
+    const inboxId = inbox[0]?.id || null;
+
+    // 2. cf_items по inbox_id → id обогащённого элемента (в cf_items нет external_id)
+    let items = [], itemId = null;
+    if (inboxId) {
+      const r2 = await supabase.from('cf_items').select('id,content').eq('inbox_id', inboxId);
+      items = r2.data || [];
+      itemId = items[0]?.id || null;
+    }
+
+    // 3. cf_publications по item_id
+    let pubs = [];
+    if (itemId) {
+      const r3 = await supabase.from('cf_publications').select('platform,status').eq('item_id', itemId);
+      pubs = r3.data || [];
+    }
 
     $('m-inbox').textContent = inbox.length ? 1 : 0;
     $('m-items').textContent = items.length;

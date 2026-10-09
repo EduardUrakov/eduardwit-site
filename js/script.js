@@ -144,18 +144,24 @@ document.addEventListener('keydown', e => {
                 apikey: ANON_KEY,
                 Authorization: 'Bearer ' + ANON_KEY
             };
-            const rIn = await fetch(SUPABASE_URL + '/rest/v1/cf_inbox?select=status&external_id=eq.' + externalId + '&limit=1', { headers });
+            // 1. cf_inbox по external_id → id входящей заявки
+            const rIn = await fetch(SUPABASE_URL + '/rest/v1/cf_inbox?select=id,status&external_id=eq.' + externalId + '&limit=1', { headers });
             const inbox = await rIn.json();
             const status = (inbox[0] || {}).status;
+            const inboxId = (inbox[0] || {}).id || null;
 
-            const rItem = await fetch(SUPABASE_URL + '/rest/v1/cf_items?select=content,id&external_id=eq.' + externalId + '&limit=1', { headers });
-            const items = await rItem.json();
+            // 2. cf_items по inbox_id (в cf_items нет external_id)
+            let items = [], itemId = null;
+            if (inboxId) {
+                const rItem = await fetch(SUPABASE_URL + '/rest/v1/cf_items?select=content,id&inbox_id=eq.' + inboxId + '&limit=1', { headers });
+                items = await rItem.json();
+                itemId = items.length ? items[0].id : null;
+            }
 
             let stepIndex = 0;
             if (status && status !== 'new') stepIndex = 1;
             if (items.length) stepIndex = 2;
 
-            const itemId = items.length ? items[0].id : null;
             let pubs = [];
             if (itemId) {
                 const rPubs = await fetch(SUPABASE_URL + '/rest/v1/cf_publications?select=platform,status&item_id=eq.' + itemId + '&status=eq.success&limit=5', { headers });
