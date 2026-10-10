@@ -13,6 +13,35 @@
         content="Автоматизированная контент-фабрика: webhook-приём персонажей и сценариев, AI-обогащение (OpenAI + GigaChat), база знаний (RAG), публикация в Telegram и NocoDB.">
 
     <script src="../js/analytics.js" defer></script>
+
+    <style>
+        /* === ГАЛЕРЕЯ СКРИНОВ (клик — увеличение) === */
+        .screengrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+        .screenshot{
+            cursor:zoom-in;position:relative;border:1px solid var(--border,#e0e0e0);
+            border-radius:10px;overflow:hidden;background:#f5f5f5;transition:box-shadow .25s ease,transform .25s ease;
+        }
+        .screenshot:hover{box-shadow:0 10px 24px rgba(0,0,0,.14);transform:translateY(-2px)}
+        .screenshot img{width:100%;height:auto;display:block}
+        .screenshot .zoom-hint{
+            position:absolute;top:.6rem;right:.6rem;background:rgba(0,0,0,.65);color:#fff;
+            font-size:.72rem;font-weight:600;letter-spacing:.03em;padding:.3rem .7rem;border-radius:999px;
+            opacity:0;transition:opacity .25s ease;pointer-events:none;
+        }
+        .screenshot:hover .zoom-hint{opacity:1}
+        .screenshot .caption{padding:.7rem .9rem;font-size:.82rem;color:#4b5563;background:#fff;border-top:1px solid #eee}
+        .screenshot .caption strong{color:#000}
+        @media(max-width:640px){.screengrid{grid-template-columns:1fr}}
+        /* === МОДАЛЬНОЕ ОКНО === */
+        .modal{display:none;position:fixed;z-index:9999;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,.92);animation:fadeIn .25s ease}
+        .modal.active{display:flex;align-items:center;justify-content:center}
+        .modal-content{max-width:95%;max-height:95vh;margin:auto;display:block;animation:zoomIn .25s ease;border-radius:.5rem;box-shadow:0 16px 48px rgba(0,0,0,.5)}
+        .modal-caption{position:absolute;bottom:1.5rem;left:50%;transform:translateX(-50%);color:#fff;background:rgba(0,0,0,.7);padding:.75rem 1.5rem;border-radius:.5rem;text-align:center;max-width:90%;font-size:.95rem}
+        .modal-close{position:absolute;top:1rem;right:1.5rem;color:#fff;font-size:2.6rem;font-weight:700;cursor:pointer;background:rgba(255,255,255,.14);width:3rem;height:3rem;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:background .3s;border:none;line-height:1}
+        .modal-close:hover{background:rgba(255,0,0,.7)}
+        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+        @keyframes zoomIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+    </style>
 </head>
 
 <body>
@@ -96,42 +125,52 @@
 
         <section class="section">
             <h2>Скриншоты</h2>
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;">
-                <div>
-                    <div class="mockup-wrapper" style="margin:0;"><img src="../images/content-factory/intake.jpg" alt="Воркфлоу Intake в n8n"></div>
-                    <p style="color:#4b5563;font-size:13px;margin-top:8px;"><strong>1 · Intake</strong> — webhook-приём заявки в очередь cf_inbox</p>
+            <p style="color:#4b5563;font-size:14px;">Нажмите на скриншот, чтобы увеличить.</p>
+            <div class="screengrid">
+                <div class="screenshot" onclick="openModal(this)">
+                    <span class="zoom-hint">Увеличить</span>
+                    <img src="../images/content-factory/intake.jpg" alt="Воркфлоу Intake в n8n">
+                    <div class="caption"><strong>1 · Intake</strong> — webhook-приём заявки в очередь cf_inbox</div>
                 </div>
-                <div>
-                    <div class="mockup-wrapper" style="margin:0;"><img src="../images/content-factory/worker.jpg" alt="Воркфлоу Worker в n8n"></div>
-                    <p style="color:#4b5563;font-size:13px;margin-top:8px;"><strong>2 · Worker</strong> — событийный старт, RAG-поиск, AI-обогащение</p>
+                <div class="screenshot" onclick="openModal(this)">
+                    <span class="zoom-hint">Увеличить</span>
+                    <img src="../images/content-factory/worker.jpg" alt="Воркфлоу Worker в n8n">
+                    <div class="caption"><strong>2 · Worker</strong> — событийный старт, RAG-поиск, AI-обогащение</div>
                 </div>
-                <div>
-                    <div class="mockup-wrapper" style="margin:0;"><img src="../images/content-factory/publisher.jpg" alt="Воркфлоу Publisher в n8n"></div>
-                    <p style="color:#4b5563;font-size:13px;margin-top:8px;"><strong>3 · Publisher</strong> — публикация в Telegram, NocoDB, webhook</p>
+                <div class="screenshot" onclick="openModal(this)">
+                    <span class="zoom-hint">Увеличить</span>
+                    <img src="../images/content-factory/publisher.jpg" alt="Воркфлоу Publisher в n8n">
+                    <div class="caption"><strong>3 · Publisher</strong> — публикация в Telegram, NocoDB, webhook</div>
                 </div>
-                <div>
-                    <div class="mockup-wrapper" style="margin:0;"><img src="../images/content-factory/ingest.jpg" alt="Воркфлоу KB-ingest в n8n"></div>
-                    <p style="color:#4b5563;font-size:13px;margin-top:8px;"><strong>4 · KB-ingest</strong> — загрузка базы знаний: /kb-intake → чанкинг → эмбеддинги → pgvector</p>
+                <div class="screenshot" onclick="openModal(this)">
+                    <span class="zoom-hint">Увеличить</span>
+                    <img src="../images/content-factory/ingest.jpg" alt="Воркфлоу KB-ingest в n8n">
+                    <div class="caption"><strong>4 · KB-ingest</strong> — загрузка базы знаний: /kb-intake → чанкинг → эмбеддинги → pgvector</div>
                 </div>
-                <div>
-                    <div class="mockup-wrapper" style="margin:0;"><img src="../images/content-factory/telegram.jpg" alt="Telegram-уведомление Content Factory"></div>
-                    <p style="color:#4b5563;font-size:13px;margin-top:8px;"><strong>5 · Telegram</strong> — карточка персонажа «Мара» после AI-обогащения</p>
+                <div class="screenshot" onclick="openModal(this)">
+                    <span class="zoom-hint">Увеличить</span>
+                    <img src="../images/content-factory/telegram.jpg" alt="Telegram-уведомление Content Factory">
+                    <div class="caption"><strong>5 · Telegram</strong> — карточка персонажа «Мара» после AI-обогащения</div>
                 </div>
-                <div>
-                    <div class="mockup-wrapper" style="margin:0;"><img src="../images/content-factory/NocoDB.jpg" alt="Таблица NocoDB с контентом"></div>
-                    <p style="color:#4b5563;font-size:13px;margin-top:8px;"><strong>6 · NocoDB</strong> — обогащённый контент в таблице</p>
+                <div class="screenshot" onclick="openModal(this)">
+                    <span class="zoom-hint">Увеличить</span>
+                    <img src="../images/content-factory/NocoDB.jpg" alt="Таблица NocoDB с контентом">
+                    <div class="caption"><strong>6 · NocoDB</strong> — обогащённый контент в таблице</div>
                 </div>
-                <div>
-                    <div class="mockup-wrapper" style="margin:0;"><img src="../images/content-factory/dashbord.jpg" alt="Дашборд Content Factory — верх"></div>
-                    <p style="color:#4b5563;font-size:13px;margin-top:8px;"><strong>7 · Дашборд</strong> — верх панели: очередь и контент</p>
+                <div class="screenshot" onclick="openModal(this)">
+                    <span class="zoom-hint">Увеличить</span>
+                    <img src="../images/content-factory/dashbord.jpg" alt="Дашборд Content Factory — верх">
+                    <div class="caption"><strong>7 · Дашборд</strong> — верх панели: очередь и контент</div>
                 </div>
-                <div>
-                    <div class="mockup-wrapper" style="margin:0;"><img src="../images/content-factory/dashbord-1.jpg" alt="Дашборд Content Factory — низ"></div>
-                    <p style="color:#4b5563;font-size:13px;margin-top:8px;"><strong>8 · Дашборд</strong> — низ панели: публикации и метрики</p>
+                <div class="screenshot" onclick="openModal(this)">
+                    <span class="zoom-hint">Увеличить</span>
+                    <img src="../images/content-factory/dashbord-1.jpg" alt="Дашборд Content Factory — низ">
+                    <div class="caption"><strong>8 · Дашборд</strong> — низ панели: публикации и метрики</div>
                 </div>
-                <div>
-                    <div class="mockup-wrapper" style="margin:0;"><img src="../images/content-factory/evoluate.jpg" alt="Оценка RAG-retrieval"></div>
-                    <p style="color:#4b5563;font-size:13px;margin-top:8px;"><strong>9 · Оценка поиска</strong> — precision@k / recall@k / MRR / NDCG</p>
+                <div class="screenshot" onclick="openModal(this)">
+                    <span class="zoom-hint">Увеличить</span>
+                    <img src="../images/content-factory/evoluate.jpg" alt="Оценка RAG-retrieval">
+                    <div class="caption"><strong>9 · Оценка поиска</strong> — precision@k / recall@k / MRR / NDCG</div>
                 </div>
             </div>
         </section>
@@ -212,4 +251,43 @@
             <p>&copy; 2026 EduardWIT &bull; <a href="../index.html">На главную</a> &bull; <a href="../privacy-policy.html">Политика конфиденциальности</a></p>
         </div>
     </footer>
+
+    <!-- МОДАЛЬНОЕ ОКНО -->
+    <div id="imageModal" class="modal">
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+        <img class="modal-content" id="modalImg">
+        <div class="modal-caption" id="modalCaption"></div>
+    </div>
+
+    <script>
+        function openModal(element) {
+            var modal = document.getElementById('imageModal');
+            var modalImg = document.getElementById('modalImg');
+            var modalCaption = document.getElementById('modalCaption');
+            var img = element.querySelector('img');
+            var caption = element.querySelector('.caption').textContent;
+            if (img) {
+                modalImg.src = img.src;
+                modalImg.style.display = 'block';
+                modalCaption.textContent = caption;
+                modal.classList.add('active');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').classList.remove('active');
+        }
+
+        document.getElementById('imageModal').addEventListener('click', function (e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
 </body>
