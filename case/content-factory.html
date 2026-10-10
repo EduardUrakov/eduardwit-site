@@ -42,7 +42,7 @@
     <main class="container">
         <div style="margin-bottom:30px;background:#f9fafb;border:1px solid #e0e0e0;border-radius:12px;padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:20px;">
             <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Задача</strong><span style="color:#4b5563;font-size:14px;">Убрать ручную работу при подготовке контента: персонажей, сценариев и публикаций. Описание персонажа вместо часов работы — за минуту, по единому стандарту и без потери заявок.</span></div>
-            <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Моя работа</strong><span style="color:#4b5563;font-size:14px;">Спроектировал и собрал три n8n-воркфлоу: приём заявок, AI-обогащение с базой знаний и публикацию. Защита от дублей, очередь без гонок, журнал ошибок, живой дашборд.</span></div>
+            <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Моя работа</strong><span style="color:#4b5563;font-size:14px;">Спроектировал и собрал четыре n8n-воркфлоу: KB-ingest (база знаний), приём заявок, AI-обогащение и публикацию. Защита от дублей, очередь без гонок, журнал ошибок, живой дашборд.</span></div>
             <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Технологии</strong><span style="color:#4b5563;font-size:14px;">n8n 2.36, Supabase PostgreSQL, pgvector (поиск по базе знаний), OpenAI gpt-6-luna через proxyapi + GigaChat fallback, Telegram Bot API, NocoDB</span></div>
             <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Результат</strong><span style="color:#4b5563;font-size:14px;">Полный цикл работает: из имени персонажа система сама собирает мотивацию, черты и предысторию, проверяет качество и публикует. Retrieval базы знаний: recall@3 = 100%.</span></div>
         </div>
@@ -65,7 +65,7 @@
             <ul>
                 <li><strong>Приём:</strong> CRM, форма или API шлют заявку на webhook — мгновенно, с токеном</li>
                 <li><strong>AI-обогащение:</strong> OpenAI или GigaChat превращают сырые данные в структурированный JSON: имя, роль, черты, мотивация, предыстория</li>
-                <li><strong>База знаний:</strong> перед ответом AI ищет в стильбуках и гайдах — соблюдает стиль компании</li>
+                <li><strong>База знаний:</strong> воркфлоу KB-ingest загружает стильбуки и гайды, AI перед ответом ищет в них релевантный контекст и соблюдает стиль компании</li>
                 <li><strong>Контроль качества:</strong> система проверяет, что ответ — валидный JSON и заполнен</li>
                 <li><strong>Публикация:</strong> готовый контент уходит в Telegram-канал, NocoDB-таблицу и webhook</li>
                 <li><strong>Мониторинг:</strong> каждая заявка в журнале, ошибки не теряются</li>
@@ -74,21 +74,66 @@
 
         <section class="section">
             <h2>Архитектура</h2>
-            <div class="architecture">[1/6] Webhook /content-intake → cf_inbox
+            <div class="architecture">[0/7] KB-ingest: /kb-intake → чанкинг → эмбеддинги → cf_kb_chunks (pgvector)
     ↓
-[2/6] Очередь: SELECT FOR UPDATE SKIP LOCKED (без гонок)
+[1/7] Webhook /content-intake → cf_inbox
     ↓
-[3/6] RAG-поиск top-3 по базе знаний (pgvector)
+[2/7] Очередь: SELECT FOR UPDATE SKIP LOCKED (без гонок)
     ↓
-[4/6] AI: OpenAI gpt-6-luna → fallback GigaChat (строгий JSON)
+[3/7] RAG-поиск top-3 по базе знаний (pgvector)
     ↓
-[5/6] Quality gate: score 0–1, валидация JSON
+[4/7] AI: OpenAI gpt-6-luna → fallback GigaChat (строгий JSON)
     ↓
-[6/6] Публикация: Telegram + NocoDB + webhook → cf_publications</div>
+[5/7] Quality gate: score 0–1, валидация JSON
+    ↓
+[6/7] Публикация: Telegram + NocoDB + webhook → cf_publications</div>
             <p style="margin-top:14px;color:#4b5563;font-size:14px;">
-                Три независимых воркфлоу связаны базой данных: Intake (приём), Worker (обогащение),
-                Publisher (публикация). Ошибка в одном не останавливает другие.
+                Четыре независимых воркфлоу связаны базой данных: KB-ingest (загрузка базы знаний),
+                Intake (приём), Worker (обогащение), Publisher (публикация).
+                Ошибка в одном не останавливает другие.
             </p>
+        </section>
+
+        <section class="section">
+            <h2>Скриншоты</h2>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;">
+                <div>
+                    <div class="mockup-wrapper" style="margin:0;"><img src="../images/content-factory/intake.jpg" alt="Воркфлоу Intake в n8n"></div>
+                    <p style="color:#4b5563;font-size:13px;margin-top:8px;"><strong>1 · Intake</strong> — webhook-приём заявки в очередь cf_inbox</p>
+                </div>
+                <div>
+                    <div class="mockup-wrapper" style="margin:0;"><img src="../images/content-factory/worker.jpg" alt="Воркфлоу Worker в n8n"></div>
+                    <p style="color:#4b5563;font-size:13px;margin-top:8px;"><strong>2 · Worker</strong> — событийный старт, RAG-поиск, AI-обогащение</p>
+                </div>
+                <div>
+                    <div class="mockup-wrapper" style="margin:0;"><img src="../images/content-factory/publisher.jpg" alt="Воркфлоу Publisher в n8n"></div>
+                    <p style="color:#4b5563;font-size:13px;margin-top:8px;"><strong>3 · Publisher</strong> — публикация в Telegram, NocoDB, webhook</p>
+                </div>
+                <div>
+                    <div class="mockup-wrapper" style="margin:0;"><img src="../images/content-factory/ingest.jpg" alt="Воркфлоу KB-ingest в n8n"></div>
+                    <p style="color:#4b5563;font-size:13px;margin-top:8px;"><strong>4 · KB-ingest</strong> — загрузка базы знаний: /kb-intake → чанкинг → эмбеддинги → pgvector</p>
+                </div>
+                <div>
+                    <div class="mockup-wrapper" style="margin:0;"><img src="../images/content-factory/telegram.jpg" alt="Telegram-уведомление Content Factory"></div>
+                    <p style="color:#4b5563;font-size:13px;margin-top:8px;"><strong>5 · Telegram</strong> — карточка персонажа «Мара» после AI-обогащения</p>
+                </div>
+                <div>
+                    <div class="mockup-wrapper" style="margin:0;"><img src="../images/content-factory/NocoDB.jpg" alt="Таблица NocoDB с контентом"></div>
+                    <p style="color:#4b5563;font-size:13px;margin-top:8px;"><strong>6 · NocoDB</strong> — обогащённый контент в таблице</p>
+                </div>
+                <div>
+                    <div class="mockup-wrapper" style="margin:0;"><img src="../images/content-factory/dashbord.jpg" alt="Дашборд Content Factory — верх"></div>
+                    <p style="color:#4b5563;font-size:13px;margin-top:8px;"><strong>7 · Дашборд</strong> — верх панели: очередь и контент</p>
+                </div>
+                <div>
+                    <div class="mockup-wrapper" style="margin:0;"><img src="../images/content-factory/dashbord-1.jpg" alt="Дашборд Content Factory — низ"></div>
+                    <p style="color:#4b5563;font-size:13px;margin-top:8px;"><strong>8 · Дашборд</strong> — низ панели: публикации и метрики</p>
+                </div>
+                <div>
+                    <div class="mockup-wrapper" style="margin:0;"><img src="../images/content-factory/evoluate.jpg" alt="Оценка RAG-retrieval"></div>
+                    <p style="color:#4b5563;font-size:13px;margin-top:8px;"><strong>9 · Оценка поиска</strong> — precision@k / recall@k / MRR / NDCG</p>
+                </div>
+            </div>
         </section>
 
         <section class="section">
@@ -111,7 +156,7 @@
                 ищет в базе знаний (стильбуки, гайды) и подкладывает найденное в промпт. Поиск — векторный,
                 по смыслу, а не по словам.</p>
             <ul>
-                <li><strong>База знаний:</strong> документы загружаются webhook'ом, режутся на чанки и эмбеддятся</li>
+                <li><strong>KB-ingest:</strong> отдельный воркфлоу загружает документы — webhook /kb-intake → чанкинг → эмбеддинги → таблицы pgvector</li>
                 <li><strong>Поиск:</strong> pgvector по косинусной близости, top-3</li>
                 <li><strong>Качество проверено:</strong> автоматическая оценка на тестовых вопросах — recall@3 = 1.0, MRR = 0.9, NDCG@5 = 0.91</li>
                 <li><strong>5 документов:</strong> оффер, лендинг, n8n-стандарты, лиды, AI-контент — применимы и для других проектов</li>
