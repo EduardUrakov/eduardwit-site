@@ -179,6 +179,16 @@ td.td-strong{font-weight:600;color:var(--text)}
     </div>
   </section>
 
+  <section class="section">
+    <div class="section__head"><h2 class="section__title">Журнал ошибок</h2><span class="section__count" id="err-count">—</span></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ID</th><th>Воркфлоу</th><th>Нода</th><th>Код</th><th>Сообщение</th><th>Когда</th></tr></thead>
+        <tbody id="err-body"><tr><td colspan="6" class="state-loading"><span class="spinner"></span>Загрузка…</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
   <footer class="footer"><b>Content Factory</b> · обновление каждые 30 сек · <span id="clock">—</span></footer>
 </div>
 
@@ -221,7 +231,7 @@ async function load(){
       supabase.from('cf_inbox').select('*').order('received_at',{ascending:false}).limit(25),
       supabase.from('cf_items').select('*').order('created_at',{ascending:false}).limit(25),
       supabase.from('cf_publications').select('*').order('created_at',{ascending:false}).limit(25),
-      supabase.from('cf_error_log').select('*').order('created_at',{ascending:false}).limit(1)
+      supabase.from('cf_error_log').select('*').order('created_at',{ascending:false}).limit(10)
     ]);
     const inbox = r1.data||[], items = r2.data||[], pubs = r3.data||[], errors = r4.data||[];
 
@@ -247,6 +257,11 @@ async function load(){
     document.getElementById('pubs-body').innerHTML = pubs.length
       ? pubs.map(p=>`<tr><td class="td-muted">#${p.id}</td><td><span class="pill">${esc(p.platform||'webhook')}</span></td><td>${badge(p.status)}</td><td class="td-muted">${fmt(p.created_at)}</td></tr>`).join('')
       : `<tr><td colspan="4" class="state-note">Публикаций пока нет</td></tr>`;
+
+    document.getElementById('err-count').innerHTML = errors.length ? `<b>${errors.length}</b> записей` : '<b>0</b> записей';
+    document.getElementById('err-body').innerHTML = errors.length
+      ? errors.map(e=>`<tr><td class="td-muted">#${e.id}</td><td>${esc(e.workflow||'—')}</td><td>${esc(e.node||'—')}</td><td><span class="pill">${esc(e.error_code||'—')}</span></td><td title="${esc(e.message||'')}">${esc(e.message||'—')}</td><td class="td-muted">${fmt(e.created_at)}</td></tr>`).join('')
+      : `<tr><td colspan="6" class="state-note">Ошибок нет</td></tr>`;
   }catch(e){
     console.error(e);
     document.getElementById('inbox-body').innerHTML = `<tr><td colspan="5" class="state-note" style="color:var(--err)">Не удалось загрузить данные</td></tr>`;
