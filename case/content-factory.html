@@ -71,9 +71,9 @@
     <main class="container">
         <div style="margin-bottom:30px;background:#f9fafb;border:1px solid #e0e0e0;border-radius:12px;padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:20px;">
             <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Задача</strong><span style="color:#4b5563;font-size:14px;">Убрать ручную работу при подготовке контента: персонажей, сценариев и публикаций. Описание персонажа вместо часов работы — за минуту, по единому стандарту и без потери заявок.</span></div>
-            <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Моя работа</strong><span style="color:#4b5563;font-size:14px;">Спроектировал и собрал четыре n8n-воркфлоу: KB-ingest (база знаний), приём заявок, AI-обогащение и публикацию. Защита от дублей, очередь без гонок, журнал ошибок, живой дашборд.</span></div>
-            <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Технологии</strong><span style="color:#4b5563;font-size:14px;">n8n 2.36, Supabase PostgreSQL, pgvector (поиск по базе знаний), OpenAI gpt-6-luna через proxyapi + GigaChat fallback, Telegram Bot API, NocoDB</span></div>
-            <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Результат</strong><span style="color:#4b5563;font-size:14px;">Полный цикл работает: из имени персонажа система сама собирает мотивацию, черты и предысторию, проверяет качество и публикует. Retrieval базы знаний: recall@3 = 100%.</span></div>
+            <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Моя работа</strong><span style="color:#4b5563;font-size:14px;">Спроектировал и собрал четыре n8n-воркфлоу на 34 ноды: KB-ingest (база знаний), приём заявок, AI-обогащение и публикацию. Защита от дублей, очередь без гонок, журнал ошибок, живой дашборд.</span></div>
+            <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Технологии</strong><span style="color:#4b5563;font-size:14px;">n8n 2.36, Supabase PostgreSQL, pgvector (поиск по базе знаний), OpenAI GPT-6 Luna через proxyapi + GigaChat fallback, Telegram Bot API, NocoDB</span></div>
+            <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Результат</strong><span style="color:#4b5563;font-size:14px;">Полный цикл работает: из имени персонажа система сама собирает мотивацию, черты и предысторию, проверяет качество и публикует. Retrieval базы знаний: recall@3 = 100% на тестовой выборке из 10 вопросов (база знаний — 5 документов).</span></div>
         </div>
 
         <section class="section">
@@ -103,19 +103,19 @@
 
         <section class="section">
             <h2>Архитектура</h2>
-            <div class="architecture">[0/7] KB-ingest: /kb-intake → чанкинг → эмбеддинги → cf_kb_chunks (pgvector)
+            <div class="architecture">1. KB-ingest: /kb-intake → чанкинг → эмбеддинги → cf_kb_chunks (pgvector)
     ↓
-[1/7] Webhook /content-intake → cf_inbox
+2. Webhook /content-intake → cf_inbox
     ↓
-[2/7] Очередь: SELECT FOR UPDATE SKIP LOCKED (без гонок)
+3. Очередь: SELECT FOR UPDATE SKIP LOCKED (без гонок)
     ↓
-[3/7] RAG-поиск top-3 по базе знаний (pgvector)
+4. RAG-поиск top-3 по базе знаний (pgvector)
     ↓
-[4/7] AI: OpenAI gpt-6-luna → fallback GigaChat (строгий JSON)
+5. AI: OpenAI GPT-6 Luna → fallback GigaChat (строгий JSON)
     ↓
-[5/7] Quality gate: score 0–1, валидация JSON
+6. Quality gate: score 0–1, валидация JSON
     ↓
-[6/7] Публикация: Telegram + NocoDB + webhook → cf_publications</div>
+7. Публикация: Telegram + NocoDB + webhook → cf_publications</div>
             <p style="margin-top:14px;color:#4b5563;font-size:14px;">
                 Четыре независимых воркфлоу связаны базой данных: KB-ingest (загрузка базы знаний),
                 Intake (приём), Worker (обогащение), Publisher (публикация).
@@ -202,7 +202,7 @@
             <ul>
                 <li><strong>KB-ingest:</strong> отдельный воркфлоу загружает документы — webhook /kb-intake → чанкинг → эмбеддинги → таблицы pgvector</li>
                 <li><strong>Поиск:</strong> pgvector по косинусной близости, top-3</li>
-                <li><strong>Качество проверено:</strong> автоматическая оценка на тестовых вопросах — recall@3 = 1.0, MRR = 0.9, NDCG@5 = 0.91</li>
+                <li><strong>Качество проверено:</strong> автоматическая оценка на тестовой выборке из 10 вопросов (база знаний — 5 документов): recall@3 = 1.0, MRR = 0.9, NDCG@5 = 0.91</li>
                 <li><strong>5 документов:</strong> оффер, лендинг, n8n-стандарты, лиды, AI-контент — применимы и для других проектов</li>
             </ul>
         </section>
@@ -235,7 +235,7 @@
                 </div>
                 <div class="metric">
                     <div class="value">1.0</div>
-                    <div class="label">Recall@3 поиска по базе знаний</div>
+                    <div class="label">Recall@3 поиска (выборка 10 вопросов, база — 5 документов)</div>
                 </div>
             </div>
         </section>
