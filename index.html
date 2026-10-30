@@ -95,13 +95,13 @@
         </div>
         <div class="container">
             <div class="title title_fz16 promo__subtitle">EduardWIT</div>
-            <h1 class="title title_fz48 promo__title">Автоматизация &amp; Веб-разработка</h1>
+            <h1 class="title title_fz48 promo__title">Автоматизация &amp; веб-разработка под ключ</h1>
             <p style="color:#000;font-weight:500;font-size:16px;margin-top:10px;max-width:500px;line-height:1.5;">
                 Автоматизирую бизнес-процессы через n8n, создаю сайты и лендинги, разрабатываю Telegram-ботов, внедряю
                 AI в рабочие сценарии.</p>
             <div class="promo__btns">
-                <a href="#portfolio" class="promo__link btn">Портфолио</a>
-                <a href="#contacts" class="promo__link">Связаться</a>
+                <a href="#contacts" class="promo__link btn">Обсудить задачу</a>
+                <a href="#portfolio" class="promo__link">Портфолио</a>
             </div>
         </div>
     </section>
@@ -435,9 +435,19 @@
             <h2 class="title title_fz16 title__section-title">Портфолио</h2>
             <div class="title title__section-subtitle portfolio__subtitle">Мои работы</div>
             <div class="divider"></div>
+            <div class="projects__filters">
+                <button class="projects__filter active" data-filter="all">Все</button>
+                <button class="projects__filter" data-filter="ai">AI</button>
+                <button class="projects__filter" data-filter="automation">Автоматизация</button>
+                <button class="projects__filter" data-filter="bots">Боты</button>
+                <button class="projects__filter" data-filter="sites">Сайты</button>
+                <button class="projects__filter" data-filter="nocode">No-Code</button>
+                <button class="projects__filter" data-filter="analytics">Аналитика</button>
+            </div>
             <div class="projects__grid">
-                <div class="projects__card">
+                <div class="projects__card" data-cat="ai">
                     <div class="projects__header">
+                        <span class="projects__badge">Топ-проекты</span>
                         <div class="projects__title">Автоконтент под ключ: CrewAI + GigaChat</div>
                         <div class="projects__description">Многоагентная система производства контента: 4 агента
                             (разведчик трендов, автор, фактчекер, SEO-специалист) делают готовый контент-пакет за ~3
@@ -453,7 +463,7 @@
                         <a href="case/auto-content.html" class="projects__link">Читать кейс и попробовать демо</a>
                     </div>
                 </div>
-                <div class="projects__card">
+                <div class="projects__card" data-cat="ai">
                     <div class="projects__header">
                         <div class="projects__title">Prod-RAG: Корпоративная база знаний с ИИ</div>
                         <div class="projects__description">RAG-конвейер на self-hosted инфраструктуре: документы →
@@ -469,8 +479,9 @@
                         <a href="case/prod-rag.html" class="projects__link">Читать кейс</a>
                     </div>
                 </div>
-                <div class="projects__card">
+                <div class="projects__card" data-cat="ai">
                     <div class="projects__header">
+                        <span class="projects__badge">Топ-проекты</span>
                         <div class="projects__title">Landing Audit Agent — автономный AI-аудит лендингов</div>
                         <div class="projects__description">По публичному URL агент безопасно скачивает страницу,
                             извлекает оффер, CTA, формы и сигналы доверия, удаляет персональные данные и возвращает
@@ -487,7 +498,7 @@
                         <a href="https://audit.eduardwit.ru" target="_blank" class="projects__link">Открыть сервис</a>
                     </div>
                 </div>
-                <div class="projects__card">
+                <div class="projects__card" data-cat="analytics">
                     <div class="projects__header">
                         <div class="projects__title">DataInsight: Big Data аналитика на n8n</div>
                         <div class="projects__description">Полный конвейер обработки больших данных: загрузка из внешних
@@ -505,8 +516,9 @@
                         <a href="case/bigdata.html" class="projects__link">Читать кейс</a>
                     </div>
                 </div>
-                <div class="projects__card">
+                <div class="projects__card" data-cat="ai">
                     <div class="projects__header">
+                        <span class="projects__badge">Топ-проекты</span>
                         <div class="projects__title">Content Factory — автоконтент-фабрика на n8n + AI</div>
                         <div class="projects__description">Автоматизированный конвейер контента: webhook-приём персонажей, сценариев и публикаций, AI-обогащение через OpenAI GPT-6 Luna и GigaChat, quality gate и публикация на внешние платформы. 4 воркфлоу, 34 ноды, 6 таблиц Supabase.</div>
                         <div class="projects__tags">
@@ -522,7 +534,7 @@
                         <a href="case/cf-dashboard.html" class="projects__link">Открыть дашборд</a>
                     </div>
                 </div>
-                <div class="projects__card">
+                <div class="projects__card" data-cat="ai automation">
                     <div class="projects__header">
                         <div class="projects__title">Enterprise AI Service Desk</div>
                         <div class="projects__description">Полная автоматизация жизненного цикла сервисного обращения:
@@ -539,7 +551,7 @@
                         <a href="case/SLA.html" class="projects__link">Читать кейс</a>
                     </div>
                 </div>
-                <div class="projects__card">
+                <div class="projects__card" data-cat="automation bots">
                     <div class="projects__header">
                         <div class="projects__title">AI-Охотник за заказами</div>
                         <div class="projects__description">Авто-поиск и AI-отклик на заказы с HH.ru и Telegram-каналов.
@@ -557,7 +569,7 @@
                         <a href="case/lead-hunter.html" class="projects__link">Читать кейс</a>
                     </div>
                 </div>
-                <div class="projects__card">
+                <div class="projects__card" data-cat="automation">
                     <div class="projects__header">
                         <div class="projects__title">Бронирование отелей: заявка → оплата</div>
                         <div class="projects__description">Автоматический пайплайн бронирования: атомарная бронь через
@@ -575,11 +587,12 @@
                         <a href="case/otel-booking.html" class="projects__link">Читать кейс</a>
                     </div>
                 </div>
-                <div class="projects__card">
+                <div class="projects__card" data-cat="automation">
                     <div class="projects__header">
                         <div class="projects__title">Self-Healing: Автономное восстановление workflow</div>
                         <div class="projects__description">Система автоматического retry с exponential backoff, circuit
-                            breaker и идемпотентным UPSERT. Снижение ручных перезапусков на 90%.</div>
+                            breaker и идемпотентным UPSERT. Снижение ручных перезапусков на 90% — после внедрения
+                            autoretry и circuit breaker; восстановление менее 3 минут.</div>
                         <div class="projects__tags">
                             <span class="projects__tag">n8n</span>
                             <span class="projects__tag">Supabase</span>
@@ -592,11 +605,12 @@
                         <a href="case/self-healing.html" class="projects__link">Читать кейс</a>
                     </div>
                 </div>
-                <div class="projects__card">
+                <div class="projects__card" data-cat="automation">
                     <div class="projects__header">
                         <div class="projects__title">CRM + Оплата: Сквозной пайплайн на n8n</div>
                         <div class="projects__description">AI-скоринг заявок, генерация КП, NocoDB Kanban, Robokassa с
-                            MD5-защитой. Сокращение Time-to-Response с 24 ч до 15 сек.</div>
+                            MD5-защитой. Сокращение Time-to-Response с 24 ч до 15 сек — от заявки до выдачи КП: КП
+                            формируется автоматически, ручных действий 6–8 → 1.</div>
                         <div class="projects__tags">
                             <span class="projects__tag">n8n</span>
                             <span class="projects__tag">NocoDB</span>
@@ -608,11 +622,12 @@
                         <a href="case/crm-automation.html" class="projects__link">Читать кейс</a>
                     </div>
                 </div>
-                <div class="projects__card">
+                <div class="projects__card" data-cat="ai automation">
                     <div class="projects__header">
                         <div class="projects__title">ИИ-классификация обращений</div>
                         <div class="projects__description">Автоматическая маршрутизация 100+ лидов в день. GigaChat LLM,
-                            Confidence Score, Human-in-the-Loop. Экономия ~624к ₽/год.</div>
+                            Confidence Score, Human-in-the-Loop. Экономия ~624к ₽/год — расчёт: 15 ч/нед × 800 ₽/ч × 52
+                            нед на времени менеджеров.</div>
                         <div class="projects__tags">
                             <span class="projects__tag">n8n</span>
                             <span class="projects__tag">GigaChat LLM</span>
@@ -624,7 +639,7 @@
                         <a href="case/ai-classification.html" class="projects__link">Читать кейс</a>
                     </div>
                 </div>
-                <div class="projects__card">
+                <div class="projects__card" data-cat="bots">
                     <div class="projects__header">
                         <div class="projects__title">Telegram-боты и интеграции</div>
                         <div class="projects__description">Разработка Telegram-ботов для автоматизации: AI-ассистенты,
@@ -639,7 +654,7 @@
                         <a href="case/telegram-bot.html" class="projects__link">Читать кейс</a>
                     </div>
                 </div>
-                <div class="projects__card">
+                <div class="projects__card" data-cat="sites">
                     <div class="projects__header">
                         <div class="projects__title">Адаптивная вёрстка (Bootstrap)</div>
                         <div class="projects__description">Вёрстка по макету с использованием Bootstrap, SCSS, адаптив
@@ -654,7 +669,7 @@
                         <a href="https://eduardurakov.github.io/uber/" target="_blank" class="projects__link">Демо</a>
                     </div>
                 </div>
-                <div class="projects__card">
+                <div class="projects__card" data-cat="sites">
                     <div class="projects__header">
                         <div class="projects__title">Одностраничный магазин</div>
                         <div class="projects__description">Полнофункциональный магазин с корзиной, оформлением заказа,
@@ -669,7 +684,7 @@
                         <a href="https://eduardurakov.github.io/Kettox/" target="_blank" class="projects__link">Демо</a>
                     </div>
                 </div>
-                <div class="projects__card">
+                <div class="projects__card" data-cat="sites">
                     <div class="projects__header">
                         <div class="projects__title">FutureTech AI News – Информационный портал</div>
                         <div class="projects__description">Адаптивный многостраничный сайт с BEM-вёрсткой, ES-модулями,
@@ -685,7 +700,7 @@
                             class="projects__link">Демо</a>
                     </div>
                 </div>
-                <div class="projects__card">
+                <div class="projects__card" data-cat="nocode">
                     <div class="projects__header">
                         <div class="projects__title">Glide — бизнес-приложение</div>
                         <div class="projects__description">No-Code приложение на Glide для учёта расходов с
@@ -699,7 +714,7 @@
                         <a href="https://kniga-rashodov-j4dd.glide.page" target="_blank" class="projects__link">Демо</a>
                     </div>
                 </div>
-                <div class="projects__card">
+                <div class="projects__card" data-cat="sites">
                     <div class="projects__header">
                         <div class="projects__title">React — мебельный магазин</div>
                         <div class="projects__description">SPA на React с корзиной, фильтрацией товаров и адаптивным
@@ -714,7 +729,7 @@
                             class="projects__link">Демо</a>
                     </div>
                 </div>
-                <div class="projects__card">
+                <div class="projects__card" data-cat="sites">
                     <div class="projects__header">
                         <div class="projects__title">Angular + TypeScript</div>
                         <div class="projects__description">Приложения на Angular с типизацией через TypeScript. Два
@@ -763,6 +778,9 @@
                 <div class="cf-widget__result" id="cf-result"></div>
                 <a class="cf-widget__full" id="cf-full" href="case/cf-demo.html" target="_blank" rel="noopener">Открыть полное демо →</a>
             </div>
+
+            <p class="audit-widget__next">Это мои рабочие продукты — попробуйте бесплатно. Нужна такая
+                автоматизация для вашего бизнеса? <a href="#contacts">Обсудить задачу →</a></p>
         </div>
     </section>
 
@@ -798,7 +816,7 @@
                         Оставьте ваши данные и я вам напишу:
                     </div>
 
-                    <form id="contact-form" class="contact-form" novalidate>
+                    <form id="contact-form" class="contact-form" method="post" novalidate>
                         <div class="contact-form__group">
                             <label class="contact-form__label" for="name-input">Ваше имя *</label>
                             <input type="text" id="name-input" name="name" class="contact-form__input"

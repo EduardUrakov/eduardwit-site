@@ -46,6 +46,24 @@ document.addEventListener('keydown', e => {
     }
 });
 
+/* ============ Портфолио: фильтры по направлениям ============ */
+(function () {
+    const filters = document.querySelectorAll('.projects__filter');
+    const cards = document.querySelectorAll('.projects__card[data-cat]');
+    if (!filters.length || !cards.length) return;
+    filters.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filters.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const filter = btn.dataset.filter;
+            cards.forEach(card => {
+                const cats = (card.dataset.cat || '').split(' ');
+                card.style.display = (filter === 'all' || cats.indexOf(filter) > -1) ? '' : 'none';
+            });
+        });
+    });
+})();
+
 /* ============ Виджет: бесплатный AI-аудит лендинга ============ */
 (function () {
     const form = document.getElementById('audit-form');
