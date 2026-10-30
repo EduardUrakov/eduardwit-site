@@ -267,6 +267,70 @@ document.addEventListener('keydown', e => {
     const resultEl = document.getElementById('ac-result');
     const WEBHOOK = 'https://n8n.eduardwit.ru/webhook/auto-content-demo';
 
+    // Мини-Markdown рендер + чистка эмодзи: ответ конвейера (md-текст) показываем
+    // оформленными блоками, а не «сырым» текстом с разметкой.
+    function escapeHtml(s) {
+        return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function stripEmoji(s) {
+        return s
+            .replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}\u{1F1E6}-\u{1F1FF}]/gu, '')
+            .replace(/\s{2,}/g, ' ');
+    }
+
+    function renderMarkdown(text) {
+        const lines = String(text).replace(/\r\n?/g, '\n').split('\n');
+        let html = '';
+        let list = null;
+
+        const closeList = () => {
+            if (list) { html += '</' + list + '>'; list = null; }
+        };
+
+        const inline = (s) => {
+            s = escapeHtml(s);
+            s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+            s = s.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+            s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+            return s;
+        };
+
+        lines.forEach(line => {
+            const t = stripEmoji(line.trim());
+            if (!t) { closeList(); return; }
+
+            const h = t.match(/^(#{1,4})\s+(.*)$/);
+            if (h) {
+                closeList();
+                const lvl = Math.min(h[1].length + 1, 6);
+                html += '<h' + lvl + '>' + inline(h[2].replace(/^#+\s*/, '')) + '</h' + lvl + '>';
+                return;
+            }
+
+            if (/^(-{3,}|\*{3,}|_{3,})\s*$/.test(t)) { closeList(); html += '<hr>'; return; }
+
+            const uDash = t.match(/^[-*+]\s+(.*)$/);
+            if (uDash) {
+                if (list !== 'ul') { closeList(); list = 'ul'; html += '<ul>'; }
+                html += '<li>' + inline(uDash[1]) + '</li>';
+                return;
+            }
+
+            const uNum = t.match(/^\d+[.)]\s+(.*)$/);
+            if (uNum) {
+                if (list !== 'ol') { closeList(); list = 'ol'; html += '<ol>'; }
+                html += '<li>' + inline(uNum[1]) + '</li>';
+                return;
+            }
+
+            closeList();
+            html += '<p>' + inline(t) + '</p>';
+        });
+        closeList();
+        return html;
+    }
+
     // Шаги конвейера — показываем по таймеру, пока n8n гонит CrewAI (2–4 минуты).
     const STEPS = [
         'Разведчик трендов анализирует нишу',
@@ -328,8 +392,7 @@ document.addEventListener('keydown', e => {
             const text = (data && (data.result || data.output || data.text)) || 'Контент-пакет сформирован.';
             cleanup();
             resultEl.innerHTML = '<div class="cf-widget__result-card"><div class="cf-widget__result-name">Контент-пакет готов</div>' +
-                '<div class="ac-widget__result-text"></div></div>';
-            resultEl.querySelector('.ac-widget__result-text').textContent = text;
+                '<div class="ac-widget__result-text">' + renderMarkdown(text) + '</div></div>';
             statusEl.textContent = 'Готово — контент-пакет сформирован за 2–4 минуты.';
         } catch (err) {
             cleanup();
