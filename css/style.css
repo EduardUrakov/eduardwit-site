@@ -2022,8 +2022,8 @@ li {
 
 .projects__badge {
     position: absolute;
-    top: 12px;
-    right: 12px;
+    top: 24px;
+    right: 24px;
     z-index: 1;
     font-size: 10px;
     font-weight: 700;
@@ -2033,6 +2033,10 @@ li {
     background: #EBFF01;
     padding: 3px 10px;
     border-radius: 4px;
+}
+
+.projects__header .projects__badge + .projects__title {
+    padding-right: 108px;
 }
 
 /* Бесплатные инструменты: переход к обсуждению проекта */
@@ -2051,4 +2055,13 @@ li {
 
 .audit-widget__next a:hover {
     opacity: 0.7;
+}
+
+/* Виджет Автоконтент: текст сформированного контент-пакета */
+.ac-widget__result-text {
+    white-space: pre-wrap;
+    color: #374151;
+    font-size: 14px;
+    line-height: 1.6;
+    margin-top: 12px;
 }

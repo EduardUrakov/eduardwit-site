@@ -257,3 +257,87 @@ document.addEventListener('keydown', e => {
         }
     });
 })();
+
+/* ============ Виджет: Автоконтент под ключ (CrewAI демо) ============ */
+(function () {
+    const form = document.getElementById('ac-form');
+    if (!form) return;
+    const topicInput = document.getElementById('ac-topic');
+    const statusEl = document.getElementById('ac-status');
+    const resultEl = document.getElementById('ac-result');
+    const WEBHOOK = 'https://n8n.eduardwit.ru/webhook/auto-content-demo';
+
+    // Шаги конвейера — показываем по таймеру, пока n8n гонит CrewAI (2–4 минуты).
+    const STEPS = [
+        'Разведчик трендов анализирует нишу',
+        'Автор пишет черновик',
+        'Фактчекер проверяет утверждения',
+        'SEO-специалист готовит упаковку',
+        'Сборка итогового контент-пакета'
+    ];
+
+    function renderSteps(stepIndex) {
+        const html = STEPS.map(function (s, i) {
+            const done = i < stepIndex ? 'done' : '';
+            const mark = i < stepIndex ? '&#10003;' : '';
+            return '<div class="cf-widget__step ' + done + '"><span class="mark">' + mark + '</span>' + s + '</div>';
+        }).join('');
+        return '<div class="cf-widget__result-steps">' + html + '</div>';
+    }
+
+    let stepTimer = null;
+
+    function cleanup() {
+        clearTimeout(stepTimer);
+    }
+
+    function runSteps() {
+        let i = 0;
+        resultEl.innerHTML = renderSteps(0);
+        stepTimer = setInterval(function () {
+            i += 1;
+            resultEl.innerHTML = renderSteps(i);
+            if (i >= STEPS.length) clearInterval(stepTimer);
+        }, 45000);
+    }
+
+    form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const topic = (topicInput.value || '').trim();
+        if (!topic) return;
+        statusEl.textContent = 'Команда агентов работает…';
+        resultEl.innerHTML = '';
+        cleanup();
+        runSteps();
+        const btn = form.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        btn.textContent = 'Генерация…';
+        try {
+            const res = await fetch(WEBHOOK, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    topic: topic,
+                    source: 'eduardwit.ru',
+                    type: 'auto_content_demo',
+                    timestamp: new Date().toISOString()
+                })
+            });
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const data = await res.json().catch(() => null);
+            const text = (data && (data.result || data.output || data.text)) || 'Контент-пакет сформирован.';
+            cleanup();
+            resultEl.innerHTML = '<div class="cf-widget__result-card"><div class="cf-widget__result-name">Контент-пакет готов</div>' +
+                '<div class="ac-widget__result-text"></div></div>';
+            resultEl.querySelector('.ac-widget__result-text').textContent = text;
+            statusEl.textContent = 'Готово — контент-пакет сформирован за 2–4 минуты.';
+        } catch (err) {
+            cleanup();
+            statusEl.innerHTML = 'Не удалось отправить запрос. Напишите тему напрямую ' +
+                '<a href="https://t.me/EduardWIT_assistent_bot" target="_blank" rel="noopener" style="color:#000;font-weight:700;">Telegram-боту</a>.';
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'Сгенерировать';
+        }
+    });
+})();
