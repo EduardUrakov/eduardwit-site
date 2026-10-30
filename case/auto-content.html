@@ -274,6 +274,31 @@
                 clearTimeout(stepTimer);
             }
 
+            // Ретраи: n8n может кратковременно не отвечать (рестарт/нагрузка).
+            async function postWithRetry(payload) {
+                let lastErr = null;
+                for (let attempt = 0; attempt < 3; attempt++) {
+                    try {
+                        const response = await fetch(WEBHOOK_URL, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        if (response.ok) return response;
+                        if (response.status < 500) throw new Error('HTTP ' + response.status);
+                        lastErr = new Error('HTTP ' + response.status);
+                    } catch (err) {
+                        if (err instanceof TypeError) lastErr = err;
+                        else throw err;
+                    }
+                    if (attempt < 2) {
+                        statusSteps.textContent = 'Сервис занят — пробуем ещё раз...';
+                        await new Promise(r => setTimeout(r, 7000));
+                    }
+                }
+                throw lastErr || new Error('Сервис недоступен');
+            }
+
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
 
@@ -294,18 +319,12 @@
                 submitBtn.textContent = 'Генерация...';
 
                 try {
-                    const response = await fetch(WEBHOOK_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            topic: topic,
-                            source: 'eduardwit.ru',
-                            type: 'auto_content_demo',
-                            timestamp: new Date().toISOString()
-                        })
+                    const response = await postWithRetry({
+                        topic: topic,
+                        source: 'eduardwit.ru',
+                        type: 'auto_content_demo',
+                        timestamp: new Date().toISOString()
                     });
-
-                    if (!response.ok) throw new Error('HTTP ' + response.status);
 
                     const data = await response.json().catch(() => null);
                     cleanup();

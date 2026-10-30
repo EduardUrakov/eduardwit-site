@@ -365,6 +365,32 @@ document.addEventListener('keydown', e => {
         }, 45000);
     }
 
+    // Ретраи: n8n может кратковременно не отвечать (рестарт/нагрузка).
+    // Сетевые ошибки и 5xx повторяем до 3 раз с паузой; 4xx — сразу стоп.
+    async function postWithRetry(payload) {
+        let lastErr = null;
+        for (let attempt = 0; attempt < 3; attempt++) {
+            try {
+                const res = await fetch(WEBHOOK, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) return res;
+                if (res.status < 500) throw new Error('HTTP ' + res.status);
+                lastErr = new Error('HTTP ' + res.status);
+            } catch (err) {
+                if (err instanceof TypeError) lastErr = err;
+                else throw err;
+            }
+            if (attempt < 2) {
+                statusEl.textContent = 'Сервис занят — пробуем ещё раз…';
+                await new Promise(r => setTimeout(r, 7000));
+            }
+        }
+        throw lastErr || new Error('Сервис недоступен');
+    }
+
     form.addEventListener('submit', async function (e) {
         e.preventDefault();
         const topic = (topicInput.value || '').trim();
@@ -377,17 +403,12 @@ document.addEventListener('keydown', e => {
         btn.disabled = true;
         btn.textContent = 'Генерация…';
         try {
-            const res = await fetch(WEBHOOK, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    topic: topic,
-                    source: 'eduardwit.ru',
-                    type: 'auto_content_demo',
-                    timestamp: new Date().toISOString()
-                })
+            const res = await postWithRetry({
+                topic: topic,
+                source: 'eduardwit.ru',
+                type: 'auto_content_demo',
+                timestamp: new Date().toISOString()
             });
-            if (!res.ok) throw new Error('HTTP ' + res.status);
             const data = await res.json().catch(() => null);
             const text = (data && (data.result || data.output || data.text)) || 'Контент-пакет сформирован.';
             cleanup();
