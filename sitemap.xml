@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://eduardwit.ru/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://eduardwit.ru/case/SLA.html</loc><changefreq>yearly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://eduardwit.ru/case/ai-classification.html</loc><changefreq>yearly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://eduardwit.ru/case/auto-content.html</loc><changefreq>yearly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://eduardwit.ru/case/bigdata.html</loc><changefreq>yearly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://eduardwit.ru/case/cf-dashboard.html</loc><changefreq>yearly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://eduardwit.ru/case/cf-demo.html</loc><changefreq>yearly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://eduardwit.ru/case/content-factory.html</loc><changefreq>yearly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://eduardwit.ru/case/crm-automation.html</loc><changefreq>yearly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://eduardwit.ru/case/landing-audit-agent.html</loc><changefreq>yearly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://eduardwit.ru/case/lead-hunter.html</loc><changefreq>yearly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://eduardwit.ru/case/otel-booking.html</loc><changefreq>yearly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://eduardwit.ru/case/prod-rag.html</loc><changefreq>yearly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://eduardwit.ru/case/self-healing.html</loc><changefreq>yearly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://eduardwit.ru/case/telegram-bot.html</loc><changefreq>yearly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://eduardwit.ru/privacy-policy.html</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+</urlset>
