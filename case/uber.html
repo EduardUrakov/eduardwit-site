@@ -44,9 +44,9 @@
     <main class="container">
         <div style="margin-bottom:30px;background:#f9fafb;border:1px solid #e0e0e0;border-radius:12px;padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:20px;">
             <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Задача</strong><span style="color:#4b5563;font-size:14px;">Лендинг выглядел устаревшим и не отвечал современным требованиям: дизайн 2019 года, тяжёлые картинки и шрифты, сторонние CDN, отсутствие продуманной производительности и доступности.</span></div>
-            <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Моя работа</strong><span style="color:#4b5563;font-size:14px;">Полный редизайн и переборка: тёмная дизайн-система на CSS-токенах, реальная 3D-модель спорткара, выделенная из набора в самостоятельный GLB (101 КБ) и отрисованная каркасом three.js, mobile-first от 320px, ноль зависимостей от внешних CDN, двухступенчатый fallback (процедурная машина → SVG-чертёж).</span></div>
+            <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Моя работа</strong><span style="color:#4b5563;font-size:14px;">Полный редизайн и переборка: тёмная дизайн-система на CSS-токенах, реальная 3D-модель спорткара (CC-BY набор, узел выбирается в рантайме) в каркасной подаче three.js, mobile-first от 320px, ноль зависимостей от внешних CDN, двухступенчатый fallback (процедурная машина → SVG-чертёж).</span></div>
             <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Технологии</strong><span style="color:#4b5563;font-size:14px;">HTML5, CSS3 (custom properties, clamp, grid), JavaScript ES-модули, three.js r160 + GLTFLoader (вендорятся в репозитории), import maps, IntersectionObserver, CC-BY 3D-модель</span></div>
-            <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Результат</strong><span style="color:#4b5563;font-size:14px;">49 файлов → 27, вес репозитория 1182 КБ → 981 КБ. Ноль внешних запросов к CDN. Модель загружается асинхронно и не блокирует остальной JS; рендер на паузе, когда герой вне экрана.</span></div>
+            <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Результат</strong><span style="color:#4b5563;font-size:14px;">49 файлов → 27. Ноль внешних запросов к CDN. Модель загружается асинхронно и не блокирует остальной JS; рендер на паузе, когда герой вне экрана. Рендер проверен автоматически (headless Edge по CDP): каркас рисуется, ошибок консоли нет.</span></div>
         </div>
 
         <section class="section">
@@ -78,9 +78,10 @@
             <p>В герое — настоящая модель спорткара (CC-BY 4.0, автор Neill Bogie), а не примитивы из кода.
                 Но подана она в фирменной «экзоскелетной» стилистике:</p>
             <ul>
-                <li><strong>Выделение модели:</strong> я написал Node-скрипт, который вырезает один узел
-                    «car_sports_striped» из набора на 1,6 МБ в самостоятельный GLB на 101 КБ — со всеми
-                    мешиями, аксессорами, текстурой и корректными индексами</li>
+                <li><strong>Модель:</strong> оригинальный CC-BY GLB-набор (17 машин, 1,6 МБ) — в рантайме
+                    берётся узел <code>car_sports_striped</code> (getObjectByName), остальное отбрасывается
+                    до рендера; свой скрипт-экстрактор одной машины был написан, но давал битую геометрию
+                    колёс — от него отказались после автоматической проверки рендера</li>
                 <li><strong>Каркас:</strong> каждый меш модели получает тёмный корпус (скрытые задние рёбра
                     не «просвечивают») + EdgesGeometry с лаймовыми рёбрами поверх — узнаваемый цифровой прототип</li>
                 <li><strong>Нормализация:</strong> Box3 — масштаб до длины 4,4 м, центр в начале координат,
@@ -104,7 +105,7 @@ js/car.js — three.js: сцена, каркасная подача модели
     ↓ dynamic import('./loaders/GLTFLoader.js')
 js/loaders/GLTFLoader.js + js/utils/BufferGeometryUtils.js — вендорные загрузчики r160
     ↓
-car.glb — реальная модель спорткара, 101 КБ (CC-BY 4.0)
+car.glb — CC-BY набор машин (1,6 МБ), в рантайме выбирается спорткар
 vendor/three.module.js — three.js r160, лежит в репозитории (без CDN)</div>
             <p style="margin-top:14px;color:#4b5563;font-size:14px;">
                 Модель и загрузчик подгружаются асинхронно и не блокируют остальной JS: меню, форма
@@ -117,11 +118,13 @@ vendor/three.module.js — three.js r160, лежит в репозитории (
             <h2>Метрики редизайна</h2>
             <ul>
                 <li><strong>Файлы:</strong> 49 → 27</li>
-                <li><strong>Вес репозитория:</strong> 1182 КБ → 981 КБ, включая three.js (670 КБ, gzip ≈ 170),
-                    GLTFLoader (106 КБ) и модель авто (101 КБ)</li>
+                <li><strong>Вес репозитория:</strong> 2436 КБ, из них модель-набор 1,6 МБ, three.js 670 КБ
+                    (gzip ≈ 170), GLTFLoader 106 КБ</li>
                 <li><strong>Внешние CDN:</strong> 1 → 0 (Font Awesome убран, three.js и загрузчик вендорятся локально)</li>
                 <li><strong>Фреймворки:</strong> Bootstrap grid/reboot + Sass → нативный CSS и ES-модули</li>
                 <li><strong>Адаптив:</strong> единая mobile-first сетка от 320px до 4K вместо брейкпоинтов Bootstrap</li>
+                <li><strong>Автопроверка:</strong> headless Edge по CDP (SwiftShader WebGL) — скриншот героя
+                    и консоль без ошибок; так же был пойман битый экстракт модели</li>
             </ul>
         </section>
 
