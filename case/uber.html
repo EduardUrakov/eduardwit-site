@@ -32,10 +32,10 @@
             </div>
             <p class="subtitle">
                 Классический лендинг 2019 года («Адаптивная вёрстка на Bootstrap») переработан целиком:
-                тёмная тема, в герое — реальное фото премиального чёрного автомобиля с водителем
-                (медленный Ken Burns-драйв + параллакс от курсора), современный CSS и чистые ES-модули
-                вместо Bootstrap-сетки и сторонних CDN. Содержательное ядро (привлечение водителей,
-                8 преимуществ, две схемы работы, заявка) сохранено.
+                тёмная тема, в герое — чёрный Mercedes-AMG E-Class (Night Edition): тот самый автомобиль,
+                который пассажир видит в Uber Black (медленный Ken Burns-драйв + параллакс от курсора),
+                современный CSS и чистые ES-модули вместо Bootstrap-сетки и сторонних CDN. Содержательное
+                ядро (привлечение водителей, 8 преимуществ, две схемы работы, заявка) сохранено.
             </p>
             <a href="https://eduardurakov.github.io/uber/" target="_blank" rel="noopener" class="demo-link">Открыть живое демо →</a>
         </div>
@@ -46,7 +46,7 @@
             <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Задача</strong><span style="color:#4b5563;font-size:14px;">Лендинг выглядел устаревшим и не отвечал современным требованиям: дизайн 2019 года, тяжёлые картинки и шрифты, сторонние CDN, отсутствие продуманной производительности и доступности.</span></div>
             <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Моя работа</strong><span style="color:#4b5563;font-size:14px;">Полный редизайн и переборка: тёмная дизайн-система на CSS-токенах, фото-герой с Ken Burns и параллаксом, mobile-first от 320px, ноль зависимостей от внешних CDN, анимации с уважением к prefers-reduced-motion.</span></div>
             <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Технологии</strong><span style="color:#4b5563;font-size:14px;">HTML5, CSS3 (custom properties, clamp, grid, keyframes), JavaScript ES-модули, IntersectionObserver, CSS-параллакс через CSS-переменные</span></div>
-            <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Результат</strong><span style="color:#4b5563;font-size:14px;">49 файлов → 23, вес репозитория 1182 КБ → 146 КБ. Ноль внешних запросов к CDN. Рендер проверен автоматически (headless Edge по CDP): герой с фото рисуется, ошибок консоли нет.</span></div>
+            <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Результат</strong><span style="color:#4b5563;font-size:14px;">49 файлов → 23, вес репозитория 1182 КБ → 744 КБ (фото-герой 662 КБ, CC0). Ноль внешних запросов к CDN. Рендер проверен автоматически (headless Edge по CDP): герой с фото рисуется, ошибок консоли нет.</span></div>
         </div>
 
         <section class="section">
@@ -82,10 +82,11 @@
                 <li><strong>Итерация 2 — реальная 3D-модель:</strong> CC-BY спорткар, поданный каркасом
                     (тёмный корпус + полная триангуляция + силуэтные рёбра), с двухступенчатым fallback.
                     Технически насыщенно, но на маленьком экране линии «сливались»</li>
-                <li><strong>Итерация 3 (финал) — реальное фото:</strong> чёрный автомобиль с водителем,
-                    открывающим дверь — ровно та сцена, ради которой на лендинг приходят. Медленный
-                    Ken Burns (22 с, scale 1.04→1.14) даёт жизнь, параллакс от курсора (±14px через
-                    CSS-переменные) — глубину, оверлей-вуаль — читаемость заголовка</li>
+                <li><strong>Итерация 3 (финал) — реальное фото:</strong> чёрный Mercedes-AMG E53
+                    Night Edition (CC0, Wikimedia Commons) — тот класс авто, что работает в Uber Black.
+                    Медленный Ken Burns (22 с, scale 1.04→1.14) даёт жизнь, параллакс от курсора (±14px
+                    через CSS-переменные) — глубину, оверлей-вуаль и CSS-фильтр (brightness 0.62) —
+                    кинематографичность и читаемость заголовка</li>
             </ul>
             <p style="margin-top:12px;color:#4b5563;font-size:14px;">
                 Урок для процесса: 3D-эксперименты обошлись в 2,3 МБ в репозитории и два цикла отладки
@@ -102,7 +103,7 @@
 css/style.css — токены (:root), mobile-first, clamp-ритм,
                  Ken Burns @keyframes, вуаль-градиенты, reduced-motion
     ↓
-img/hero-bg.jpg — реальное фото (66 КБ)
+img/hero-bg.jpg — чёрный Mercedes-AMG E53 (CC0, 662 КБ)
     ↓
 js/app.js — ES-модуль: параллакс героя (CSS-переменные), меню,
              reveal-анимации (IntersectionObserver), валидация формы</div>
@@ -117,7 +118,7 @@ js/app.js — ES-модуль: параллакс героя (CSS-перемен
             <h2>Метрики редизайна</h2>
             <ul>
                 <li><strong>Файлы:</strong> 49 → 23</li>
-                <li><strong>Вес репозитория:</strong> 1182 КБ → 146 КБ (фото-герой — 66 КБ)</li>
+                <li><strong>Вес репозитория:</strong> 1182 КБ → 744 КБ (фото-герой — 662 КБ, CC0)</li>
                 <li><strong>Внешние CDN:</strong> 1 → 0</li>
                 <li><strong>Фреймворки:</strong> Bootstrap grid/reboot + Sass → нативный CSS и ES-модули</li>
                 <li><strong>Адаптив:</strong> единая mobile-first сетка от 320px до 4K вместо брейкпоинтов Bootstrap</li>
