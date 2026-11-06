@@ -124,7 +124,7 @@
         <div class="container">
             <div class="about__wrapper">
                 <div class="about__photo">
-                    <img src="img/main_photo-min1.jpg" alt="photo">
+                    <img src="img/main_photo.jpg" alt="photo">
                 </div>
                 <div class="about__descr">
                     <h2 class="title title_fz16 about__title">Про меня</h2>
@@ -156,17 +156,6 @@
                         где нужен один человек, который закроет задачу целиком.
                     </p>
                     
-                </div>
-                <div class="about__skills">
-                    <div class="about__skills-item" style="grid-column: 1 / -1; grid-template-columns: 1fr;">
-                        <div>
-                            <div class="title title_fz14">Услуги и цены</div>
-                            <div class="about__skills-text">Коммерческие услуги, цены и форма заявки —
-                                на <a href="https://eduardwit.online"
-                                    style="color:#000;font-weight:700;">eduardwit.online</a>.
-                                Здесь остаются кейсы, опыт и бесплатные инструменты.</div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -791,24 +780,31 @@
             </div>
 
             <div class="contacts__wrapper">
-                <div class="contacts__photo">
-                    <img src="img/main_photo.jpg" alt="photo">
-                </div>
                 <div class="contacts__descr">
                     <div class="title title_fz14 contacts__text">Связаться напрямую:</div>
-
-                    <p style="margin:16px 0 8px;line-height:1.8;">
-                        <a href="mailto:admin@eduardwit.ru" style="color:#000;font-weight:600;">admin@eduardwit.ru</a><br>
-                        <a href="tel:+79195910101" style="color:#000;font-weight:600;">+7 919 591-01-01</a><br>
-                        <a href="https://t.me/EduardWIT_bot" target="_blank"
-                            style="color:#000;font-weight:600;">Telegram</a>
-                    </p>
-
-                    <p style="color:#555;font-size:14px;line-height:1.5;">
-                        Заявки на проекты и сметы — на
-                        <a href="https://eduardwit.online/#contact"
-                            style="color:#000;font-weight:700;">eduardwit.online</a>.
-                    </p>
+                    <div class="contacts__cards">
+                        <a class="contacts__card" href="mailto:admin@eduardwit.ru">
+                            <span class="contacts__card-label">Email</span>
+                            <span class="contacts__card-value">admin@eduardwit.ru</span>
+                            <span class="contacts__card-action">Написать письмо</span>
+                        </a>
+                        <a class="contacts__card" href="tel:+79195910101">
+                            <span class="contacts__card-label">Телефон</span>
+                            <span class="contacts__card-value">+7 919 591-01-01</span>
+                            <span class="contacts__card-action">Позвонить</span>
+                        </a>
+                        <a class="contacts__card" href="https://t.me/EduardWIT_bot" target="_blank"
+                            rel="noopener">
+                            <span class="contacts__card-label">Telegram</span>
+                            <span class="contacts__card-value">@EduardWIT_bot</span>
+                            <span class="contacts__card-action">Открыть чат</span>
+                        </a>
+                        <div class="contacts__card contacts__card--note">
+                            <span class="contacts__card-label">Заявки и сметы</span>
+                            <a class="contacts__card-value" href="https://eduardwit.online/#contact">eduardwit.online</a>
+                            <span class="contacts__card-action">Услуги, цены и форма заявки на коммерческом сайте</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

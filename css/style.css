@@ -796,20 +796,62 @@ li {
 }
 
 .contacts__wrapper {
-    padding: 0 35px 0 52px;
-    display: grid;
-    grid-template-columns: 400px 585px;
-    justify-content: space-between;
-}
-
-.contacts__photo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    max-width: 820px;
+    margin: 0 auto;
 }
 
 .contacts__descr {
     padding-top: 6px;
+}
+
+.contacts__cards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.contacts__card {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 20px 22px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-left: 4px solid #EBFF01;
+    border-radius: 8px;
+    color: #000;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.contacts__card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.07);
+}
+
+.contacts__card-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #777;
+}
+
+.contacts__card-value {
+    font-size: 16px;
+    font-weight: 700;
+    color: #000;
+    word-break: break-word;
+}
+
+.contacts__card-action {
+    font-size: 13px;
+    color: #555;
+}
+
+.contacts__card--note .contacts__card-value {
+    text-decoration: underline;
 }
 
 .contacts__descr .divider {
@@ -1331,11 +1373,6 @@ li {
         grid-column: unset;
     }
 
-    .contacts__wrapper {
-        padding: 0;
-        grid-template-columns: 400px 520px;
-    }
-
     .contacts__form {
         grid-template: 45px 190px 45px / repeat(2, 250px);
     }
@@ -1401,8 +1438,8 @@ li {
         font-size: 30px;
     }
 
-    .contacts__wrapper {
-        grid-template-columns: 300px 400px;
+    .contacts__cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .contacts__form {
@@ -1500,14 +1537,6 @@ li {
 
     .contacts {
         padding-top: 40px;
-    }
-
-    .contacts__photo {
-        display: none;
-    }
-
-    .contacts__wrapper {
-        grid-template-columns: 1fr;
     }
 
     .contacts__form {
@@ -1615,6 +1644,10 @@ li {
 
     .contacts {
         padding-bottom: 50px;
+    }
+
+    .contacts__cards {
+        grid-template-columns: 1fr;
     }
 
     .contacts__subtitle {
@@ -1777,7 +1810,7 @@ li {
 
 /* ============ Widget: бесплатный AI-аудит лендинга (стиль главной) ============ */
 .audit-widget {
-    padding: 120px 0 120px 0;
+    padding: 120px 0 0 0;
     text-align: center;
 }
 
