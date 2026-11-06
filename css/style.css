@@ -378,6 +378,95 @@ li {
     line-height: 21px;
 }
 
+.about__facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+    margin-top: 28px;
+}
+
+.about__fact {
+    padding: 16px 18px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-left: 4px solid #EBFF01;
+    border-radius: 8px;
+}
+
+.about__fact-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: #000;
+}
+
+.about__fact-label {
+    margin-top: 4px;
+    font-size: 12px;
+    line-height: 1.4;
+    color: #555;
+}
+
+.about__block-title {
+    margin-top: 32px;
+}
+
+.about__focus {
+    margin-top: 16px;
+    display: grid;
+    gap: 12px;
+}
+
+.about__focus-item {
+    display: flex;
+    gap: 14px;
+    padding: 14px 18px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-left: 4px solid #EBFF01;
+    border-radius: 8px;
+}
+
+.about__focus-num {
+    font-size: 14px;
+    font-weight: 700;
+    color: #777;
+}
+
+.about__focus-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: #000;
+}
+
+.about__focus-text {
+    margin-top: 4px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #555;
+}
+
+.about__quote {
+    margin: 32px 0 0;
+    padding: 16px 20px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-left: 4px solid #EBFF01;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    font-style: italic;
+    line-height: 1.5;
+    color: #000;
+}
+
+.about__quote-author {
+    margin-top: 8px;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    color: #777;
+}
+
 .about__skills {
     display: grid;
     grid-template: repeat(2, minmax(170px, auto)) / repeat(2, 390px);
