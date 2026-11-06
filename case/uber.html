@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../css/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="../css/fonts.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/case.css">
+    <title>Кейс: Uber Partners — редизайн лендинга с three.js | EduardWIT</title>
+    <meta name="description"
+        content="Редизайн классического лендинга 2019 года: тёмная тема, процедурный three.js-каркас автомобиля в герое, ES-модули без фреймворков, mobile-first от 320px.">
+
+    <script src="../js/analytics.js" defer></script>
+</head>
+
+<body>
+    <div style="position:fixed;top:0;left:0;right:0;z-index:1000;background:#fff;border-bottom:1px solid #e0e0e0;padding:10px 20px;display:flex;align-items:center;gap:16px;font-family:Open Sans, sans-serif;">
+        <a href="../index.html" style="background:#EBFF01;color:#000;font-weight:700;text-decoration:none;padding:6px 16px;border-radius:4px;font-size:13px;">&#8592; На главную</a>
+        <a href="../index.html#portfolio" style="color:#555;font-size:13px;font-weight:500;text-decoration:none;">Портфолио</a>
+    </div>
+    <header class="header">
+        <div class="container">
+            <h1>Uber Partners — редизайн лендинга</h1>
+            <div class="meta">
+                <span>HTML5 / CSS3</span>
+                <span>ES-модули</span>
+                <span>three.js r160</span>
+                <span>Mobile-first 320–4K</span>
+                <span>Без сборщика</span>
+            </div>
+            <p class="subtitle">
+                Классический лендинг 2019 года («Адаптивная вёрстка на Bootstrap») переработан целиком:
+                тёмная тема, вращающийся каркас автомобиля на three.js прямо в герое, современный CSS
+                и чистые ES-модули вместо Bootstrap-сетки и сторонних CDN. Содержательное ядро
+                (привлечение водителей, 8 преимуществ, две схемы работы, заявка) сохранено.
+            </p>
+            <a href="https://eduardurakov.github.io/uber/" target="_blank" rel="noopener" class="demo-link">Открыть живое демо →</a>
+        </div>
+    </header>
+
+    <main class="container">
+        <div style="margin-bottom:30px;background:#f9fafb;border:1px solid #e0e0e0;border-radius:12px;padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+            <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Задача</strong><span style="color:#4b5563;font-size:14px;">Лендинг выглядел устаревшим и не отвечал современным требованиям: дизайн 2019 года, тяжёлые картинки и шрифты, сторонние CDN, отсутствие продуманной производительности и доступности.</span></div>
+            <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Моя работа</strong><span style="color:#4b5563;font-size:14px;">Полный редизайн и переборка: тёмная дизайн-система на CSS-токенах, процедурный 3D-каркас автомобиля (three.js) вместо стоковых фото, mobile-first вёрстка от 320px, zero зависимости от внешних CDN, fallback для слабых устройств.</span></div>
+            <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Технологии</strong><span style="color:#4b5563;font-size:14px;">HTML5, CSS3 (custom properties, clamp, grid), JavaScript ES-модули, three.js r160 (vendored локально), IntersectionObserver, SVG-fallback</span></div>
+            <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Результат</strong><span style="color:#4b5563;font-size:14px;">49 файлов → 24, вес репозитория 1182 КБ → 741 КБ (three.js в gzip ≈ 170 КБ). Ноль внешних запросов к CDN. 3D работает только в первом экране и ставится на паузу при потере видимости.</span></div>
+        </div>
+
+        <section class="section">
+            <h2>Бизнес-проблема</h2>
+            <p>Старая версия — типовой учебный лендинг эпохи «Bootstrap + стоковые картинки». Для живого
+                портфолио это минус: сайт выглядит на пять лет старше, а его техническая начинка не
+                отвечает тому уровню, который я сдаю заказчикам.</p>
+            <ul>
+                <li><strong>Устаревший вид:</strong> светлый шаблонный дизайн, фоновые JPG-картинки, шрифты из 2019-го</li>
+                <li><strong>Внешние зависимости:</strong> Font Awesome подключался сторонним CDN-китом — точка отказа и лишний запрос</li>
+                <li><strong>Сетка на костылях:</strong> bootstrap-grid вместо нативного CSS Grid — лишний вес и меньше гибкости</li>
+                <li><strong>Никакой доступности:</strong> нет prefers-reduced-motion, нет осмысленных aria-атрибутов, форма без валидации</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>Что изменилось</h2>
+            <ul>
+                <li><strong>Дизайн:</strong> тёмная тема (#0a0a0a) с брендовым лаймовым акцентом (#EBFF01), стеклянные карточки, единый ритм секций через clamp(72px, 10vw, 140px)</li>
+                <li><strong>Герой:</strong> вместо стокового фото — вращающийся каркас автомобиля, собранный процедурно в three.js (профиль кузова → экструзия → рёбра), с параллаксом от курсора</li>
+                <li><strong>Контент:</strong> сохранён и причесан — 8 преимуществ карточками, две схемы работы сравнительной таблицей, четыре шага подключения, форма заявки</li>
+                <li><strong>Сборка:</strong> Bootstrap и Sass убраны; чистый CSS на custom properties и ES-модули — сайт работает без сборки и без node_modules</li>
+                <li><strong>Доступность:</strong> семантические секции, aria-атрибуты, focus-стили, prefers-reduced-motion, форма с валидацией и live-статусом</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>Как устроен 3D-каркас</h2>
+            <p>Никаких внешних GLTF-моделей — автомобиль рождается из кода, поэтому у демо нет проблем
+                с лицензиями и лишним весом:</p>
+            <ul>
+                <li><strong>Профиль кузова</strong> — десяти точек в боковой проекции; THREE.Shape → ExtrudeGeometry (ширина 1.7 м)</li>
+                <li><strong>Каркас</strong> — EdgesGeometry поверх экструзии: лаймовые линии по чёрному корпусу, задние рёбра скрыты самим корпусом</li>
+                <li><strong>Колёса</strong> — четыре полигональных кольца с тёмным цилиндром внутри</li>
+                <li><strong>Сцена</strong> — перспективная сетка-пол и туман для глубины; медленное авто-вращение + параллакс от курсора</li>
+                <li><strong>Экономия</strong> — рендер ставится на паузу, когда герой уходит за экран (IntersectionObserver) или вкладка скрыта; devicePixelRatio ограничен 2</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>Архитектура</h2>
+            <div class="architecture">index.html — семантическая разметка, 6 секций
+    ↓
+css/style.css — токены (:root), mobile-first, clamp-ритм, reduced-motion
+    ↓
+js/app.js — ES-модуль: меню, reveal-анимации, валидация формы
+    ↓ dynamic import (ошибка = SVG-fallback, остальной JS живёт)
+js/car.js — three.js: сцена, процедурный каркас, параллакс, пауза рендера
+    ↓
+vendor/three.module.js — three.js r160, лежит в репозитории (без CDN)</div>
+            <p style="margin-top:14px;color:#4b5563;font-size:14px;">
+                three.js подключается динамическим импортом: если WebGL недоступен, включена
+                prefers-reduced-motion или модуль не загрузился — вместо canvas показывается
+                статичный SVG-чертёж. Остальной JS (меню, форма, анимации) не зависит от 3D.
+            </p>
+        </section>
+
+        <section class="section">
+            <h2>Метрики редизайна</h2>
+            <ul>
+                <li><strong>Файлы:</strong> 49 → 24</li>
+                <li><strong>Вес репозитория:</strong> 1182 КБ → 741 КБ (three.js в gzip ≈ 170 КБ)</li>
+                <li><strong>Внешние CDN:</strong> 1 → 0 (Font Awesome убран, three.js вендорится локально)</li>
+                <li><strong>Фреймворки:</strong> Bootstrap grid/reboot + Sass → нативный CSS и ES-модули</li>
+                <li><strong>Адаптив:</strong> единая mobile-first сетка от 320px до 4K вместо брейкпоинтов Bootstrap</li>
+            </ul>
+        </section>
+
+        <div class="cta">
+            <h3>Посмотреть вживую</h3>
+            <p style="color:#4b5563;margin:12px 0 0;">
+                Демо открыто и работает: покрутите карточку машины параллаксом, сожмите окно до 320px,
+                проверьте форму — всё в реальном браузере, без скриншотов.
+            </p>
+            <a href="https://eduardurakov.github.io/uber/" target="_blank" rel="noopener" class="button">Открыть демо</a>
+            <a href="../index.html#contacts" class="button" style="background:#fff;color:#000;border:1px solid #e0e0e0;">Обсудить задачу</a>
+        </div>
+    </main>
+
+    <footer>
+        <div style="max-width:1100px;margin:0 auto;">
+            <p>&copy; 2026 EduardWIT &bull; <a href="../index.html">На главную</a> &bull; <a href="../privacy-policy.html">Политика конфиденциальности</a></p>
+        </div>
+    </footer>
+</body>
+
+</html>
