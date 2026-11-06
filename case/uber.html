@@ -101,8 +101,8 @@ css/style.css — токены (:root), mobile-first, clamp-ритм, reduced-mo
 js/app.js — ES-модуль: меню, reveal-анимации, валидация формы
     ↓ dynamic import (ошибка = SVG-fallback, остальной JS живёт)
 js/car.js — three.js: сцена, каркасная подача модели, параллакс, пауза рендера
-    ↓ dynamic import('./GLTFLoader.js')
-js/GLTFLoader.js + js/utils/BufferGeometryUtils.js — вендорные загрузчики r160
+    ↓ dynamic import('./loaders/GLTFLoader.js')
+js/loaders/GLTFLoader.js + js/utils/BufferGeometryUtils.js — вендорные загрузчики r160
     ↓
 car.glb — реальная модель спорткара, 101 КБ (CC-BY 4.0)
 vendor/three.module.js — three.js r160, лежит в репозитории (без CDN)</div>
