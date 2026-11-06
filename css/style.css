@@ -313,10 +313,8 @@ li {
 .about__wrapper {
     display: grid;
     grid-template-columns: 400px 570px;
-    grid-template-rows: minmax(200px, auto) minmax(255px, auto);
-    grid-auto-rows: minmax(200px, auto);
+    grid-template-rows: minmax(200px, auto);
     column-gap: 70px;
-    row-gap: 40px;
 }
 
 .about__photo {
