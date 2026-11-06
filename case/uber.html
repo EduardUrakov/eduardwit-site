@@ -27,14 +27,15 @@
                 <span>HTML5 / CSS3</span>
                 <span>ES-модули</span>
                 <span>three.js r160</span>
+                <span>GLTF / CC-BY</span>
                 <span>Mobile-first 320–4K</span>
                 <span>Без сборщика</span>
             </div>
             <p class="subtitle">
                 Классический лендинг 2019 года («Адаптивная вёрстка на Bootstrap») переработан целиком:
-                тёмная тема, вращающийся каркас автомобиля на three.js прямо в герое, современный CSS
-                и чистые ES-модули вместо Bootstrap-сетки и сторонних CDN. Содержательное ядро
-                (привлечение водителей, 8 преимуществ, две схемы работы, заявка) сохранено.
+                тёмная тема, реальная 3D-модель автомобиля, отрисованная лаймовым каркасом прямо в герое,
+                современный CSS и чистые ES-модули вместо Bootstrap-сетки и сторонних CDN. Содержательное
+                ядро (привлечение водителей, 8 преимуществ, две схемы работы, заявка) сохранено.
             </p>
             <a href="https://eduardurakov.github.io/uber/" target="_blank" rel="noopener" class="demo-link">Открыть живое демо →</a>
         </div>
@@ -43,9 +44,9 @@
     <main class="container">
         <div style="margin-bottom:30px;background:#f9fafb;border:1px solid #e0e0e0;border-radius:12px;padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:20px;">
             <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Задача</strong><span style="color:#4b5563;font-size:14px;">Лендинг выглядел устаревшим и не отвечал современным требованиям: дизайн 2019 года, тяжёлые картинки и шрифты, сторонние CDN, отсутствие продуманной производительности и доступности.</span></div>
-            <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Моя работа</strong><span style="color:#4b5563;font-size:14px;">Полный редизайн и переборка: тёмная дизайн-система на CSS-токенах, процедурный 3D-каркас автомобиля (three.js) вместо стоковых фото, mobile-first вёрстка от 320px, zero зависимости от внешних CDN, fallback для слабых устройств.</span></div>
-            <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Технологии</strong><span style="color:#4b5563;font-size:14px;">HTML5, CSS3 (custom properties, clamp, grid), JavaScript ES-модули, three.js r160 (vendored локально), IntersectionObserver, SVG-fallback</span></div>
-            <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Результат</strong><span style="color:#4b5563;font-size:14px;">49 файлов → 24, вес репозитория 1182 КБ → 741 КБ (three.js в gzip ≈ 170 КБ). Ноль внешних запросов к CDN. 3D работает только в первом экране и ставится на паузу при потере видимости.</span></div>
+            <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Моя работа</strong><span style="color:#4b5563;font-size:14px;">Полный редизайн и переборка: тёмная дизайн-система на CSS-токенах, реальная 3D-модель спорткара, выделенная из набора в самостоятельный GLB (101 КБ) и отрисованная каркасом three.js, mobile-first от 320px, ноль зависимостей от внешних CDN, двухступенчатый fallback (процедурная машина → SVG-чертёж).</span></div>
+            <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Технологии</strong><span style="color:#4b5563;font-size:14px;">HTML5, CSS3 (custom properties, clamp, grid), JavaScript ES-модули, three.js r160 + GLTFLoader (вендорятся в репозитории), import maps, IntersectionObserver, CC-BY 3D-модель</span></div>
+            <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Результат</strong><span style="color:#4b5563;font-size:14px;">49 файлов → 27, вес репозитория 1182 КБ → 981 КБ. Ноль внешних запросов к CDN. Модель загружается асинхронно и не блокирует остальной JS; рендер на паузе, когда герой вне экрана.</span></div>
         </div>
 
         <section class="section">
@@ -74,41 +75,51 @@
 
         <section class="section">
             <h2>Как устроен 3D-каркас</h2>
-            <p>Никаких внешних GLTF-моделей — автомобиль рождается из кода, поэтому у демо нет проблем
-                с лицензиями и лишним весом:</p>
+            <p>В герое — настоящая модель спорткара (CC-BY 4.0, автор Neill Bogie), а не примитивы из кода.
+                Но подана она в фирменной «экзоскелетной» стилистике:</p>
             <ul>
-                <li><strong>Профиль кузова</strong> — десяти точек в боковой проекции; THREE.Shape → ExtrudeGeometry (ширина 1.7 м)</li>
-                <li><strong>Каркас</strong> — EdgesGeometry поверх экструзии: лаймовые линии по чёрному корпусу, задние рёбра скрыты самим корпусом</li>
-                <li><strong>Колёса</strong> — четыре полигональных кольца с тёмным цилиндром внутри</li>
-                <li><strong>Сцена</strong> — перспективная сетка-пол и туман для глубины; медленное авто-вращение + параллакс от курсора</li>
-                <li><strong>Экономия</strong> — рендер ставится на паузу, когда герой уходит за экран (IntersectionObserver) или вкладка скрыта; devicePixelRatio ограничен 2</li>
+                <li><strong>Выделение модели:</strong> я написал Node-скрипт, который вырезает один узел
+                    «car_sports_striped» из набора на 1,6 МБ в самостоятельный GLB на 101 КБ — со всеми
+                    мешиями, аксессорами, текстурой и корректными индексами</li>
+                <li><strong>Каркас:</strong> каждый меш модели получает тёмный корпус (скрытые задние рёбра
+                    не «просвечивают») + EdgesGeometry с лаймовыми рёбрами поверх — узнаваемый цифровой прототип</li>
+                <li><strong>Нормализация:</strong> Box3 — масштаб до длины 4,4 м, центр в начале координат,
+                    колёса стоят ровно на сетке-полу</li>
+                <li><strong>Сцена:</strong> перспективная сетка, туман для глубины, медленное авто-вращение,
+                    параллакс от курсора</li>
+                <li><strong>Двухступенчатый fallback:</strong> не загрузилась модель → процедурная машина
+                    из кода; нет WebGL / включён prefers-reduced-motion → статичный SVG-чертёж</li>
             </ul>
         </section>
 
         <section class="section">
             <h2>Архитектура</h2>
-            <div class="architecture">index.html — семантическая разметка, 6 секций
+            <div class="architecture">index.html — разметка + import map ("three" → vendor/three.module.js)
     ↓
 css/style.css — токены (:root), mobile-first, clamp-ритм, reduced-motion
     ↓
 js/app.js — ES-модуль: меню, reveal-анимации, валидация формы
     ↓ dynamic import (ошибка = SVG-fallback, остальной JS живёт)
-js/car.js — three.js: сцена, процедурный каркас, параллакс, пауза рендера
+js/car.js — three.js: сцена, каркасная подача модели, параллакс, пауза рендера
+    ↓ dynamic import('./GLTFLoader.js')
+js/GLTFLoader.js + js/utils/BufferGeometryUtils.js — вендорные загрузчики r160
     ↓
+car.glb — реальная модель спорткара, 101 КБ (CC-BY 4.0)
 vendor/three.module.js — three.js r160, лежит в репозитории (без CDN)</div>
             <p style="margin-top:14px;color:#4b5563;font-size:14px;">
-                three.js подключается динамическим импортом: если WebGL недоступен, включена
-                prefers-reduced-motion или модуль не загрузился — вместо canvas показывается
-                статичный SVG-чертёж. Остальной JS (меню, форма, анимации) не зависит от 3D.
+                Модель и загрузчик подгружаются асинхронно и не блокируют остальной JS: меню, форма
+                и анимации работают, даже если 3D не инициализировалось. Рендер ставится на паузу,
+                когда герой уходит за экран (IntersectionObserver) или вкладка скрыта; devicePixelRatio ограничен 2.
             </p>
         </section>
 
         <section class="section">
             <h2>Метрики редизайна</h2>
             <ul>
-                <li><strong>Файлы:</strong> 49 → 24</li>
-                <li><strong>Вес репозитория:</strong> 1182 КБ → 741 КБ (three.js в gzip ≈ 170 КБ)</li>
-                <li><strong>Внешние CDN:</strong> 1 → 0 (Font Awesome убран, three.js вендорится локально)</li>
+                <li><strong>Файлы:</strong> 49 → 27</li>
+                <li><strong>Вес репозитория:</strong> 1182 КБ → 981 КБ, включая three.js (670 КБ, gzip ≈ 170),
+                    GLTFLoader (106 КБ) и модель авто (101 КБ)</li>
+                <li><strong>Внешние CDN:</strong> 1 → 0 (Font Awesome убран, three.js и загрузчик вендорятся локально)</li>
                 <li><strong>Фреймворки:</strong> Bootstrap grid/reboot + Sass → нативный CSS и ES-модули</li>
                 <li><strong>Адаптив:</strong> единая mobile-first сетка от 320px до 4K вместо брейкпоинтов Bootstrap</li>
             </ul>
