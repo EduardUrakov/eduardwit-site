@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../css/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="../css/fonts.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/case.css">
+    <title>Кейс: Facade AI — мульти-агентная ИИ-система фасадного проектирования | EduardWIT</title>
+    <meta name="description"
+        content="Инженерный ИИ-ассистент для архитектора: команда из 10 агентов считает фасад (теплотехника, ветер, пожарная безопасность), сверяет расчёты с СП/ГОСТ через RAG, генерирует концепты и точные рендеры чертежей, а независимый Red Team аудит отклоняет слабые отчёты.">
+
+    <script src="../js/analytics.js" defer></script>
+
+    <style>
+        /* === ГАЛЕРЕЯ СКРИНОВ (клик — увеличение) === */
+        .screengrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+        .screenshot{
+            cursor:zoom-in;position:relative;border:1px solid var(--border,#e0e0e0);
+            border-radius:10px;overflow:hidden;background:#f5f5f5;transition:box-shadow .25s ease,transform .25s ease;
+        }
+        .screenshot:hover{box-shadow:0 10px 24px rgba(0,0,0,.14);transform:translateY(-2px)}
+        .screenshot img{width:100%;height:auto;display:block}
+        .screenshot .zoom-hint{
+            position:absolute;top:.6rem;right:.6rem;background:rgba(0,0,0,.65);color:#fff;
+            font-size:.72rem;font-weight:600;letter-spacing:.03em;padding:.3rem .7rem;border-radius:999px;
+            opacity:0;transition:opacity .25s ease;pointer-events:none;
+        }
+        .screenshot:hover .zoom-hint{opacity:1}
+        .screenshot .caption{padding:.7rem .9rem;font-size:.82rem;color:#4b5563;background:#fff;border-top:1px solid #eee}
+        .screenshot .caption strong{color:#000}
+        @media(max-width:640px){.screengrid{grid-template-columns:1fr}}
+        /* === МОДАЛЬНОЕ ОКНО === */
+        .modal{display:none;position:fixed;z-index:9999;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,.92);animation:fadeIn .25s ease}
+        .modal.active{display:flex;align-items:center;justify-content:center}
+        .modal-content{max-width:95%;max-height:95vh;margin:auto;display:block;animation:zoomIn .25s ease;border-radius:.5rem;box-shadow:0 16px 48px rgba(0,0,0,.5)}
+        .modal-caption{position:absolute;bottom:1.5rem;left:50%;transform:translateX(-50%);color:#fff;background:rgba(0,0,0,.7);padding:.75rem 1.5rem;border-radius:.5rem;text-align:center;max-width:90%;font-size:.95rem}
+        .modal-close{position:absolute;top:1rem;right:1.5rem;color:#fff;font-size:2.6rem;font-weight:700;cursor:pointer;background:rgba(255,255,255,.14);width:3rem;height:3rem;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:background .3s;border:none;line-height:1}
+        .modal-close:hover{background:rgba(255,0,0,.7)}
+        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+        @keyframes zoomIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+    </style>
+</head>
+
+<body>
+    <div style="position:fixed;top:0;left:0;right:0;z-index:1000;background:#fff;border-bottom:1px solid #e0e0e0;padding:10px 20px;display:flex;align-items:center;gap:16px;font-family:Open Sans, sans-serif;">
+        <a href="../index.html" style="background:#EBFF01;color:#000;font-weight:700;text-decoration:none;padding:6px 16px;border-radius:4px;font-size:13px;">&#8592; На главную</a>
+        <a href="../index.html#portfolio" style="color:#555;font-size:13px;font-weight:500;text-decoration:none;">Портфолио</a>
+    </div>
+    <header class="header">
+        <div class="container">
+            <h1>Facade AI</h1>
+            <div class="meta">
+                <span>FastAPI + Celery</span>
+                <span>React + TypeScript</span>
+                <span>GigaChat-2 + Qwen</span>
+                <span>PostgreSQL + pgvector</span>
+                <span>ComfyUI + ControlNet</span>
+                <span>Docker + Traefik</span>
+            </div>
+            <p class="subtitle">
+                Инженерный ИИ-ассистент для архитектора: команда из 10 агентов разбирает задачу по фасаду —
+                теплотехника, ветровая нагрузка, пожарная безопасность, — сверяет каждый расчёт с СП и ГОСТ
+                через векторную базу знаний, рисует концепты и фоторендеры чертежей, а независимый Red Team
+                аудит отклоняет слабые отчёты. Закрытый проект на собственном VPS.
+            </p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div style="margin-bottom:30px;background:#f9fafb;border:1px solid #e0e0e0;border-radius:12px;padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+            <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Задача</strong><span style="color:#4b5563;font-size:14px;">Дать практикующему архитектору инструмент, который за минуты делает многодисциплинарный разбор фасада со ссылками на действующие нормы — и при этом не выдаёт уверенно неверные расчёты.</span></div>
+            <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Моя работа</strong><span style="color:#4b5563;font-size:14px;">С нуля спроектировал и развернул полную систему: мульти-агентный backend с Celery-оркестрацией, RAG по нормативной базе, генерацию изображений через домашний ComfyUI по Tailscale, фронтенд, мониторинг и деплой из 15 сервисов.</span></div>
+            <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Технологии</strong><span style="color:#4b5563;font-size:14px;">FastAPI, Celery + Redis, React + TypeScript, PostgreSQL 16 + pgvector (HNSW), GigaChat-2 и Qwen через Model Router, Qwen-Image, ComfyUI + ControlNet (RealVisXL V4), Docker + Traefik v3, Prometheus/Grafana, Tailscale</span></div>
+            <div><strong style="color:#000;display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;">Результат</strong><span style="color:#4b5563;font-size:14px;">Система работает на проде: 12 выполненных задач, 2 519 нормативных чанков из 8 СП/ГОСТ, честный аудит Red Team (не бояется отклонять: вердикт «Отклонено · 92%»), точные рендеры чертежей на домашнем GPU бесплатно. 28 автотестов backend.</span></div>
+        </div>
+
+        <section class="section">
+            <h2>Бизнес-проблема</h2>
+            <p>Навесной вентфасад — это одновременно теплотехника, ветровые нагрузки, пожарная безопасность,
+                совместимость материалов и смета. Архитектор проверяет всё руками по нескольким документам СП/ГОСТ,
+                и на разбор одного узла уходят часы. Обычные чат-боты задачу не решают:</p>
+            <ul>
+                <li><strong>Галлюцинации:</strong> модель уверенно выдумывает пункты норм и значения</li>
+                <li><strong>Нет ссылок:</strong> ответ без указания документа нельзя показать заказчику</li>
+                <li><strong>Одна тема за раз:</strong> приходится самому декомпозировать задачу по дисциплинам</li>
+                <li><strong>Визуализация отдельно:</strong> концепт и рендер чертежа — снова ручная работа</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>Как проходит задача</h2>
+            <p>Пользователь выбирает направление, описывает здание и отмечает темы экспертиз — вплоть до
+                отдельных под-проверок (например, только U-value и классы горючести). Дальнейший конвейер
+                виден в реальном времени по WebSocket:</p>
+            <ul>
+                <li><strong>В очереди → Проверка данных</strong> — валидация входных параметров</li>
+                <li><strong>Работают агенты</strong> — оркестратор собирает команду специалистов по выбранным темам</li>
+                <li><strong>Синтез отчёта</strong> — единый markdown-документ со ссылками на пункты</li>
+                <li><strong>Аудит Red Team</strong> — независимая проверка с вердиктом и процентом</li>
+                <li><strong>Нормоконтроль → Готово</strong> — отчёт можно скачать</li>
+            </ul>
+            <p style="margin-top:12px;color:#4b5563;font-size:14px;">
+                Пример из прод-истории: проверка пожарной безопасности навесного вентфасада 5-этажного дома —
+                минвата 140 кг/м³ (класс НГ, СП 2.13130.2020 п.5.4.2), фиброцемент 8 мм (группа Г4, ГОСТ 30244-94),
+                требования к отсечкам и рассечкам с ссылкой на п.8.5.13 и 123-ФЗ. Red Team: «Отклонено · 92%» —
+                система не прячет слабые места расчёта, а подсвечивает их.
+            </p>
+        </section>
+
+        <section class="section">
+            <h2>Команда агентов</h2>
+            <p>Десять ролей, каждая — персона-промпт (.md) + методику-скилл + доступ к нормативной базе:</p>
+            <ul>
+                <li><strong>Оркестратор</strong> (ведущий архитектор фасадов) — декомпозиция и сборка команды</li>
+                <li><strong>Физик building-оболочки</strong> — U-value, точка росы, тепловые мосты</li>
+                <li><strong>Конструктор</strong> — ветровые нагрузки, подсистема, прогибы</li>
+                <li><strong>Пожарный эксперт</strong> — классы горючести, отсечки, высоты, ФЗ-123</li>
+                <li><strong>Материаловед</strong> — совместимость, гальваническая коррозия, долговечность</li>
+                <li><strong>Эколог</strong> — embodied carbon, EPD, сертификация</li>
+                <li><strong>Сметчик и дизайн-интегратор</strong> — экономика и визуальные концепты</li>
+                <li><strong>Red Team</strong> — независимый аудит с JSON-вердиктом</li>
+                <li><strong>Code Checker</strong> — нормоконтроль</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>Нормативная база: RAG вместо выдуманных пунктов</h2>
+            <p>Ключевое отличие от «просто чата с GPT»: перед каждым ответом агент получает релевантные
+                выдержки из настоящих СП и ГОСТ.</p>
+            <ul>
+                <li><strong>Корпус:</strong> 8 документов (СП 50.13330, СП 2.13130, ГОСТ 30244 и др.) → 2 519 чанков</li>
+                <li><strong>Чанкинг по пунктам</strong> (≤900 знаков, склейка коротких хвостов) — выдержка = цитируемый пункт</li>
+                <li><strong>Эмбеддинги локально:</strong> multilingual-e5-large (1024 М) на домашнем ПК — бесплатно и без квот облачных API</li>
+                <li><strong>Хранение:</strong> pgvector + HNSW (cosine), поиск top-5 с фильтром по специализации агента</li>
+                <li><strong>В промпт</strong> выдержки попадают секцией «НОРМАТИВНАЯ БАЗА» с требованием указывать источник; нет данных — агент обязан сказать это явно</li>
+                <li><strong>Graceful degradation:</strong> embedding-сервер выключен — агенты работают без выдержек, задача не падает</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>Студия концептов: два режима генерации</h2>
+            <ul>
+                <li><strong>Быстрый концепт</strong> — Qwen-Image по текстовому описанию, 10–20 секунд: прикинуть идею, подобрать материал и цвет</li>
+                <li><strong>Точный рендер чертежа</strong> — загруженный эскиз/чертёж через ComfyUI + ControlNet (RealVisXL V4) на домашнем GPU: геометрия чертежа сохраняется, получается фотореалистичный фасад</li>
+                <li><strong>Авто-выбор ControlNet:</strong> по доле белого в изображении — линейный чертёж → canny, заполненная 3D-схема → depth; композитный чекбокс блокирует запуск без чертежа</li>
+                <li><strong>Приватный канал:</strong> ComfyUI доступен backend только через Tailscale — домашний GPU работает на прод, порты в интернет не торчат</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>Red Team: аудит, который имеет право сказать «нет»</h2>
+            <p>После синтеза отчёта независимый агент-оппонент проверяет расчёты, ссылки и логику.
+                Ответ — строгий JSON: вердикт (APPROVED/REJECTED), score, список замечаний. В истории
+                есть и «Отклонено · 92%» — это осознанное решение: заказчику нужен честный аудит,
+                а не льстивый ассистент. Парсер вердикта покрыт тестами, JSON-контракт фиксируется
+                в temperature 0.2.</p>
+        </section>
+
+        <section class="section">
+            <h2>Архитектура</h2>
+            <div class="architecture">1. UI (React+TS) → выбор тем и под-проверок → POST /runs
+    ↓
+2. Celery-оркестрация: валидация → команда агентов → синтез → Red Team → нормоконтроль
+   прогресс — по WebSocket; статусы: running_agents / synthesizing / red_team...
+    ↓
+3. Каждый агент: персона.md + скиллы.md + RAG top-5 выдержек → Model Router
+   GigaChat-2 (OAuth) → fallback Qwen; лог токенов и стоимости на вызов
+    ↓
+4. RAG: СП/ГОСТ → чанкинг по пунктам → локальные эмбеддинги (ПК, :8189)
+   → pgvector HNSW → retrieval с фильтром по агенту
+    ↓
+5. Изображения: быстрый концепт → Qwen-Image API
+   точный рендер → ComfyUI + ControlNet (canny/depth авто) через Tailscale
+    ↓
+6. Прод: Docker Compose, 15 сервисов за Traefik v3 (HTTPS), Postgres 16,
+   Redis, Flower, Prometheus + Grafana</div>
+            <p style="margin-top:14px;color:#4b5563;font-size:14px;">
+                Backend — FastAPI (uvicorn, 2 воркера) + 4 Celery-воркера и beat; фронтенд — SPA на
+                nginx; всё на одном VPS, доступ к интерфейсу — только по логину (закрытый проект).
+            </p>
+        </section>
+
+        <section class="section">
+            <h2>Скриншоты</h2>
+            <p style="color:#4b5563;font-size:14px;">Интерфейс рабочего прода. Нажмите на скриншот, чтобы увеличить.</p>
+            <div class="screengrid">
+                <div class="screenshot" onclick="openModal(this)">
+                    <span class="zoom-hint">Увеличить</span>
+                    <img src="../images/facade-ai/02-dashboard.png" alt="Дашборд Facade AI — направления работ">
+                    <div class="caption"><strong>1 · Дашборд</strong> — направления: Фасад работает, Кровля/Фундамент/Генплан/Интерьер в roadmap</div>
+                </div>
+                <div class="screenshot" onclick="openModal(this)">
+                    <span class="zoom-hint">Увеличить</span>
+                    <img src="../images/facade-ai/03-new-run.png" alt="Новая задача: темы экспертиз и под-проверки">
+                    <div class="caption"><strong>2 · Новая задача</strong> — контекст здания и выбор тем: теплотехника, ветровая нагрузка, пожарка — с точными под-проверками</div>
+                </div>
+                <div class="screenshot" onclick="openModal(this)">
+                    <span class="zoom-hint">Увеличить</span>
+                    <img src="../images/facade-ai/07-run-detail.png" alt="Отчёт: пожарная безопасность НВФ со ссылками на нормы">
+                    <div class="caption"><strong>3 · Отчёт</strong> — классы горючести со ссылками на СП 2.13130.2020 и ГОСТ 30244-94, статус Red Team виден сразу</div>
+                </div>
+                <div class="screenshot" onclick="openModal(this)">
+                    <span class="zoom-hint">Увеличить</span>
+                    <img src="../images/facade-ai/08-run-report.png" alt="Аудит Red Team: Отклонено, 92%">
+                    <div class="caption"><strong>4 · Red Team</strong> — независимый вердикт «Отклонено · 92%»: система честно отмечает слабые места расчёта</div>
+                </div>
+                <div class="screenshot" onclick="openModal(this)">
+                    <span class="zoom-hint">Увеличить</span>
+                    <img src="../images/facade-ai/04-history.png" alt="История задач с вердиктами Red Team">
+                    <div class="caption"><strong>5 · История</strong> — все запуски с темами, статусами и RT-score каждого отчёта</div>
+                </div>
+                <div class="screenshot" onclick="openModal(this)">
+                    <span class="zoom-hint">Увеличить</span>
+                    <img src="../images/facade-ai/05-studio-concept.png" alt="Студия концептов: быстрый концепт">
+                    <div class="caption"><strong>6 · Быстрый концепт</strong> — Qwen-Image по описанию, 10–20 секунд, с готовыми промптами-подсказками</div>
+                </div>
+                <div class="screenshot" onclick="openModal(this)">
+                    <span class="zoom-hint">Увеличить</span>
+                    <img src="../images/facade-ai/06-studio-render.png" alt="Студия концептов: точный рендер чертежа">
+                    <div class="caption"><strong>7 · Точный рендер</strong> — загрузка чертежа, авто-выбор ControlNet (canny/depth), ComfyUI на домашнем GPU</div>
+                </div>
+                <div class="screenshot" onclick="openModal(this)">
+                    <span class="zoom-hint">Увеличить</span>
+                    <img src="../images/facade-ai/01-login.png" alt="Страница входа Facade AI">
+                    <div class="caption"><strong>8 · Вход</strong> — закрытый доступ: аккаунты создаёт администратор</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Инфраструктура и надёжность</h2>
+            <ul>
+                <li><strong>15 сервисов в Docker Compose</strong> за Traefik v3: backend, 4 Celery-воркера + beat, Flower, Postgres 16 с pgvector, Redis, frontend nginx, Prometheus, Grafana</li>
+                <li><strong>Model Router с фоллбэками:</strong> цепочки провайдеров под тип задачи; при отказе GigaChat — Qwen; при отказе ComfyUI — Qwen-Image</li>
+                <li><strong>Секреты — только env-переменные</strong>, никаких ключей в коде и репозитории</li>
+                <li><strong>Кэш фронтенда:</strong> index.html с no-store — обновления доходят сразу, статика — 30 дней</li>
+                <li><strong>Наблюдаемость:</strong> Prometheus + Grafana, логи токенов и стоимости каждого агентного вызова</li>
+                <li><strong>Приватный GPU-хост:</strong> Tailscale между VPS и домашним ПК — ComfyUI и embedding-сервер не светятся наружу</li>
+                <li><strong>Тесты:</strong> 28 автотестов backend (роутер, RAG, интеграция RAG в агентов) — все зелёные</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>Результаты</h2>
+            <div class="metrics">
+                <div class="metric">
+                    <div class="value">10</div>
+                    <div class="label">ролей агентов: от оркестратора до Red Team</div>
+                </div>
+                <div class="metric">
+                    <div class="value">2 519</div>
+                    <div class="label">нормативных чанков из 8 СП/ГОСТ в pgvector</div>
+                </div>
+                <div class="metric">
+                    <div class="value">15</div>
+                    <div class="label">сервисов в проде за Traefik (Docker Compose)</div>
+                </div>
+                <div class="metric">
+                    <div class="value">28</div>
+                    <div class="label">автотестов backend, включая RAG-интеграцию</div>
+                </div>
+            </div>
+        </section>
+
+        <div class="cta">
+            <h3>Закрытый проект — покажу демо по запросу</h3>
+            <p style="color:#4b5563;margin:12px 0 0;">
+                Доступ к прода только по логину (проект для конкретного архитектора).
+                Напишите — покажу живой прогон задачи: от выбора тем до отчёта с вердиктом Red Team
+                и рендера чертежа.
+            </p>
+            <a href="mailto:admin@eduardwit.ru?subject=Facade%20AI%20—%20покажите%20демо" class="button">Запросить демо</a>
+            <a href="https://t.me/EduardWIT_bot" target="_blank" class="button" style="background:#fff;color:#000;border:1px solid #e0e0e0;">Написать в Telegram</a>
+        </div>
+    </main>
+
+    <footer>
+        <div style="max-width:1100px;margin:0 auto;">
+            <p>&copy; 2026 EduardWIT &bull; <a href="../index.html">На главную</a> &bull; <a href="../privacy-policy.html">Политика конфиденциальности</a></p>
+        </div>
+    </footer>
+
+    <!-- МОДАЛЬНОЕ ОКНО -->
+    <div id="imageModal" class="modal">
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+        <img class="modal-content" id="modalImg">
+        <div class="modal-caption" id="modalCaption"></div>
+    </div>
+
+    <script>
+        function openModal(element) {
+            var modal = document.getElementById('imageModal');
+            var modalImg = document.getElementById('modalImg');
+            var modalCaption = document.getElementById('modalCaption');
+            var img = element.querySelector('img');
+            var caption = element.querySelector('.caption').textContent;
+            if (img) {
+                modalImg.src = img.src;
+                modalImg.style.display = 'block';
+                modalCaption.textContent = caption;
+                modal.classList.add('active');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').classList.remove('active');
+        }
+
+        document.getElementById('imageModal').addEventListener('click', function (e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+
+</html>
